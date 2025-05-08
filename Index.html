@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <base target="_top">
+    <style>
+      body { font-family: Arial, sans-serif; padding: 20px; }
+      label { margin-top: 10px; display: block; font-weight: bold; }
+      input, select { padding: 6px; width: 100%; margin-bottom: 10px; }
+      button { padding: 10px; background: #28a745; color: #fff; border: none; cursor: pointer; }
+      #status { margin-top: 15px; white-space: pre-line; color: #333; }
+    </style>
+  </head>
+  <body>
+    <h2>Upload de Recibos em PDF</h2>
+    <form id="uploadForm">
+      <label>Arquivos PDF:</label>
+      <input type="file" id="arquivo" name="arquivo" accept="application/pdf" multiple required>
+
+      <label>Data da Despesa:</label>
+      <input type="date" id="data" name="data" required>
+
+      <label>Conta de Despesa:</label>
+      <select name="despesa" id="despesa" required>
+        <option value="">Selecione...</option>
+        <option value="284 - Comissão Vendedores">284 - Comissão Vendedores</option>
+        <option value="285 - Comissões Operador de Caixa">285 - Comissões Operador de Caixa</option>
+        <option value="199 - Cursos e Treinamentos">199 - Cursos e Treinamentos</option>
+        <option value="347 - Decoração e Ornamentação Loja">347 - Decoração e Ornamentação Loja</option>
+        <option value="385 - Despesas Diversas">385 - Despesas Diversas</option>
+        <option value="203 - Estagiários e Aprendizes">203 - Estagiários e Aprendizes</option>
+        <option value="370 - Exame Médico Admissional/Demissional">370 - Exame Médico Admissional/Demissional</option>
+        <option value="189 - Férias">189 - Férias</option>
+        <option value="158 - Fretes">158 - Fretes</option>
+        <option value="110 - Manutenção de Máquinas e Equipamentos">110 - Manutenção de Máquinas e Equipamentos</option>
+        <option value="156 - Manutenção e Reparos Predial">156 - Manutenção e Reparos Predial</option>
+        <option value="118 - Materiais de Expediente">118 - Materiais de Expediente</option>
+        <option value="105 - Materiais de Limpeza">105 - Materiais de Limpeza</option>
+        <option value="312 - Material de Informática">312 - Material de Informática</option>
+        <option value="351 - Móveis, Utensílios e Bens">351 - Móveis, Utensílios e Bens</option>
+        <option value="192 - Multa Rescisória">192 - Multa Rescisória</option>
+        <option value="191 - Rescisões Contratuais">191 - Rescisões Contratuais</option>
+        <option value="357 - Sacolas">357 - Sacolas</option>
+        <option value="324 - Salário Operadores de Caixa">324 - Salário Operadores de Caixa</option>
+        <option value="195 - Vales-Transporte">195 - Vales-Transporte</option>
+        <option value="129 - Viagens">129 - Viagens</option>
+      </select>
+
+      <button type="submit">Enviar Arquivos</button>
+    </form>
+
+    <div id="status"></div>
+
+    <script>
+      document.getElementById("uploadForm").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        const files = document.getElementById("arquivo").files;
+        const data = document.getElementById("data").value;
+        const despesa = document.getElementById("despesa").value;
+        const status = document.getElementById("status");
+
+        if (!files.length) {
+          alert("Selecione ao menos um arquivo PDF.");
+          return;
+        }
+
+        status.innerText = "Enviando arquivos...\n";
+
+        Array.from(files).forEach((file, index) => {
+          const reader = new FileReader();
+          reader.onload = function() {
+            const fileData = reader.result.split(',')[1];
+
+            google.script.run
+              .withSuccessHandler(function(msg) {
+                status.innerText += msg + '\n';
+                if (index === files.length - 1) {
+                  document.getElementById("uploadForm").reset();
+                }
+              })
+              .uploadFile({
+                arquivo: Utilities.newBlob(Utilities.base64Decode(fileData), file.type, file.name),
+                data: data,
+                despesa: despesa
+              });
+          };
+          reader.readAsDataURL(file);
+        });
+      });
+    </script>
+  </body>
+</html>
