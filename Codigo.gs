@@ -1,4 +1,69 @@
-/**
+// Função principal para exibir o Web App
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('Index')
+    .setTitle('Upload de Recibos - Grupo Tavares')
+    .setFaviconUrl('https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ');
+}
+
+// Cria a estrutura de pastas automaticamente na raiz do Drive
+function createFolderStructure(despesa, ano, mes) {
+  Logger.log(`Criando pasta: ${despesa}/${ano}-${mes}`);
+  
+  // Cria ou obtém a pasta base "Grupo Tavares" na raiz do Drive
+  const root = DriveApp.getRootFolder();
+  const baseFolderIterator = root.getFoldersByName('Grupo Tavares');
+  let baseFolder = baseFolderIterator.hasNext() ? baseFolderIterator.next() : root.createFolder('Grupo Tavares');
+
+  // Cria a pasta da despesa, se não existir
+  const despesaFolderIterator = baseFolder.getFoldersByName(despesa);
+  let despesaFolder = despesaFolderIterator.hasNext() ? despesaFolderIterator.next() : baseFolder.createFolder(despesa);
+
+  // Cria a subpasta ano-mes, se não existir
+  const subFolderName = `${ano}-${mes}`;
+  const subFolderIterator = despesaFolder.getFoldersByName(subFolderName);
+  let folder = subFolderIterator.hasNext() ? subFolderIterator.next() : despesaFolder.createFolder(subFolderName);
+
+  return folder;
+}
+
+// Faz o upload de um arquivo
+function uploadFileToDrive(blob, folder, fileName) {
+  Logger.log(`Fazendo upload do arquivo: ${fileName}`);
+  if (!blob) {
+    return { success: false, message: `Erro ao processar o arquivo: ${fileName}` };
+  }
+
+  try {
+    const file = folder.createFile(blob);
+    file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
+    return { success: true, message: `Arquivo ${file.getName()} enviado com sucesso!`, url: file.getUrl() };
+  } catch (e) {
+    Logger.log(`Erro ao fazer upload de ${fileName}: ${e.message}`);
+    return { success: false, message: `Erro ao enviar ${fileName}: ${e.message}` };
+  }
+}
+
+// Função principal de upload
+function uploadFile(formObject) {
+  if (!formObject.mes.match(/^(0[1-9]|1[0-2])$/) || !formObject.ano.match(/^\d{4}$/) || !formObject.despesa) {
+    return JSON.stringify([{ success: false, message: 'Dados inválidos: Verifique mês, ano ou despesa.' }]);
+  }
+
+  const folder = createFolderStructure(formObject.despesa, formObject.ano, formObject.mes);
+  const results = [];
+
+  formObject.arquivo.forEach(blob => {
+    const result = uploadFileToDrive(blob, folder, blob.getName());
+    results.push(result);
+  });
+
+  const userEmail = Session.getActiveUser().getEmail();
+  const subject = 'Upload Concluído - Grupo Tavares';
+  const body = `Olá,\n\nSeu upload foi concluído com sucesso!\nDetalhes:\n- Arquivos: ${results.length}\n- Pasta: ${formObject.despesa}/${formObject.ano}-${formObject.mes}\n\nAcesse o Drive para visualizar: https://drive.google.com/drive/my-drive`;
+  MailApp.sendEmail(userEmail, subject, body);
+
+  return JSON.stringify(results);
+}/**
  * @OnlyCurrentDoc
  */
 
