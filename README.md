@@ -12,6 +12,8 @@ Este projeto é um aplicativo web construído com Google Apps Script para facili
 
 melhorias foram implementadas com foco em clareza, leveza e compatibilidade com a versÃ£o original.*
 
+Este PR aplica melhorias visuais na aba `BASE`
+
 ## Exemplo de Estrutura no Drive
 
 Google Drive/ ├── 284 - Comissão Vendedores/ │   └── 2025-05/ │       └── 2025-05-08_recibo.pdf
