@@ -10,6 +10,8 @@ Este projeto é um aplicativo web construído com Google Apps Script para facili
 - Renomeia os arquivos com a data da despesa.
 - Interface simples e responsiva para uso interno.
 
+melhorias foram implementadas com foco em clareza, leveza e compatibilidade com a versÃ£o original.*
+
 ## Exemplo de Estrutura no Drive
 
 Google Drive/ ├── 284 - Comissão Vendedores/ │   └── 2025-05/ │       └── 2025-05-08_recibo.pdf
