@@ -11,122 +11,221 @@
       background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
       font-family: 'Roboto', sans-serif;
       color: #333;
+      overflow-x: hidden;
+      position: relative;
     }
     .container {
-      max-width: 700px;
-      margin: 50px auto;
+      max-width: 800px;
+      margin: 40px auto;
       padding: 0;
     }
     .card {
-      background-color: rgba(255, 255, 255, 0.97);
-      border-radius: 12px;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-      padding: 30px;
-      animation: fadeIn 0.5s ease-in;
+      background: linear-gradient(145deg, #ffffff, #f0f4f8);
+      border-radius: 16px;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(38, 166, 154, 0.5);
+      padding: 40px;
+      animation: fadeIn 0.8s ease-in;
+      position: relative;
+    }
+    .logo {
+      display: block;
+      margin: 0 auto 20px;
+      width: 120px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
     }
     h4 {
       color: #004D40;
-      font-weight: 500;
+      font-weight: 600;
+      text-align: center;
       margin-bottom: 30px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     }
     .btn {
-      background-color: #00796B;
-      transition: all 0.3s ease;
-      border-radius: 8px;
+      background: linear-gradient(45deg, #00796B, #26A69A);
+      border-radius: 10px;
+      transition: all 0.4s ease;
+      text-transform: none;
+      font-weight: 500;
     }
     .btn:hover {
-      background-color: #26A69A;
-      transform: scale(1.05);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(38, 166, 154, 0.6);
     }
     .clear-btn {
-      background-color: #757575;
-      margin-top: 15px;
-    }
-    .clear-btn:hover {
-      background-color: #616161;
-      transform: scale(1.05);
+      background: linear-gradient(45deg, #757575, #616161);
+      margin-top: 20px;
     }
     .input-field label {
       color: #004D40;
+      font-size: 1.1em;
     }
     .input-field input:focus + label,
     .input-field select:focus + label {
-      color: #00796B !important;
+      color: #26A69A !important;
     }
     .input-field input:focus,
     .input-field select:focus {
-      border-bottom: 1px solid #00796B !important;
-      box-shadow: 0 1px 0 0 #00796B !important;
+      border-bottom: 2px solid #26A69A !important;
+      box-shadow: 0 2px 0 0 #26A69A !important;
+    }
+    .file-field {
+      position: relative;
+      border: 2px dashed #B0BEC5;
+      border-radius: 8px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+    .file-field.dragover {
+      border-color: #26A69A;
+      background: rgba(38, 166, 154, 0.1);
+    }
+    .file-count {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 10px;
     }
     .progress {
       display: none;
-      background-color: #E0F2F1;
+      background: #E0F2F1;
+      border-radius: 5px;
       margin-top: 20px;
     }
     .progress .indeterminate {
-      background-color: #00796B;
+      background: #00796B;
     }
     #status {
       margin-top: 20px;
       font-size: 1.1em;
-      max-height: 200px;
+      max-height: 250px;
       overflow-y: auto;
+      padding: 10px;
+      background: #F5F7FA;
+      border-radius: 8px;
     }
     .status-message {
-      padding: 10px;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      animation: slideIn 0.3s ease;
+      padding: 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      animation: slideIn 0.4s ease;
+      display: flex;
+      align-items: center;
     }
     .status-success {
-      background-color: #E8F5E9;
+      background: #E8F5E9;
       color: #2E7D32;
     }
     .status-error {
-      background-color: #FFEBEE;
+      background: #FFEBEE;
       color: #D32F2F;
     }
+    .status-message i {
+      margin-right: 10px;
+    }
     footer {
-      margin-top: 20px;
-      text-align: center;
-      font-size: 0.85em;
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      font-size: 0.9em;
       color: #555;
     }
     footer a {
-      color: #00796B;
+      color: #FFD700;
       text-decoration: none;
-      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
     }
     footer a:hover {
       color: #26A69A;
-      text-decoration: underline;
     }
     footer i {
-      vertical-align: middle;
-      font-size: 1.2em;
-      margin-right: 5px;
+      font-size: 1.4em;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+    .modal {
+      max-width: 500px;
+      border-radius: 12px;
+    }
+    .modal .modal-content {
+      padding: 30px;
+    }
+    .modal .modal-footer .btn {
+      margin: 0 10px;
+    }
+    .history-section {
+      margin-top: 20px;
+      display: none;
+    }
+    .history-section.active {
+      display: block;
+    }
+    .history-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9em;
+    }
+    .history-table th, .history-table td {
+      padding: 10px;
+      border-bottom: 1px solid #E0E0E0;
+      text-align: left;
+    }
+    .history-table th {
+      background: #00796B;
+      color: white;
+    }
+    .help-btn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #FFD700;
+      color: #004D40;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
+      from { opacity: 0; transform: translateY(30px); }
       to { opacity: 1; transform: translateY(0); }
     }
     @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-20px); }
+      from { opacity: 0; transform: translateX(-30px); }
       to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); }
     }
     @media (max-width: 600px) {
       .container {
         margin: 20px;
-        padding: 15px;
       }
       .card {
         padding: 20px;
       }
       h4 {
-        font-size: 1.8em;
+        font-size: 1.6em;
       }
       .btn {
-        padding: 0 20px;
+        padding: 0 15px;
+        font-size: 0.9em;
+      }
+      footer {
+        position: static;
+        text-align: center;
+        margin-top: 20px;
+      }
+      .help-btn {
+        bottom: 10px;
+        left: 10px;
+        width: 40px;
+        height: 40px;
       }
     }
   </style>
@@ -134,19 +233,21 @@
 <body>
   <div class="container">
     <div class="card">
-      <h4 class="center-align">Envio de Despesas - Grupo Tavares</h4>
+      <img src="https://via.placeholder.com/120?text=Grupo+Tavares" class="logo" alt="Logotipo Grupo Tavares">
+      <h4>Envio de Despesas - Grupo Tavares</h4>
       <form id="uploadForm">
-        <div class="file-field input-field">
+        <div class="file-field input-field tooltipped" data-tooltip="Arraste ou selecione PDFs (máx. 10MB cada)">
           <div class="btn">
             <span><i class="material-icons left">cloud_upload</i>Selecionar Arquivos</span>
             <input type="file" id="arquivo" name="arquivo" accept="application/pdf" multiple required aria-label="Selecionar arquivos PDF">
           </div>
           <div class="file-path-wrapper">
-            <input class="file-path validate" type="text" placeholder="Envie um ou mais arquivos PDF">
+            <input class="file-path validate" type="text" placeholder="Arraste ou selecione PDFs">
           </div>
+          <div class="file-count" id="fileCount">Nenhum arquivo selecionado</div>
         </div>
 
-        <div class="input-field">
+        <div class="input-field tooltipped" data-tooltip="Selecione o mês da despesa">
           <select id="mes" required aria-label="Mês da despesa">
             <option value="" disabled selected>Escolha o Mês</option>
             <option value="01">Janeiro</option>
@@ -165,19 +266,19 @@
           <label for="mes">Mês da Despesa</label>
         </div>
 
-        <div class="input-field">
+        <div class="input-field tooltipped" data-tooltip="Selecione o ano da despesa">
           <select id="ano" required aria-label="Ano da despesa">
             <option value="" disabled selected>Escolha o Ano</option>
           </select>
           <label for="ano">Ano da Despesa</label>
         </div>
 
-        <div class="input-field">
+        <div class="input-field tooltipped" data-tooltip="Digite para buscar uma despesa">
           <input type="text" id="buscaDespesa" placeholder="Buscar por código ou nome da despesa..." aria-label="Buscar despesa">
           <label for="buscaDespesa">Buscar Conta de Despesa</label>
         </div>
 
-        <div class="input-field">
+        <div class="input-field tooltipped" data-tooltip="Selecione a conta de despesa">
           <select id="despesa" required aria-label="Conta de despesa">
             <option value="" disabled selected>Escolha a Conta de Despesa</option>
           </select>
@@ -194,20 +295,67 @@
       <div class="progress">
         <div class="indeterminate"></div>
       </div>
-      <div id="status" aria-live="polite"></div>
+      <div id="status" role="alert"></div>
       <div class="center-align">
         <button class="btn waves-effect waves-light clear-btn" id="clearForm" style="display: none;">
           <i class="material-icons left">clear</i>Limpar Formulário
         </button>
+        <button class="btn waves-effect waves-light" onclick="window.open('https://drive.google.com/drive/my-drive', '_blank')">
+          <i class="material-icons left">folder</i>Ver Pastas no Drive
+        </button>
       </div>
+
+      <div class="history-section" id="historySection">
+        <h6><i class="material-icons left">history</i>Histórico de Uploads</h6>
+        <table class="history-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Arquivos</th>
+              <th>Despesa</th>
+            </tr>
+          </thead>
+          <tbody id="historyTable"></tbody>
+        </table>
+      </div>
+
       <footer>
         Desenvolvido por 
-        <a href="https://github.com/RyannBreston" target="_blank" data-tooltip="Visite meu GitHub!" class="tooltipped">
+        <a href="https://github.com/RyannBreston" target="_blank" data-tooltip="Confira meu trabalho no GitHub!" class="tooltipped">
           <i class="material-icons">code</i>RyannBreston
         </a>
       </footer>
     </div>
   </div>
+
+  <div id="confirmModal" class="modal">
+    <div class="modal-content">
+      <h5>Confirmar Envio</h5>
+      <p id="confirmMessage"></p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close btn grey">Cancelar</a>
+      <a href="#!" class="modal-close btn" id="confirmSubmit">Confirmar</a>
+    </div>
+  </div>
+
+  <div id="helpModal" class="modal">
+    <div class="modal-content">
+      <h5>Instruções</h5>
+      <p>1. Selecione um ou mais arquivos PDF (máx. 10MB cada).<br>
+         2. Escolha o mês e o ano da despesa.<br>
+         3. Busque e selecione a conta de despesa.<br>
+         4. Clique em "Enviar Arquivos" e confirme o envio.<br>
+         5. Verifique o status e acesse as pastas no Google Drive.</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close btn">Fechar</a>
+    </div>
+  </div>
+
+  <a href="#helpModal" class="help-btn modal-trigger tooltipped" data-tooltip="Ajuda">
+    <i class="material-icons">help_outline</i>
+  </a>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
@@ -310,120 +458,78 @@
       M.FormSelect.init(select);
     }
 
+    function updateFileCount() {
+      const files = document.getElementById('arquivo').files;
+      const fileCount = document.getElementById('fileCount');
+      fileCount.textContent = files.length ? `${files.length} arquivo(s) selecionado(s)` : 'Nenhum arquivo selecionado';
+    }
+
+    function saveUploadHistory(files, despesa, mes, ano) {
+      const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
+      const entry = {
+        date: new Date().toLocaleString('pt-BR'),
+        files: Array.from(files).map(f => f.name).join(', '),
+        despesa,
+        mes: document.querySelector(`#mes option[value="${mes}"]`).text,
+        ano
+      };
+      history.unshift(entry);
+      localStorage.setItem('uploadHistory', JSON.stringify(history.slice(0, 10)));
+      updateHistoryTable();
+    }
+
+    function updateHistoryTable() {
+      const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
+      const tbody = document.getElementById('historyTable');
+      tbody.innerHTML = '';
+      if (history.length) {
+        document.getElementById('historySection').classList.add('active');
+        history.forEach(entry => {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${entry.date}</td>
+            <td>${entry.files}</td>
+            <td>${entry.despesa}</td>
+          `;
+          tbody.appendChild(row);
+        });
+      } else {
+        document.getElementById('historySection').classList.remove('active');
+      }
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
-      const elems = document.querySelectorAll('select');
-      M.FormSelect.init(elems);
+      M.FormSelect.init(document.querySelectorAll('select'));
       M.Tooltip.init(document.querySelectorAll('.tooltipped'));
+      M.Modal.init(document.querySelectorAll('.modal'));
       populateAnos();
       populateDespesa();
+      updateHistoryTable();
+
+      const fileInput = document.getElementById('arquivo');
+      const fileField = document.querySelector('.file-field');
+
+      fileInput.addEventListener('change', updateFileCount);
+
+      fileField.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileField.classList.add('dragover');
+      });
+
+      fileField.addEventListener('dragleave', () => {
+        fileField.classList.remove('dragover');
+      });
+
+      fileField.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileField.classList.remove('dragover');
+        fileInput.files = e.dataTransfer.files;
+        updateFileCount();
+      });
 
       document.getElementById('buscaDespesa').addEventListener('input', function () {
         populateDespesa(this.value);
       });
 
       document.getElementById('clearForm').addEventListener('click', function () {
-        document.getElementById('uploadForm').reset();
-        document.getElementById('status').innerText = '';
-        M.FormSelect.init(document.querySelectorAll('select'));
-        populateDespesa();
-        this.style.display = 'none';
-      });
-    });
-
-    document.getElementById('uploadForm').addEventListener('submit', function (e) {
-      e.preventDefault();
-
-      const files = document.getElementById('arquivo').files;
-      const mes = document.getElementById('mes').value;
-      const ano = document.getElementById('ano').value;
-      const despesa = document.getElementById('despesa').value;
-      const status = document.getElementById('status');
-      const progress = document.querySelector('.progress');
-      const clearBtn = document.getElementById('clearForm');
-
-      // Validações no front-end
-      if (!files.length) {
-        M.toast({ html: 'Selecione ao menos um arquivo PDF.' });
-        return;
-      }
-      if concursante!.mes) {
-        M.toast({ html: 'Selecione o mês da despesa.' });
-        return;
-      }
-      if (!ano) {
-        M.toast({ html: 'Selecione o ano da despesa.' });
-        return;
-      }
-      if (!despesa) {
-        M.toast({ html: 'Selecione a conta de despesa.' });
-        return;
-      }
-      for (let file of files) {
-        if (file.type !== 'application/pdf') {
-          M.toast({ html: `O arquivo ${file.name} não é um PDF válido.` });
-          return;
-        }
-      }
-
-      // Preparar formObject com múltiplos arquivos
-      const formObject = {
-        arquivo: [],
-        mes,
-        ano,
-        despesa
-      };
-
-      status.innerText = '';
-      const sendingMessage = document.createElement('div');
-      sendingMessage.className = 'status-message status-success';
-      sendingMessage.textContent = 'Enviando arquivos...';
-      status.appendChild(sendingMessage);
-      progress.style.display = 'block';
-
-      // Converter arquivos para blobs
-      const promises = Array.from(files).map(file => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onload = function () {
-            const fileData = reader.result.split(',')[1];
-            const blob = Utilities.newBlob(Utilities.base64Decode(fileData), file.type, file.name);
-            resolve(blob);
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-
-      Promise.all(promises).then(blobs => {
-        formObject.arquivo = blobs;
-
-        // Enviar para o Apps Script
-        google.script.run.withSuccessHandler(function (response) {
-          progress.style.display = 'none';
-          clearBtn.style.display = 'block';
-          status.innerText = '';
-
-          const results = JSON.parse(response);
-          results.forEach(result => {
-            const statusLine = document.createElement('div');
-            statusLine.className = `status-message ${result.success ? 'status-success' : 'status-error'}`;
-            statusLine.innerHTML = `<i class="material-icons left">${result.success ? 'check_circle' : 'error'}</i> ${result.message}${result.url ? ` <a href="${result.url}" target="_blank">Ver arquivo</a>` : ''}`;
-            status.appendChild(statusLine);
-          });
-
-          // Limitar número de mensagens exibidas
-          while (status.children.length > 5) {
-            status.removeChild(status.firstChild);
-          }
-        }).withFailureHandler(function (error) {
-          progress.style.display = 'none';
-          M.toast({ html: `Erro ao enviar arquivos: ${error.message}` });
-          const errorMessage = document.createElement('div');
-          errorMessage.className = 'status-message status-error';
-          errorMessage.innerHTML = `<i class="material-icons left">error</i> Erro: ${error.message}`;
-          status.appendChild(errorMessage);
-        }).uploadFile(formObject);
-      });
-    });
-  </script>
-</body>
-</html>
+        document.g
