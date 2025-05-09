@@ -55,9 +55,13 @@
       background: linear-gradient(45deg, #757575, #616161);
       margin-top: 20px;
     }
+    .input-field {
+      margin-bottom: 25px; /* Maior espaçamento entre campos */
+    }
     .input-field label {
       color: #004D40;
       font-size: 1.1em;
+      transform: translateY(-14px); /* Garantir que o label esteja visível */
     }
     .input-field input:focus + label,
     .input-field select:focus + label {
@@ -227,13 +231,16 @@
         width: 40px;
         height: 40px;
       }
+      .input-field {
+        margin-bottom: 20px;
+      }
     }
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <img src="https://via.placeholder.com/120?text=Grupo+Tavares" class="logo" alt="Logotipo Grupo Tavares">
+      <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares">
       <h4>Envio de Despesas - Grupo Tavares</h4>
       <form id="uploadForm">
         <div class="file-field input-field tooltipped" data-tooltip="Arraste ou selecione PDFs (máx. 10MB cada)">
@@ -273,9 +280,10 @@
           <label for="ano">Ano da Despesa</label>
         </div>
 
-        <div class="input-field tooltipped" data-tooltip="Digite para buscar uma despesa">
-          <input type="text" id="buscaDespesa" placeholder="Buscar por código ou nome da despesa..." aria-label="Buscar despesa">
+        <div class="input-field tooltipped" data-tooltip="Digite para buscar uma despesa" id="buscaDespesaContainer">
+          <input type="text" id="buscaDespesa" placeholder="Buscar por código ou nome da despesa..." aria-label="Buscar despesa" aria-describedby="buscaDespesaHelp">
           <label for="buscaDespesa">Buscar Conta de Despesa</label>
+          <span id="buscaDespesaHelp" class="helper-text" style="display: none;">Digite o código ou nome da despesa</span>
         </div>
 
         <div class="input-field tooltipped" data-tooltip="Selecione a conta de despesa">
@@ -520,16 +528,4 @@
         fileField.classList.remove('dragover');
       });
 
-      fileField.addEventListener('drop', (e) => {
-        e.preventDefault();
-        fileField.classList.remove('dragover');
-        fileInput.files = e.dataTransfer.files;
-        updateFileCount();
-      });
-
-      document.getElementById('buscaDespesa').addEventListener('input', function () {
-        populateDespesa(this.value);
-      });
-
-      document.getElementById('clearForm').addEventListener('click', function () {
-        document.g
+      file
