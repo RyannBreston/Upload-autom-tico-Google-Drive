@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload de Recibos - Grupo Tavares</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" integrity="sha384-3iQaDUX3N8Y5F5eIqSfNls6KQFyh/7P5pcz6l1g8jMeqU2y+Yg==" crossorigin="anonymous">
   <style>
     body {
       background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
@@ -56,12 +56,12 @@
       margin-top: 20px;
     }
     .input-field {
-      margin-bottom: 25px; /* Maior espaçamento entre campos */
+      margin-bottom: 25px;
     }
     .input-field label {
       color: #004D40;
       font-size: 1.1em;
-      transform: translateY(-14px); /* Garantir que o label esteja visível */
+      transform: translateY(-14px);
     }
     .input-field input:focus + label,
     .input-field select:focus + label {
@@ -71,6 +71,10 @@
     .input-field select:focus {
       border-bottom: 2px solid #26A69A !important;
       box-shadow: 0 2px 0 0 #26A69A !important;
+    }
+    .input-field.invalid input,
+    .input-field.invalid select {
+      border-bottom: 2px solid #D32F2F !important;
     }
     .file-field {
       position: relative;
@@ -240,7 +244,7 @@
 <body>
   <div class="container">
     <div class="card">
-      <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares">
+      <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares" loading="lazy">
       <h4>Envio de Despesas - Grupo Tavares</h4>
       <form id="uploadForm">
         <div class="file-field input-field tooltipped" data-tooltip="Arraste ou selecione PDFs (máx. 10MB cada)">
@@ -252,6 +256,11 @@
             <input class="file-path validate" type="text" placeholder="Arraste ou selecione PDFs">
           </div>
           <div class="file-count" id="fileCount">Nenhum arquivo selecionado</div>
+        </div>
+
+        <div id="previewArea" style="display: none; margin-top: 20px;">
+          <h6>Pré-visualização</h6>
+          <iframe id="pdfPreview" width="100%" height="300px" style="border: 1px solid #ccc;"></iframe>
         </div>
 
         <div class="input-field tooltipped" data-tooltip="Selecione o mês da despesa">
@@ -303,7 +312,7 @@
       <div class="progress">
         <div class="indeterminate"></div>
       </div>
-      <div id="status" role="alert"></div>
+      <div id="status" role="alert" aria-live="polite"></div>
       <div class="center-align">
         <button class="btn waves-effect waves-light clear-btn" id="clearForm" style="display: none;">
           <i class="material-icons left">clear</i>Limpar Formulário
@@ -365,7 +374,7 @@
     <i class="material-icons">help_outline</i>
   </a>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" integrity="sha384-p21AgXbtTqkR2WAEQ+wZgiZyQmoP3ASvvsVOFDfObT6F2t3GrR8aQNZQkxnU+Ul7A==" crossorigin="anonymous"></script>
   <script>
     const allAccountsData = [
       { value: "119 - AGUA E ESGOTO", text: "119 - AGUA E ESGOTO" },
@@ -470,6 +479,19 @@
       const files = document.getElementById('arquivo').files;
       const fileCount = document.getElementById('fileCount');
       fileCount.textContent = files.length ? `${files.length} arquivo(s) selecionado(s)` : 'Nenhum arquivo selecionado';
+
+      const previewArea = document.getElementById('previewArea');
+      const pdfPreview = document.getElementById('pdfPreview');
+      if (files.length && files[0].type === 'application/pdf') {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          pdfPreview.src = e.target.result;
+          previewArea.style.display = 'block';
+        };
+        reader.readAsDataURL(files[0]);
+      } else {
+        previewArea.style.display = 'none';
+      }
     }
 
     function saveUploadHistory(files, despesa, mes, ano) {
@@ -496,36 +518,4 @@
           const row = document.createElement('tr');
           row.innerHTML = `
             <td>${entry.date}</td>
-            <td>${entry.files}</td>
-            <td>${entry.despesa}</td>
-          `;
-          tbody.appendChild(row);
-        });
-      } else {
-        document.getElementById('historySection').classList.remove('active');
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', function () {
-      M.FormSelect.init(document.querySelectorAll('select'));
-      M.Tooltip.init(document.querySelectorAll('.tooltipped'));
-      M.Modal.init(document.querySelectorAll('.modal'));
-      populateAnos();
-      populateDespesa();
-      updateHistoryTable();
-
-      const fileInput = document.getElementById('arquivo');
-      const fileField = document.querySelector('.file-field');
-
-      fileInput.addEventListener('change', updateFileCount);
-
-      fileField.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        fileField.classList.add('dragover');
-      });
-
-      fileField.addEventListener('dragleave', () => {
-        fileField.classList.remove('dragover');
-      });
-
-      file
+            <t
