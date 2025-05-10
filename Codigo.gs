@@ -53,14 +53,14 @@ function uploadFile(formObject) {
 
       validateFile(blob, originalName);
 
-      const folderName = sanitizeName(formObject.despesa);
-      const subFolderName = `${formObject.ano}-${String(formObject.mes).padStart(2, '0')}`;
-      const newFileName = `${subFolderName}_${sanitizedOriginalName}`;
+      // Criação das pastas conforme a estrutura
+      const folderRoot = getOrCreateFolder(DriveApp.getRootFolder(), "Despesas");
+      const categoriaFolder = getOrCreateFolder(folderRoot, sanitizeName(formObject.despesa));
+      const anoFolder = getOrCreateFolder(categoriaFolder, String(formObject.ano));
+      const mesFolder = getOrCreateFolder(anoFolder, String(formObject.mes).padStart(2, '0'));
 
-      const mainFolder = getOrCreateFolder(DriveApp.getRootFolder(), folderName);
-      const subFolder = getOrCreateFolder(mainFolder, subFolderName);
-
-      const file = subFolder.createFile(blob);
+      const newFileName = `${formObject.ano}-${String(formObject.mes).padStart(2, '0')}_${sanitizedOriginalName}`;
+      const file = mesFolder.createFile(blob);
       file.setName(newFileName);
       const fileUrl = file.getUrl();
 
@@ -69,7 +69,7 @@ function uploadFile(formObject) {
         throw new Error(`O arquivo '${newFileName}' excedeu o limite após upload.`);
       }
 
-      results.push(createResponse(true, `${newFileName} enviado com sucesso para "${folderName}/${subFolderName}".`, fileUrl));
+      results.push(createResponse(true, `${newFileName} enviado com sucesso para "Despesas/${formObject.despesa}/${formObject.ano}/${formObject.mes}".`, fileUrl));
     }
 
     sendNotificationEmail(formObject, results.length);
