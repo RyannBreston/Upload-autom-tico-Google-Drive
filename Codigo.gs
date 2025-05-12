@@ -1,49 +1,42 @@
-function doGet() {
-  return HtmlService.createHtmlOutputFromFile('Index')
-    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
-}
-
 function uploadFile(formObject) {
-  const pastaRaiz = DriveApp.getFoldersByName("Despesas").hasNext()
-    ? DriveApp.getFoldersByName("Despesas").next()
-    : DriveApp.createFolder("Despesas");
+  try {
+    // Pega os dados do formulário
+    const { mes, ano, despesa, arquivo } = formObject;
 
-  const mes = formObject.mes;
-  const ano = formObject.ano;
-  const despesa = formObject.despesa;
+    // Nome da pasta principal
+    const rootFolderName = "Despesas";
+    const rootFolder = getOrCreateFolder(rootFolderName);
 
-  const [codigo, ...descricaoArray] = despesa.split(' - ');
-  const descricao = descricaoArray.join(' - ');
+    // Cria subpastas para ano/mês/despesa
+    const anoFolder = getOrCreateFolder(ano, rootFolder);
+    const mesFolder = getOrCreateFolder(mes, anoFolder);
+    const despesaFolder = getOrCreateFolder(despesa, mesFolder);
 
-  const pastaCategoria = getOrCreateFolder(pastaRaiz, `${codigo} - ${descricao}`);
-  const pastaAno = getOrCreateFolder(pastaCategoria, ano);
-  const pastaMes = getOrCreateFolder(pastaAno, mes);
+    // Faz o upload dos arquivos
+    const results = [];
+    arquivo.forEach(file => {
+      const blob = Utilities.newBlob(Utilities.base64Decode(file.data), file.type, file.name);
+      despesaFolder.createFile(blob);
+      results.push({ success: true, message: `Arquivo ${file.name} enviado com sucesso!` });
+    });
 
-  const blobs = formObject.arquivo.map(arquivo => {
-    const contentType = arquivo.type || "application/pdf";
-    return Utilities.newBlob(Utilities.base64Decode(arquivo.data), contentType, arquivo.name);
-  });
-
-  const resultados = blobs.map(blob => {
-    try {
-      const arquivoSalvo = pastaMes.createFile(blob);
-      return {
-        success: true,
-        message: `Arquivo <strong>${blob.getName()}</strong> enviado com sucesso.`,
-        url: arquivoSalvo.getUrl()
-      };
-    } catch (e) {
-      return {
-        success: false,
-        message: `Erro ao enviar <strong>${blob.getName()}</strong>: ${e.message}`
-      };
-    }
-  });
-
-  return JSON.stringify(resultados);
+    return JSON.stringify(results);
+  } catch (error) {
+    return JSON.stringify([{ success: false, message: `Erro: ${error.message}` }]);
+  }
 }
 
-function getOrCreateFolder(parent, name) {
-  const folders = parent.getFoldersByName(name);
-  return folders.hasNext() ? folders.next() : parent.createFolder(name);
+// Função para pegar ou criar uma pasta
+function getOrCreateFolder(name, parentFolder) {
+  const folders = parentFolder.getFoldersByName(name);
+  if (folders.hasNext()) {
+    return folders.next();
+  } else {
+    return parentFolder.createFolder(name);
+  }
+}
+
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('index.html')
+      .setSandboxMode(HtmlService.SandboxMode.IFRAME);
 }
