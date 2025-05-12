@@ -1,18 +1,17 @@
 function uploadFile(formObject) {
   try {
-    // Pega os dados do formulário
     const { mes, ano, despesa, arquivo } = formObject;
 
-    // Nome da pasta principal
+    // Configurar a pasta raiz
     const rootFolderName = "Despesas";
     const rootFolder = getOrCreateFolder(rootFolderName);
 
-    // Cria subpastas para ano/mês/despesa
+    // Subpastas de organização
     const anoFolder = getOrCreateFolder(ano, rootFolder);
     const mesFolder = getOrCreateFolder(mes, anoFolder);
     const despesaFolder = getOrCreateFolder(despesa, mesFolder);
 
-    // Faz o upload dos arquivos
+    // Fazer upload dos arquivos
     const results = [];
     arquivo.forEach(file => {
       const blob = Utilities.newBlob(Utilities.base64Decode(file.data), file.type, file.name);
@@ -26,7 +25,6 @@ function uploadFile(formObject) {
   }
 }
 
-// Função para pegar ou criar uma pasta
 function getOrCreateFolder(name, parentFolder) {
   const folders = parentFolder.getFoldersByName(name);
   if (folders.hasNext()) {
@@ -34,9 +32,4 @@ function getOrCreateFolder(name, parentFolder) {
   } else {
     return parentFolder.createFolder(name);
   }
-}
-
-function doGet() {
-  return HtmlService.createHtmlOutputFromFile('index.html')
-      .setSandboxMode(HtmlService.SandboxMode.IFRAME);
 }
