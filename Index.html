@@ -5,267 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload de Recibos - Grupo Tavares</title>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" integrity="sha384-3iQaDUX3N8Y5F5eIqSfNls6KQFyh/7P5pcz6l1g8jMeqU2y+Yg==" crossorigin="anonymous">
-  <style>
-    body {
-      background: linear-gradient(135deg, #00796B 0%, #004D40 100%);
-      font-family: 'Roboto', sans-serif;
-      color: #333;
-      overflow-x: hidden;
-      position: relative;
-    }
-    .container {
-      max-width: 800px;
-      margin: 40px auto;
-      padding: 0;
-    }
-    .card {
-      background: linear-gradient(145deg, #ffffff, #f0f4f8);
-      border-radius: 16px;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 0 10px rgba(38, 166, 154, 0.5);
-      padding: 40px;
-      animation: fadeIn 0.8s ease-in;
-      position: relative;
-    }
-    .logo {
-      display: block;
-      margin: 0 auto 20px;
-      width: 120px;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-    }
-    h4 {
-      color: #004D40;
-      font-weight: 600;
-      text-align: center;
-      margin-bottom: 30px;
-      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-    }
-    .btn {
-      background: linear-gradient(45deg, #00796B, #26A69A);
-      border-radius: 10px;
-      transition: all 0.4s ease;
-      text-transform: none;
-      font-weight: 500;
-    }
-    .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(38, 166, 154, 0.6);
-    }
-    .clear-btn {
-      background: linear-gradient(45deg, #757575, #616161);
-      margin-top: 20px;
-    }
-    .input-field {
-      margin-bottom: 25px;
-    }
-    .input-field label {
-      color: #004D40;
-      font-size: 1.1em;
-      transform: translateY(-14px);
-    }
-    .input-field input:focus + label,
-    .input-field select:focus + label {
-      color: #26A69A !important;
-    }
-    .input-field input:focus,
-    .input-field select:focus {
-      border-bottom: 2px solid #26A69A !important;
-      box-shadow: 0 2px 0 0 #26A69A !important;
-    }
-    .input-field.invalid input,
-    .input-field.invalid select {
-      border-bottom: 2px solid #D32F2F !important;
-    }
-    .file-field {
-      position: relative;
-      border: 2px dashed #B0BEC5;
-      border-radius: 8px;
-      padding: 20px;
-      transition: all 0.3s ease;
-    }
-    .file-field.dragover {
-      border-color: #26A69A;
-      background: rgba(38, 166, 154, 0.1);
-    }
-    .file-count {
-      font-size: 0.9em;
-      color: #555;
-      margin-top: 10px;
-    }
-    .progress {
-      display: none;
-      background: #E0F2F1;
-      border-radius: 5px;
-      margin-top: 20px;
-    }
-    .progress .indeterminate {
-      background: #00796B;
-    }
-    #status {
-      margin-top: 20px;
-      font-size: 1.1em;
-      max-height: 250px;
-      overflow-y: auto;
-      padding: 10px;
-      background: #F5F7FA;
-      border-radius: 8px;
-    }
-    .status-message {
-      padding: 12px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-      animation: slideIn 0.4s ease;
-      display: flex;
-      align-items: center;
-    }
-    .status-success {
-      background: #E8F5E9;
-      color: #2E7D32;
-    }
-    .status-error {
-      background: #FFEBEE;
-      color: #D32F2F;
-    }
-    .status-message i {
-      margin-right: 10px;
-    }
-    footer {
-      position: absolute;
-      bottom: 20px;
-      right: 20px;
-      font-size: 0.9em;
-      color: #555;
-    }
-    footer a {
-      color: #FFD700;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      transition: all 0.3s ease;
-    }
-    footer a:hover {
-      color: #26A69A;
-    }
-    footer i {
-      font-size: 1.4em;
-      margin-right: 6px;
-      animation: pulse 2s infinite;
-    }
-    .modal {
-      max-width: 500px;
-      border-radius: 12px;
-    }
-    .modal .modal-content {
-      padding: 30px;
-    }
-    .modal .modal-footer .btn {
-      margin: 0 10px;
-    }
-    .history-section {
-      margin-top: 20px;
-      display: none;
-    }
-    .history-section.active {
-      display: block;
-    }
-    .history-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9em;
-    }
-    .history-table th, .history-table td {
-      padding: 10px;
-      border-bottom: 1px solid #E0E0E0;
-      text-align: left;
-    }
-    .history-table th {
-      background: #00796B;
-      color: white;
-    }
-    .help-btn {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #FFD700;
-      color: #004D40;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      z-index: 1000;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @keyframes slideIn {
-      from { opacity: 0; transform: translateX(-30px); }
-      to { opacity: 1; transform: translateX(0); }
-    }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-      100% { transform: scale(1); }
-    }
-    @media (max-width: 600px) {
-      .container {
-        margin: 20px;
-      }
-      .card {
-        padding: 20px;
-      }
-      h4 {
-        font-size: 1.6em;
-      }
-      .btn {
-        padding: 0 15px;
-        font-size: 0.9em;
-      }
-      footer {
-        position: static;
-        text-align: center;
-        margin-top: 20px;
-      }
-      .help-btn {
-        bottom: 10px;
-        left: 10px;
-        width: 40px;
-        height: 40px;
-      }
-      .input-field {
-        margin-bottom: 20px;
-      }
-    }
-  </style>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 </head>
 <body>
   <div class="container">
     <div class="card">
-      <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares" loading="lazy">
-      <h4>Envio de Despesas - Grupo Tavares</h4>
+      <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares" style="width: 200px; margin: 20px auto; display: block;">
+      <h4 class="center-align">Envio de Despesas - Grupo Tavares</h4>
       <form id="uploadForm">
-        <div class="file-field input-field tooltipped" data-tooltip="Arraste ou selecione PDFs (máx. 10MB cada)">
+        <div class="file-field input-field">
           <div class="btn">
-            <span><i class="material-icons left">cloud_upload</i>Selecionar Arquivos</span>
-            <input type="file" id="arquivo" name="arquivo" accept="application/pdf" multiple required aria-label="Selecionar arquivos PDF">
+            <span>Selecionar PDF(s)</span>
+            <input type="file" id="arquivo" multiple accept="application/pdf">
           </div>
           <div class="file-path-wrapper">
-            <input class="file-path validate" type="text" placeholder="Arraste ou selecione PDFs">
+            <input class="file-path validate" type="text" placeholder="Selecione os arquivos">
           </div>
-          <div class="file-count" id="fileCount">Nenhum arquivo selecionado</div>
         </div>
 
-        <div id="previewArea" style="display: none; margin-top: 20px;">
-          <h6>Pré-visualização</h6>
-          <iframe id="pdfPreview" width="100%" height="300px" style="border: 1px solid #ccc;"></iframe>
-        </div>
-
-        <div class="input-field tooltipped" data-tooltip="Selecione o mês da despesa">
-          <select id="mes" required aria-label="Mês da despesa">
-            <option value="" disabled selected>Escolha o Mês</option>
+        <div class="input-field">
+          <select id="mes">
+            <option value="" disabled selected>Escolha o mês</option>
             <option value="01">Janeiro</option>
             <option value="02">Fevereiro</option>
             <option value="03">Março</option>
@@ -279,243 +39,130 @@
             <option value="11">Novembro</option>
             <option value="12">Dezembro</option>
           </select>
-          <label for="mes">Mês da Despesa</label>
+          <label>Mês</label>
         </div>
 
-        <div class="input-field tooltipped" data-tooltip="Selecione o ano da despesa">
-          <select id="ano" required aria-label="Ano da despesa">
-            <option value="" disabled selected>Escolha o Ano</option>
-          </select>
-          <label for="ano">Ano da Despesa</label>
+        <div class="input-field">
+          <select id="ano"></select>
+          <label>Ano</label>
         </div>
 
-        <div class="input-field tooltipped" data-tooltip="Digite para buscar uma despesa" id="buscaDespesaContainer">
-          <input type="text" id="buscaDespesa" placeholder="Buscar por código ou nome da despesa..." aria-label="Buscar despesa" aria-describedby="buscaDespesaHelp">
-          <label for="buscaDespesa">Buscar Conta de Despesa</label>
-          <span id="buscaDespesaHelp" class="helper-text" style="display: none;">Digite o código ou nome da despesa</span>
-        </div>
-
-        <div class="input-field tooltipped" data-tooltip="Selecione a conta de despesa">
-          <select id="despesa" required aria-label="Conta de despesa">
-            <option value="" disabled selected>Escolha a Conta de Despesa</option>
-          </select>
+        <div class="input-field">
+          <input id="despesa" type="text" placeholder="Ex: 337050 - Material de Consumo" required>
           <label for="despesa">Conta de Despesa</label>
         </div>
 
         <div class="center-align">
-          <button class="btn waves-effect waves-light" type="submit">
-            <i class="material-icons left">send</i>Enviar Arquivos
+          <button type="submit" class="btn waves-effect waves-light">
+            <i class="material-icons left">upload</i>Enviar
           </button>
         </div>
       </form>
 
-      <div class="progress">
+      <div class="progress" style="display: none; margin-top: 20px;">
         <div class="indeterminate"></div>
       </div>
-      <div id="status" role="alert" aria-live="polite"></div>
-      <div class="center-align">
-        <button class="btn waves-effect waves-light clear-btn" id="clearForm" style="display: none;">
+
+      <div id="status" style="margin-top: 20px;"></div>
+
+      <div class="center-align" style="margin-top: 10px;">
+        <button class="btn waves-effect grey lighten-1 black-text" id="clearForm" style="display: none;">
           <i class="material-icons left">clear</i>Limpar Formulário
         </button>
-        <button class="btn waves-effect waves-light" onclick="window.open('https://drive.google.com/drive/my-drive', '_blank')">
+        <button class="btn waves-effect teal" id="openDrive">
           <i class="material-icons left">folder</i>Ver Pastas no Drive
         </button>
       </div>
 
-      <div class="history-section" id="historySection">
-        <h6><i class="material-icons left">history</i>Histórico de Uploads</h6>
-        <table class="history-table">
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Arquivos</th>
-              <th>Despesa</th>
-            </tr>
-          </thead>
-          <tbody id="historyTable"></tbody>
-        </table>
-      </div>
-
-      <footer>
+      <footer class="center-align" style="margin-top: 30px;">
         Desenvolvido por 
-        <a href="https://github.com/RyannBreston" target="_blank" data-tooltip="Confira meu trabalho no GitHub!" class="tooltipped">
-          <i class="material-icons">code</i>RyannBreston
+        <a href="https://github.com/RyannBreston" target="_blank">
+          <i class="material-icons">code</i> RyannBreston
         </a>
       </footer>
     </div>
   </div>
 
-  <div id="confirmModal" class="modal">
-    <div class="modal-content">
-      <h5>Confirmar Envio</h5>
-      <p id="confirmMessage"></p>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-close btn grey">Cancelar</a>
-      <a href="#!" class="modal-close btn" id="confirmSubmit">Confirmar</a>
-    </div>
-  </div>
-
-  <div id="helpModal" class="modal">
-    <div class="modal-content">
-      <h5>Instruções</h5>
-      <p>1. Selecione um ou mais arquivos PDF (máx. 10MB cada).<br>
-         2. Escolha o mês e o ano da despesa.<br>
-         3. Busque e selecione a conta de despesa.<br>
-         4. Clique em "Enviar Arquivos" e confirme o envio.<br>
-         5. Verifique o status e acesse as pastas no Google Drive.</p>
-    </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-close btn">Fechar</a>
-    </div>
-  </div>
-
-  <a href="#helpModal" class="help-btn modal-trigger tooltipped" data-tooltip="Ajuda">
-    <i class="material-icons">help_outline</i>
-  </a>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js" integrity="sha384-p21AgXbtTqkR2WAEQ+wZgiZyQmoP3ASvvsVOFDfObT6F2t3GrR8aQNZQkxnU+Ul7A==" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-    const allAccountsData = [
-      { value: "119 - AGUA E ESGOTO", text: "119 - AGUA E ESGOTO" },
-      { value: "377 - AGUA MINERAL", text: "377 - AGUA MINERAL" },
-      { value: "344 - ALMOCO, CAFE E LANCHES", text: "344 - ALMOCO, CAFE E LANCHES" },
-      { value: "117 - ALUGUEIS DE IMOVEIS", text: "117 - ALUGUEIS DE IMOVEIS" },
-      { value: "302 - BRINDE, DOAÇÃO E BONIFICAÇÃO", text: "302 - BRINDE, DOAÇÃO E BONIFICAÇÃO" },
-      { value: "213 - BRINDES", text: "213 - BRINDES" },
-      { value: "321 - CDL", text: "321 - CDL" },
-      { value: "108 - COMBUSTIVEIS", text: "108 - COMBUSTIVEIS" },
-      { value: "284 - COMISSAO VENDEDORES", text: "284 - COMISSAO VENDEDORES" },
-      { value: "285 - COMISSOES  OPERADOR DE CAIXA", text: "285 - COMISSOES  OPERADOR DE CAIXA" },
-      { value: "5 - COMPRAS A PRAZO", text: "5 - COMPRAS A PRAZO" },
-      { value: "248 - CONSULTORIA E MARKETING", text: "248 - CONSULTORIA E MARKETING" },
-      { value: "205 - CONTRIBUICAO SINDICAL", text: "205 - CONTRIBUICAO SINDICAL" },
-      { value: "141 - CSLL", text: "141 - CSLL" },
-      { value: "199 - CURSOS E TREINAMENTOS", text: "199 - CURSOS E TREINAMENTOS" },
-      { value: "317 - DARF INSS", text: "317 - DARF INSS" },
-      { value: "347 - DECORACAO E ORNAMENTACAO LOJA", text: "347 - DECORACAO E ORNAMENTACAO LOJA" },
-      { value: "106 - DESPESAS BANCARIAS", text: "106 - DESPESAS BANCARIAS" },
-      { value: "385 - DESPESAS DIVERSAS", text: "385 - DESPESAS DIVERSAS" },
-      { value: "10 - DESPESAS FINANCEIRAS", text: "10 - DESPESAS FINANCEIRAS" },
-      { value: "154 - ECAD", text: "154 - ECAD" },
-      { value: "133 - EMBALAGENS", text: "133 - EMBALAGENS" },
-      { value: "210 - ENERGIA ELETRICA", text: "210 - ENERGIA ELETRICA" },
-      { value: "249 - ENTREGAS", text: "249 - ENTREGAS" },
-      { value: "203 - ESTAGIARIOS E APRENDIZES", text: "203 - ESTAGIARIOS E APRENDIZES" },
-      { value: "370 - EXAME MEDICO ADMISSIONAL/DEMISSIONAL", text: "370 - EXAME MEDICO ADMISSIONAL/DEMISSIONAL" },
-      { value: "189 - FERIAS", text: "189 - FERIAS" },
-      { value: "209 - FGTS", text: "209 - FGTS" },
-      { value: "158 - FRETES", text: "158 - FRETES" },
-      { value: "329 - GASTOS COM TECNICO DE INFORMATICA TERCEIRIZADO", text: "329 - GASTOS COM TECNICO DE INFORMATICA TERCEIRIZADO" },
-      { value: "342 - HONORARIO CONTADOR", text: "342 - HONORARIO CONTADOR" },
-      { value: "318 - IMPOSTO ESTADUAL", text: "318 - IMPOSTO ESTADUAL" },
-      { value: "316 - IMPULSIONAMENTO NO FACEBOOK", text: "316 - IMPULSIONAMENTO NO FACEBOOK" },
-      { value: "310 - INTERNET", text: "310 - INTERNET" },
-      { value: "125 - IPTU", text: "125 - IPTU" },
-      { value: "120 - IRPJ", text: "120 - IRPJ" },
-      { value: "110 - MANUTENÇÃO DE MAQUINAS E EQUIPAMENTOS", text: "110 - MANUTENÇÃO DE MAQUINAS E EQUIPAMENTOS" },
-      { value: "156 - MANUTENÇÃO E REPAROS PREDIAL", text: "156 - MANUTENÇÃO E REPAROS PREDIAL" },
-      { value: "118 - MATERIAIS DE EXPEDIENTE", text: "118 - MATERIAIS DE EXPEDIENTE" },
-      { value: "105 - MATERIAIS DE LIMPEZA", text: "105 - MATERIAIS DE LIMPEZA" },
-      { value: "312 - MATERIAL DE INFORMÁTICA", text: "312 - MATERIAL DE INFORMÁTICA" },
-      { value: "212 - MENSALIDADE SISTEMA INFORMATICA", text: "212 - MENSALIDADE SISTEMA INFORMATICA" },
-      { value: "146 - MONITORAMENTO E VIGILANCIA", text: "146 - MONITORAMENTO E VIGILANCIA" },
-      { value: "320 - MONTAGEM LOJA/REFORMA", text: "320 - MONTAGEM LOJA/REFORMA" },
-      { value: "351 - MOVEIS, UTENSILIOS E BENS", text: "351 - MOVEIS, UTENSILIOS E BENS" },
-      { value: "192 - MULTA RESCISORIA", text: "192 - MULTA RESCISORIA" },
-      { value: "371 - MULTA TRABALHISTAS", text: "371 - MULTA TRABALHISTAS" },
-      { value: "352 - PAGAMENTO EMPRESTIMO BANCO", text: "352 - PAGAMENTO EMPRESTIMO BANCO" },
-      { value: "271 - PROPAGANDA E ANUNCIOS", text: "271 - PROPAGANDA E ANUNCIOS" },
-      { value: "9 - RECEITAS FINANCEIRAS", text: "9 - RECEITAS FINANCEIRAS" },
-      { value: "191 - RESCISOES CONTRATUAIS", text: "191 - RESCISOES CONTRATUAIS" },
-      { value: "357 - SACOLAS", text: "357 - SACOLAS" },
-      { value: "360 - SALARIO ASSISTENTE DE MARKETING", text: "360 - SALARIO ASSISTENTE DE MARKETING" },
-      { value: "326 - SALARIO ESTOQUISTA", text: "326 - SALARIO ESTOQUISTA" },
-      { value: "325 - SALARIO GERENTE", text: "325 - SALARIO GERENTE" },
-      { value: "372 - SALARIO MATERNIDADE", text: "372 - SALARIO MATERNIDADE" },
-      { value: "324 - SALARIO OPERADORES DE CAIXA", text: "324 - SALARIO OPERADORES DE CAIXA" },
-      { value: "327 - SALARIO SERVIÇOS GERAIS", text: "327 - SALARIO SERVIÇOS GERAIS" },
-      { value: "323 - SALARIO VENDEDORES", text: "323 - SALARIO VENDEDORES" },
-      { value: "266 - SERVICOS DE COBRANÇA", text: "266 - SERVICOS DE COBRANÇA" },
-      { value: "322 - TAXA ADMINISTRATIVA GT", text: "322 - TAXA ADMINISTRATIVA GT" },
-      { value: "341 - TAXAS ADMINISTRATIVAS CARTOES/TEF", text: "341 - TAXAS ADMINISTRATIVAS CARTOES/TEF" },
-      { value: "13 - TAXAS DE CARTAO", text: "13 - TAXAS DE CARTAO" },
-      { value: "290 - TELEFONE CELULAR", text: "290 - TELEFONE CELULAR" },
-      { value: "289 - TELEFONE FIXO", text: "289 - TELEFONE FIXO" },
-      { value: "201 - UNIFORMES", text: "201 - UNIFORMES" },
-      { value: "195 - VALES-TRANSPORTE", text: "195 - VALES-TRANSPORTE" },
-      { value: "129 - VIAGENS", text: "129 - VIAGENS" }
-    ];
-
-    function populateDespesa(filter = '') {
-      const select = document.getElementById('despesa');
-      select.innerHTML = '<option value="" disabled selected>Escolha a Conta de Despesa</option>';
-      const termo = filter.toLowerCase();
-
-      allAccountsData.forEach(({ value, text }) => {
-        if (termo === '' || value.toLowerCase().includes(termo) || text.toLowerCase().includes(termo)) {
-          const option = document.createElement('option');
-          option.value = value;
-          option.textContent = text;
-          select.appendChild(option);
-        }
-      });
-      M.FormSelect.init(select);
-    }
-
-    function populateAnos() {
-      const select = document.getElementById('ano');
-      const currentYear = new Date().getFullYear();
-      for (let year = currentYear; year >= currentYear - 5; year--) {
+    document.addEventListener('DOMContentLoaded', () => {
+      M.AutoInit();
+      const anoAtual = new Date().getFullYear();
+      const selectAno = document.getElementById('ano');
+      for (let a = anoAtual; a >= anoAtual - 10; a--) {
         const option = document.createElement('option');
-        option.value = year;
-        option.textContent = year;
-        select.appendChild(option);
+        option.value = a;
+        option.textContent = a;
+        selectAno.appendChild(option);
       }
-      M.FormSelect.init(select);
-    }
 
-    function updateFileCount() {
-      const files = document.getElementById('arquivo').files;
-      const fileCount = document.getElementById('fileCount');
-      fileCount.textContent = files.length ? `${files.length} arquivo(s) selecionado(s)` : 'Nenhum arquivo selecionado';
+      document.getElementById('uploadForm').addEventListener('submit', onSubmit);
+      document.getElementById('clearForm').addEventListener('click', clearForm);
+      document.getElementById('openDrive').addEventListener('click', () => {
+        window.open("https://drive.google.com/drive/u/0/my-drive", "_blank");
+      });
+    });
 
-      const previewArea = document.getElementById('previewArea');
-      const pdfPreview = document.getElementById('pdfPreview');
-      if (files.length && files[0].type === 'application/pdf') {
+    function onSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('arquivo');
+      const files = [...input.files];
+      if (!files.length) return M.toast({ html: 'Selecione ao menos um arquivo.' });
+
+      const mes = document.getElementById('mes').value;
+      const ano = document.getElementById('ano').value;
+      const despesa = document.getElementById('despesa').value;
+
+      if (!mes || !ano || !despesa) {
+        M.toast({ html: 'Preencha todos os campos.' });
+        return;
+      }
+
+      document.querySelector('.progress').style.display = 'block';
+      document.getElementById('status').innerHTML = '';
+
+      const arquivos = files.map(file => new Promise(resolve => {
         const reader = new FileReader();
-        reader.onload = function(e) {
-          pdfPreview.src = e.target.result;
-          previewArea.style.display = 'block';
-        };
-        reader.readAsDataURL(files[0]);
-      } else {
-        previewArea.style.display = 'none';
-      }
+        reader.onload = () => resolve({
+          name: file.name,
+          type: file.type,
+          data: reader.result.split(',')[1]
+        });
+        reader.readAsDataURL(file);
+      }));
+
+      Promise.all(arquivos).then(blobs => {
+        const formObject = { mes, ano, despesa, arquivo: blobs };
+        google.script.run
+          .withSuccessHandler(handleResponse)
+          .withFailureHandler(handleError)
+          .uploadFile(formObject);
+      });
     }
 
-    function saveUploadHistory(files, despesa, mes, ano) {
-      const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
-      const entry = {
-        date: new Date().toLocaleString('pt-BR'),
-        files: Array.from(files).map(f => f.name).join(', '),
-        despesa,
-        mes: document.querySelector(`#mes option[value="${mes}"]`).text,
-        ano
-      };
-      history.unshift(entry);
-      localStorage.setItem('uploadHistory', JSON.stringify(history.slice(0, 10)));
-      updateHistoryTable();
+    function handleResponse(resultsJson) {
+      document.querySelector('.progress').style.display = 'none';
+      const results = JSON.parse(resultsJson);
+      const status = document.getElementById('status');
+      results.forEach(r => {
+        const div = document.createElement('div');
+        div.className = `card-panel ${r.success ? 'green lighten-4 green-text' : 'red lighten-4 red-text'}`;
+        div.innerHTML = `<i class="material-icons left">${r.success ? 'check_circle' : 'error'}</i>${r.message}`;
+        status.appendChild(div);
+      });
+      document.getElementById('clearForm').style.display = 'inline-block';
     }
 
-    function updateHistoryTable() {
-      const history = JSON.parse(localStorage.getItem('uploadHistory') || '[]');
-      const tbody = document.getElementById('historyTable');
-      tbody.innerHTML = '';
-      if (history.length) {
-        document.getElementById('historySection').classList.add('active');
-        history.forEach(entry => {
-          const row = document.createElement('tr');
-          row.innerHTML = `
-            <td>${entry.date}</td>
-            <t
+    function handleError(error) {
+      document.querySelector('.progress').style.display = 'none';
+      M.toast({ html: 'Erro: ' + error.message });
+    }
+
+    function clearForm() {
+      document.getElementById('uploadForm').reset();
+      document.getElementById('status').innerHTML = '';
+      document.getElementById('clearForm').style.display = 'none';
+    }
+  </script>
+</body>
+</html>
