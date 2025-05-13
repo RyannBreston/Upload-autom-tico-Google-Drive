@@ -1,3 +1,8 @@
+function doGet() {
+  return HtmlService.createHtmlOutputFromFile('index.html')
+    .setTitle('Upload de Despesas - Grupo Tavares');
+}
+
 function uploadFile(formObject) {
   try {
     const { mes, ano, despesa, arquivo } = formObject;
@@ -12,16 +17,11 @@ function uploadFile(formObject) {
     const despesaFolder = getOrCreateFolder(despesa, mesFolder);
 
     // Fazer upload dos arquivos
-    const results = [];
-    arquivo.forEach(file => {
-      const blob = Utilities.newBlob(Utilities.base64Decode(file.data), file.type, file.name);
-      despesaFolder.createFile(blob);
-      results.push({ success: true, message: `Arquivo ${file.name} enviado com sucesso!` });
-    });
-
-    return JSON.stringify(results);
+    const blob = Utilities.newBlob(Utilities.base64Decode(arquivo.data), arquivo.type, arquivo.name);
+    despesaFolder.createFile(blob);
+    return { success: true, message: `Arquivo ${arquivo.name} enviado com sucesso!` };
   } catch (error) {
-    return JSON.stringify([{ success: false, message: `Erro: ${error.message}` }]);
+    return { success: false, message: `Erro: ${error.message}` };
   }
 }
 
