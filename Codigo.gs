@@ -1,35 +1,39 @@
-function doGet() {
+
+    function doGet() {
   return HtmlService.createHtmlOutputFromFile('index.html')
     .setTitle('Upload de Despesas - Grupo Tavares');
 }
 
-function uploadFile(formObject) {
+// Função para upload de múltiplos arquivos
+function uploadFiles(formObject) {
   try {
-    const { mes, ano, despesa, arquivo } = formObject;
+    const { mes, ano, despesa, arquivos } = formObject;
+    const rootFolder = getOrCreateFolder_("Despesas");
+    const anoFolder = getOrCreateFolder_(ano, rootFolder);
+    const mesFolder = getOrCreateFolder_(mes, anoFolder);
+    const despesaFolder = getOrCreateFolder_(despesa, mesFolder);
 
-    // Configurar a pasta raiz
-    const rootFolderName = "Despesas";
-    const rootFolder = getOrCreateFolder(rootFolderName);
+    let resultados = [];
 
-    // Subpastas de organização
-    const anoFolder = getOrCreateFolder(ano, rootFolder);
-    const mesFolder = getOrCreateFolder(mes, anoFolder);
-    const despesaFolder = getOrCreateFolder(despesa, mesFolder);
+    arquivos.forEach(file => {
+      const blob = Utilities.newBlob(Utilities.base64Decode(file.data), file.type, file.name);
+      despesaFolder.createFile(blob);
+      resultados.push(`✅ ${file.name} enviado!`);
+    });
 
-    // Fazer upload dos arquivos
-    const blob = Utilities.newBlob(Utilities.base64Decode(arquivo.data), arquivo.type, arquivo.name);
-    despesaFolder.createFile(blob);
-    return { success: true, message: `Arquivo ${arquivo.name} enviado com sucesso!` };
-  } catch (error) {
-    return { success: false, message: `Erro: ${error.message}` };
+    return {success: true, mensagens: resultados};
+  } catch (erro) {
+    return {success: false, mensagens: [`❌ Erro: ${erro.message}`]};
   }
 }
 
-function getOrCreateFolder(name, parentFolder) {
-  const folders = parentFolder.getFoldersByName(name);
+// Função para criar/obter pasta
+function getOrCreateFolder_(name, parent) {
+  if (!name) throw new Error("Nome de pasta inválido.");
+  let folders = parent ? parent.getFoldersByName(name) : DriveApp.getFoldersByName(name);
   if (folders.hasNext()) {
     return folders.next();
   } else {
-    return parentFolder.createFolder(name);
+    return parent ? parent.createFolder(name) : DriveApp.createFolder(name);
   }
 }
