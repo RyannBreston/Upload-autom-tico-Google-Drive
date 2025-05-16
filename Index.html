@@ -2,103 +2,219 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Upload de Despesas - Grupo Tavares</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Envio de Despesas - Grupo Tavares</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    body { background: #f5f7fa; }
+    .card { max-width: 480px; margin:40px auto; border-radius:14px; box-shadow:0 6px 32px 0 rgba(44,62,80,.10); padding-bottom:20px;}
+    .logo { width: 120px; margin:30px auto 10px auto; display:block; border-radius:8px; box-shadow:0 1px 6px #ccc;}
+    .main-title { font-size: 1.6rem; font-weight: 600; color: #1976d2; text-align:center; margin-bottom: 0;}
+    .subtitle { color: #607d8b; text-align:center; font-size:1rem; margin-bottom: 20px;}
+    .input-field label { color: #1976d2; }
+    .btn { background: #1976d2; border-radius: 22px; font-weight: 500; letter-spacing:1px; }
+    .btn-flat { color: #1976d2 !important; font-weight:600;}
+    .progress { border-radius: 10px; height:10px; margin-top:15px; margin-bottom:0; background:#dde5ee;}
+    .progress .determinate { background: #1976d2;}
+    .progress-percentage { text-align:center; color:#1976d2; font-weight: 600; }
+    .success-text { color: #388e3c; font-weight: 500; }
+    .error-text { color: #c62828; font-weight: 500; }
+    .collection .collection-item { border:none; background: #f6fbff; color:#455a64; border-radius: 8px; margin-bottom:4px;}
+    .toast { border-radius: 24px; font-weight: 500; background: #263238 !important;}
+    .required:after { content:" *"; color:#c62828; }
+    .file-list { margin-bottom:10px; }
+    .file-list li { font-size:0.97em; color:#37474f; }
+    @media(max-width:600px) { .card{max-width:100vw;margin:0;padding:2vw;} }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="card" style="margin-top:30px;">
-    <h4 class="center-align">Envio de Despesas</h4>
-    <form id="uploadForm">
-      <div class="file-field input-field">
-        <div class="btn">
-          <span>Selecionar Arquivo(s)</span>
-          <input type="file" id="arquivo" multiple accept=".pdf,.jpg,.jpeg,.png">
+  <div class="container">
+    <div class="card z-depth-2">
+      <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares">
+      <div class="main-title">Envio de Despesas</div>
+      <div class="subtitle">Envie comprovantes em PDF, JPG ou PNG<br>Máx. 10MB no total</div>
+      <form id="uploadForm" autocomplete="off">
+        <div class="file-field input-field">
+          <div class="btn">
+            <span><i class="material-icons left">cloud_upload</i>Selecionar</span>
+            <input type="file" id="arquivo" multiple accept=".pdf,.jpg,.jpeg,.png" required aria-label="Selecione os arquivos para upload">
+          </div>
+          <div class="file-path-wrapper">
+            <input class="file-path validate" type="text" placeholder="Selecione os arquivos">
+          </div>
+          <ul id="fileList" class="file-list"></ul>
         </div>
-        <div class="file-path-wrapper">
-          <input class="file-path validate" type="text" placeholder="Selecione os arquivos">
+        <div class="input-field">
+          <select id="ano" required></select>
+          <label for="ano" class="required">Ano</label>
         </div>
+        <div class="input-field">
+          <select id="mes" required aria-label="Selecione o mês">
+            <option value="" disabled selected>Escolha o mês</option>
+            <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+            <option value="03">Março</option><option value="04">Abril</option>
+            <option value="05">Maio</option><option value="06">Junho</option>
+            <option value="07">Julho</option><option value="08">Agosto</option>
+            <option value="09">Setembro</option><option value="10">Outubro</option>
+            <option value="11">Novembro</option><option value="12">Dezembro</option>
+          </select>
+          <label for="mes" class="required">Mês</label>
+        </div>
+        <div class="input-field">
+          <input id="despesa" type="text" required placeholder="Ex: 337050 - Material de Consumo" autocomplete="off" aria-label="Conta de Despesa">
+          <label for="despesa" class="required">Conta de Despesa</label>
+        </div>
+        <div class="center-align" style="margin-top:24px;">
+          <button type="submit" class="btn waves-effect waves-light">
+            <i class="material-icons left">send</i>Enviar
+          </button>
+          <button type="reset" class="btn-flat waves-effect" style="margin-left:10px;">Limpar</button>
+        </div>
+      </form>
+      <div class="progress" id="progressBar" style="display:none;">
+        <div class="determinate" style="width:0%;"></div>
       </div>
-      <div class="input-field">
-        <select id="mes" required>
-          <option value="" disabled selected>Escolha o mês</option>
-          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
-          <option value="03">Março</option><option value="04">Abril</option>
-          <option value="05">Maio</option><option value="06">Junho</option>
-          <option value="07">Julho</option><option value="08">Agosto</option>
-          <option value="09">Setembro</option><option value="10">Outubro</option>
-          <option value="11">Novembro</option><option value="12">Dezembro</option>
-        </select>
-        <label>Mês</label>
-      </div>
-      <div class="input-field">
-        <select id="ano" required></select>
-        <label>Ano</label>
-      </div>
-      <div class="input-field">
-        <input id="despesa" type="text" required placeholder="Ex: 337050 - Material de Consumo">
-        <label for="despesa">Conta de Despesa</label>
-      </div>
-      <div class="center-align">
-        <button type="submit" class="btn waves-effect waves-light">Enviar</button>
-      </div>
-    </form>
-    <div class="progress" id="progressBar" style="display:none;margin-top:20px;">
-      <div class="indeterminate"></div>
+      <div class="progress-percentage" id="progressPercentage" style="display:none;">0%</div>
+      <div id="status" style="margin-top:12px;"></div>
+      <h6 class="center-align" style="color:#607d8b;font-weight:600;margin-top:18px;">Últimos Arquivos Enviados</h6>
+      <ul id="uploadedFiles" class="collection"></ul>
     </div>
-    <div id="status" style="margin-top:20px;"></div>
   </div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  M.AutoInit();
-  // Popular anos
-  let anoAtual = new Date().getFullYear();
-  let selectAno = document.getElementById('ano');
-  for(let a=anoAtual; a >= anoAtual-10; a--) {
-    let opt = document.createElement('option');
-    opt.value = a; opt.textContent = a;
-    selectAno.appendChild(opt);
-  }
-});
-
-document.getElementById('uploadForm').onsubmit = async function(e){
-  e.preventDefault();
-  const status = document.getElementById('status');
-  status.innerHTML = '';
-  let files = document.getElementById('arquivo').files;
-  if (!files.length) return M.toast({html: 'Selecione ao menos um arquivo.'});
-  let arquivos = [];
-  for (let file of files) {
-    let base64 = await toBase64(file);
-    arquivos.push({name: file.name, type: file.type, data: base64.split(',')[1]});
-  }
-  let mes = document.getElementById('mes').value;
-  let ano = document.getElementById('ano').value;
-  let despesa = document.getElementById('despesa').value;
-  if (!mes || !ano || !despesa) return M.toast({html: 'Preencha todos os campos.'});
-
-  document.getElementById('progressBar').style.display='block';
-  google.script.run.withSuccessHandler(function(resp){
-    document.getElementById('progressBar').style.display='none';
-    resp.mensagens.forEach(msg => {
-      status.innerHTML += `<div>${msg}</div>`;
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      M.AutoInit();
+      // Preenche anos
+      let anoAtual = new Date().getFullYear();
+      let selectAno = document.getElementById('ano');
+      for(let a=anoAtual; a >= anoAtual-10; a--) {
+        let opt = document.createElement('option');
+        opt.value = a; opt.textContent = a;
+        selectAno.appendChild(opt);
+      }
     });
-  }).withFailureHandler(function(erro){
-    document.getElementById('progressBar').style.display='none';
-    status.innerHTML = `<div style="color:red;">Erro: ${erro.message}</div>`;
-  }).uploadFiles({mes, ano, despesa, arquivos});
-};
 
-function toBase64(file) {
-  return new Promise((resolve,reject)=>{
-    let reader = new FileReader();
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = err => reject(err);
-    reader.readAsDataURL(file);
-  });
-}
-</script>
+    document.getElementById('arquivo').addEventListener('change', updateFileList);
+
+    function updateFileList() {
+      const fileList = document.getElementById('fileList');
+      fileList.innerHTML = '';
+      const files = document.getElementById('arquivo').files;
+      for (let i = 0; i < files.length; i++) {
+        const li = document.createElement('li');
+        li.innerHTML = `<i class="material-icons left" style="font-size:1.1em;color:#1976d2;">description</i>${files[i].name} <span style="color:#607d8b;font-size:0.93em;">(${(files[i].size/1048576).toFixed(2)} MB)</span>`;
+        fileList.appendChild(li);
+      }
+    }
+
+    // Atualiza a listagem de arquivos já enviados ao mudar ano, mês ou despesa
+    document.getElementById('ano').addEventListener('change', updateUploadedList);
+    document.getElementById('mes').addEventListener('change', updateUploadedList);
+    document.getElementById('despesa').addEventListener('blur', updateUploadedList);
+
+    function updateUploadedList() {
+      const ano = document.getElementById('ano').value;
+      const mes = document.getElementById('mes').value;
+      const despesa = document.getElementById('despesa').value.trim();
+      const ul = document.getElementById('uploadedFiles');
+      ul.innerHTML = '<li class="collection-item">Carregando...</li>';
+      if (!ano || !mes || !despesa) {
+        ul.innerHTML = '';
+        return;
+      }
+      google.script.run.withSuccessHandler(function(files){
+        if (!files.length) {
+          ul.innerHTML = '<li class="collection-item">Nenhum arquivo enviado ainda.</li>';
+          return;
+        }
+        ul.innerHTML = files.map(f =>
+          `<li class="collection-item">
+            <a href="${f.url}" target="_blank" style="font-weight:500;color:#1976d2;text-decoration:underline">
+              <i class="material-icons left green-text">file_present</i>${f.name}
+            </a>
+            <span style="color:#789;"> &mdash; ${f.date}</span>
+          </li>`
+        ).join('');
+      }).listUploadedFiles(ano, mes, despesa);
+    }
+
+    // Chama ao abrir a página, caso valores já estejam selecionados
+    window.onload = updateUploadedList;
+
+    document.getElementById('uploadForm').onsubmit = async function(e){
+      e.preventDefault();
+      const status = document.getElementById('status');
+      status.innerHTML = '';
+      let files = document.getElementById('arquivo').files;
+      if (!files.length) return M.toast({html: 'Selecione ao menos um arquivo.'});
+      let totalMb = Array.from(files).reduce((s,f)=>s+f.size,0)/1048576;
+      if (totalMb > 10) return M.toast({html:'O tamanho total não pode passar de 10MB.'});
+      let arquivos = [];
+      for (let file of files) {
+        if (!["application/pdf","image/jpeg","image/png"].includes(file.type)) {
+          return M.toast({html:`Tipo de arquivo não permitido: ${file.name}`});
+        }
+        let base64 = await toBase64(file);
+        arquivos.push({name: file.name, type: file.type, data: base64.split(',')[1]});
+      }
+      let mes = document.getElementById('mes').value;
+      let ano = document.getElementById('ano').value;
+      let despesa = document.getElementById('despesa').value.trim();
+      if (!mes || !ano || !despesa) return M.toast({html: 'Preencha todos os campos.'});
+
+      // Previne envio duplo
+      document.querySelector('button[type=submit]').disabled = true;
+
+      // Barra de progresso
+      document.getElementById('progressBar').style.display='block';
+      document.getElementById('progressPercentage').style.display='block';
+      document.querySelector('.progress .determinate').style.width = '0%';
+      document.getElementById('progressPercentage').innerText = '0%';
+
+      // Progresso "fake"
+      let fake = 0;
+      let interval = setInterval(()=>{
+        if(fake<90){
+          fake++;
+          document.querySelector('.progress .determinate').style.width = fake+'%';
+          document.getElementById('progressPercentage').innerText = fake+'%';
+        } else {
+          clearInterval(interval);
+        }
+      }, 18);
+
+      google.script.run.withSuccessHandler(function(resp){
+        clearInterval(interval);
+        document.getElementById('progressBar').style.display='none';
+        document.getElementById('progressPercentage').style.display='none';
+        document.querySelector('button[type=submit]').disabled = false;
+        if(resp.success){
+          M.toast({html: 'Upload realizado com sucesso!'});
+          status.innerHTML = resp.mensagens.map(m=>`<div class="success-text">${m}</div>`).join('');
+          document.getElementById('uploadForm').reset();
+          document.getElementById('fileList').innerHTML = '';
+          updateUploadedList(); // Atualiza lista após upload
+        }else{
+          status.innerHTML = resp.mensagens.map(m=>`<div class="error-text">${m}</div>`).join('');
+        }
+      }).withFailureHandler(function(erro){
+        clearInterval(interval);
+        document.getElementById('progressBar').style.display='none';
+        document.getElementById('progressPercentage').style.display='none';
+        document.querySelector('button[type=submit]').disabled = false;
+        status.innerHTML = `<div class="error-text">Erro: ${erro.message}</div>`;
+      }).uploadFiles({mes, ano, despesa, arquivos});
+    };
+
+    function toBase64(file) {
+      return new Promise((resolve,reject)=>{
+        let reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+  </script>
 </body>
 </html>
