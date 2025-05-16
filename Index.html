@@ -33,7 +33,7 @@
     <div class="card z-depth-2">
       <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares">
       <div class="main-title">Envio de Despesas</div>
-      <div class="subtitle">Envie comprovantes em PDF, JPG ou PNG<br>Máx. 10MB no total</div>
+      <div class="subtitle">Envie comprovantes em PDF, JPG ou PNG<br>Máx. 5 arquivos e 10MB no total</div>
       <form id="uploadForm" autocomplete="off">
         <div class="file-field input-field">
           <div class="btn">
@@ -101,6 +101,19 @@
       const fileList = document.getElementById('fileList');
       fileList.innerHTML = '';
       const files = document.getElementById('arquivo').files;
+      if (files.length > 5) {
+        M.toast({html: 'Selecione no máximo 5 arquivos.'});
+        document.getElementById('arquivo').value = "";
+        fileList.innerHTML = '';
+        return;
+      }
+      let totalMb = Array.from(files).reduce((s,f)=>s+f.size,0)/1048576;
+      if (totalMb > 10) {
+        M.toast({html: 'O total dos arquivos não pode exceder 10MB.'});
+        document.getElementById('arquivo').value = "";
+        fileList.innerHTML = '';
+        return;
+      }
       for (let i = 0; i < files.length; i++) {
         const li = document.createElement('li');
         li.innerHTML = `<i class="material-icons left" style="font-size:1.1em;color:#1976d2;">description</i>${files[i].name} <span style="color:#607d8b;font-size:0.93em;">(${(files[i].size/1048576).toFixed(2)} MB)</span>`;
@@ -148,6 +161,7 @@
       status.innerHTML = '';
       let files = document.getElementById('arquivo').files;
       if (!files.length) return M.toast({html: 'Selecione ao menos um arquivo.'});
+      if (files.length > 5) return M.toast({html: 'Selecione no máximo 5 arquivos.'});
       let totalMb = Array.from(files).reduce((s,f)=>s+f.size,0)/1048576;
       if (totalMb > 10) return M.toast({html:'O tamanho total não pode passar de 10MB.'});
       let arquivos = [];
