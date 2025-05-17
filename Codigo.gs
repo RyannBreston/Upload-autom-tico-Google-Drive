@@ -59,13 +59,27 @@ function criarPlanilhaDespesas_() {
   return ss.getId();
 }
 
-// Robust - garante hierarquia única e nunca duplica pastas em nenhum nível!
+// Busca/cria única pasta "Despesas" só na raiz do Meu Drive
+function getOrCreateDespesasRoot() {
+  var myRoot = DriveApp.getRootFolder();
+  var folders = myRoot.getFoldersByName("Despesas");
+  var folder;
+  if (folders.hasNext()) {
+    folder = folders.next();
+    while (folders.hasNext()) {
+      let extra = folders.next();
+      try { extra.setTrashed(true); } catch(e) {}
+    }
+    return folder;
+  }
+  return myRoot.createFolder("Despesas");
+}
+
 function getOrCreateUniqueSubFolderByName(name, parentFolder) {
   let folders = parentFolder.getFoldersByName(name);
   let folder;
   if (folders.hasNext()) {
     folder = folders.next();
-    // Remove duplicatas se existirem
     while (folders.hasNext()) {
       let extra = folders.next();
       try { extra.setTrashed(true); } catch(e) {}
@@ -73,20 +87,6 @@ function getOrCreateUniqueSubFolderByName(name, parentFolder) {
     return folder;
   }
   return parentFolder.createFolder(name);
-}
-function getOrCreateDespesasRoot() {
-  // Só uma pasta "Despesas" na raiz do Drive
-  let folders = DriveApp.getFoldersByName("Despesas");
-  let folder;
-  if (folders.hasNext()) {
-    folder = folders.next();
-    while (folders.hasNext()) {
-      let extra = folders.next();
-      try { extra.setTrashed(true); } catch(e) {}
-    }
-    return folder;
-  }
-  return DriveApp.createFolder("Despesas");
 }
 function sanitizeFolderName(name) {
   return String(name).replace(/[\\/:*?"<>|]/g, '_').trim();
@@ -104,8 +104,8 @@ function uploadFiles(formObject) {
     };
     if(novaDespesa) salvarNovaDespesa(novaDespesa);
 
-    // Hierarquia garantida e sem duplicidade:
-    // Despesas(root) > [Conta de Despesa] > [AAAA-MM] > arquivos
+    // Garante hierarquia única e sem duplicidade:
+    // Meu Drive/Despesas > [Conta de Despesa] > [AAAA-MM] > arquivos
     const rootFolder = getOrCreateDespesasRoot();
     const contaNome = sanitizeFolderName(despesa);
     const contaFolder = getOrCreateUniqueSubFolderByName(contaNome, rootFolder);
