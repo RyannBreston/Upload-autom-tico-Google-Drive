@@ -154,6 +154,11 @@
     }
     .input-field { margin-top: 10px; }
     .btn-folder i { color: #e53935 !important; }
+    .nova-conta-area {
+      margin-top: -10px;
+      margin-bottom: 18px;
+      padding: 9px 0 0 0;
+    }
     @media(max-width:600px) { 
       .main-card {
         max-width:100vw;
@@ -164,6 +169,7 @@
       .gt-header{padding-top:26px;}
       .row-despesa { flex-direction: column; align-items:initial; gap:0;}
       .row-despesa .input-field {width:100%; margin-bottom:0;}
+      .nova-conta-area {margin-bottom:14px;}
     }
   </style>
 </head>
@@ -201,16 +207,18 @@
         </select>
         <label for="mes" class="required">Mês</label>
       </div>
-      <div class="row-despesa">
-        <div class="input-field" style="flex:2;">
-          <input id="despesa" type="text" required placeholder="Ex: 284 - Comissão Vendedores" autocomplete="off" list="listaDespesas" aria-label="Conta de Despesa">
-          <label for="despesa" class="required">Conta de Despesa</label>
-          <datalist id="listaDespesas"></datalist>
-        </div>
-        <div class="input-field" style="flex:2;">
+      <div class="input-field">
+        <input id="despesa" type="text" required placeholder="Ex: 284 - Comissão Vendedores" autocomplete="off" list="listaDespesas" aria-label="Conta de Despesa">
+        <label for="despesa" class="required">Conta de Despesa</label>
+        <datalist id="listaDespesas"></datalist>
+      </div>
+      <div class="nova-conta-area">
+        <div class="input-field" style="margin-top:0;">
           <input id="novaDespesa" type="text" placeholder="Ex: 999 - Nova Conta" autocomplete="off" aria-label="Nova conta de despesa">
-          <label for="novaDespesa">NOVA CONTA DE DESPESA</label>
+          <label for="novaDespesa">Criar Nova Conta de Despesa</label>
         </div>
+      </div>
+      <div class="row-despesa">
         <button id="btnVerPasta" type="button" class="btn btn-folder" title="Ver pasta no Google Drive">
           <i class="material-icons left">folder_open</i>Pasta
         </button>
