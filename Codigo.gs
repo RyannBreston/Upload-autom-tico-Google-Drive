@@ -1,6 +1,6 @@
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index.html')
-    .setTitle('Upload de Despesas - Grupo Tavares');
+    .setTitle('Gestão de Despesas - Grupo Tavares');
 }
 
 // Lista de despesas: busca da planilha + fixas
@@ -66,6 +66,7 @@ function criarPlanilhaDespesas_() {
   return ss.getId();
 }
 
+// Estrutura: /Despesas/[Conta de Despesa]/[AAAA-MM]/arquivo.pdf
 function uploadFiles(formObject) {
   try {
     const { mes, ano, despesa, arquivos, novaDespesa } = formObject;
@@ -73,24 +74,17 @@ function uploadFiles(formObject) {
     if (!arquivos || !arquivos.length) throw new Error("Nenhum arquivo recebido.");
     if (arquivos.length > 5) throw new Error("Selecione no máximo 5 arquivos por vez.");
 
-    // Nomes dos meses para feedback amigável
     const mesNomes = {
       "01":"Janeiro", "02":"Fevereiro", "03":"Março", "04":"Abril", "05":"Maio", "06":"Junho",
       "07":"Julho", "08":"Agosto", "09":"Setembro", "10":"Outubro", "11":"Novembro", "12":"Dezembro"
     };
 
-    // Se criou nova despesa, salva na planilha para as próximas vezes
     if(novaDespesa) salvarNovaDespesa(novaDespesa);
 
-    // Sanitização dos nomes de pastas
-    const safeAno = sanitizeFolderName(ano);
-    const safeMes = sanitizeFolderName(mes);
-    const safeDespesa = sanitizeFolderName(despesa);
-
     const rootFolder = getOrCreateFolder_("Despesas");
-    const anoFolder = getOrCreateFolder_(safeAno, rootFolder);
-    const mesFolder = getOrCreateFolder_(safeMes, anoFolder);
-    const despesaFolder = getOrCreateFolder_(safeDespesa, mesFolder);
+    const despesaFolder = getOrCreateFolder_(sanitizeFolderName(despesa), rootFolder);
+    const periodo = `${ano}-${mes}`;
+    const periodoFolder = getOrCreateFolder_(periodo, despesaFolder);
 
     let resultados = [];
     let totalMb = arquivos.reduce((sum, f) => sum + (f.data.length * 3 / 4 / 1048576), 0);
@@ -111,12 +105,12 @@ function uploadFiles(formObject) {
           return;
         }
         let nomeFinal = sanitizeFolderName(file.name);
-        if (despesaFolder.getFilesByName(nomeFinal).hasNext()) {
+        if (periodoFolder.getFilesByName(nomeFinal).hasNext()) {
           const ts = Utilities.formatDate(new Date(), Session.getScriptTimeZone(), "yyyyMMdd-HHmmss");
           nomeFinal = ts + "-" + nomeFinal;
         }
         const blob = Utilities.newBlob(Utilities.base64Decode(file.data), file.type, nomeFinal);
-        despesaFolder.createFile(blob);
+        periodoFolder.createFile(blob);
         resultados.push(`✅ ${nomeFinal} enviado!`);
       } catch (fileErr) {
         resultados.push(`❌ Erro ao enviar ${file.name}: ${fileErr.message}`);
@@ -134,19 +128,16 @@ function uploadFiles(formObject) {
   }
 }
 
+// Estrutura: /Despesas/[Conta de Despesa]/[AAAA-MM]/
 function listUploadedFiles(ano, mes, despesa) {
   try {
     if (!ano || !mes || !despesa) return [];
-    const safeAno = sanitizeFolderName(ano);
-    const safeMes = sanitizeFolderName(mes);
-    const safeDespesa = sanitizeFolderName(despesa);
-
     const rootFolder = getOrCreateFolder_("Despesas");
-    const anoFolder = getOrCreateFolder_(safeAno, rootFolder);
-    const mesFolder = getOrCreateFolder_(safeMes, anoFolder);
-    const despesaFolder = getOrCreateFolder_(safeDespesa, mesFolder);
+    const despesaFolder = getOrCreateFolder_(sanitizeFolderName(despesa), rootFolder);
+    const periodo = `${ano}-${mes}`;
+    const periodoFolder = getOrCreateFolder_(periodo, despesaFolder);
     let files = [];
-    const iterator = despesaFolder.getFiles();
+    const iterator = periodoFolder.getFiles();
     while (iterator.hasNext()) {
       const f = iterator.next();
       files.push({
@@ -166,15 +157,11 @@ function listUploadedFiles(ano, mes, despesa) {
 function getFolderUrl(ano, mes, despesa) {
   try {
     if (!ano || !mes || !despesa) return '';
-    const safeAno = sanitizeFolderName(ano);
-    const safeMes = sanitizeFolderName(mes);
-    const safeDespesa = sanitizeFolderName(despesa);
-
     const rootFolder = getOrCreateFolder_("Despesas");
-    const anoFolder = getOrCreateFolder_(safeAno, rootFolder);
-    const mesFolder = getOrCreateFolder_(safeMes, anoFolder);
-    const despesaFolder = getOrCreateFolder_(safeDespesa, mesFolder);
-    return despesaFolder.getUrl();
+    const despesaFolder = getOrCreateFolder_(sanitizeFolderName(despesa), rootFolder);
+    const periodo = `${ano}-${mes}`;
+    const periodoFolder = getOrCreateFolder_(periodo, despesaFolder);
+    return periodoFolder.getUrl();
   } catch(e) {
     Logger.log("Erro getFolderUrl: "+e);
     return '';
