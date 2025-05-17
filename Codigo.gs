@@ -1,6 +1,6 @@
 function doGet() {
   return HtmlService.createHtmlOutputFromFile('index.html')
-    .setTitle('Gestão de Despesas - Grupo Tavares');
+    .setTitle('Envio de Despesas - Grupo Tavares');
 }
 
 // Lista de despesas: busca da planilha + fixas
@@ -81,10 +81,11 @@ function uploadFiles(formObject) {
 
     if(novaDespesa) salvarNovaDespesa(novaDespesa);
 
-    const rootFolder = getOrCreateFolder_("Despesas");
-    const despesaFolder = getOrCreateFolder_(sanitizeFolderName(despesa), rootFolder);
+    // Corrigido: nunca cria duplicidade nas pastas!
+    const rootFolder = getOrCreateSingleFolder_("Despesas", null);
+    const despesaFolder = getOrCreateSingleFolder_(sanitizeFolderName(despesa), rootFolder);
     const periodo = `${ano}-${mes}`;
-    const periodoFolder = getOrCreateFolder_(periodo, despesaFolder);
+    const periodoFolder = getOrCreateSingleFolder_(periodo, despesaFolder);
 
     let resultados = [];
     let totalMb = arquivos.reduce((sum, f) => sum + (f.data.length * 3 / 4 / 1048576), 0);
@@ -132,10 +133,10 @@ function uploadFiles(formObject) {
 function listUploadedFiles(ano, mes, despesa) {
   try {
     if (!ano || !mes || !despesa) return [];
-    const rootFolder = getOrCreateFolder_("Despesas");
-    const despesaFolder = getOrCreateFolder_(sanitizeFolderName(despesa), rootFolder);
+    const rootFolder = getOrCreateSingleFolder_("Despesas", null);
+    const despesaFolder = getOrCreateSingleFolder_(sanitizeFolderName(despesa), rootFolder);
     const periodo = `${ano}-${mes}`;
-    const periodoFolder = getOrCreateFolder_(periodo, despesaFolder);
+    const periodoFolder = getOrCreateSingleFolder_(periodo, despesaFolder);
     let files = [];
     const iterator = periodoFolder.getFiles();
     while (iterator.hasNext()) {
@@ -157,10 +158,10 @@ function listUploadedFiles(ano, mes, despesa) {
 function getFolderUrl(ano, mes, despesa) {
   try {
     if (!ano || !mes || !despesa) return '';
-    const rootFolder = getOrCreateFolder_("Despesas");
-    const despesaFolder = getOrCreateFolder_(sanitizeFolderName(despesa), rootFolder);
+    const rootFolder = getOrCreateSingleFolder_("Despesas", null);
+    const despesaFolder = getOrCreateSingleFolder_(sanitizeFolderName(despesa), rootFolder);
     const periodo = `${ano}-${mes}`;
-    const periodoFolder = getOrCreateFolder_(periodo, despesaFolder);
+    const periodoFolder = getOrCreateSingleFolder_(periodo, despesaFolder);
     return periodoFolder.getUrl();
   } catch(e) {
     Logger.log("Erro getFolderUrl: "+e);
@@ -168,11 +169,18 @@ function getFolderUrl(ano, mes, despesa) {
   }
 }
 
-function getOrCreateFolder_(name, parent) {
+// Função que NUNCA duplica pastas, SEMPRE pega a única existente (ou cria se não existe)
+function getOrCreateSingleFolder_(name, parent) {
   if (!name) throw new Error("Nome de pasta inválido.");
   let folders = parent ? parent.getFoldersByName(name) : DriveApp.getFoldersByName(name);
   if (folders.hasNext()) {
-    return folders.next();
+    // Elimina duplicidade: pega sempre a primeira, apaga as demais, se houver
+    let first = folders.next();
+    while (folders.hasNext()) {
+      let extra = folders.next();
+      try { extra.setTrashed(true); } catch(e) {}
+    }
+    return first;
   } else {
     return parent ? parent.createFolder(name) : DriveApp.createFolder(name);
   }
