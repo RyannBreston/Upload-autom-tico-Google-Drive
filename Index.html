@@ -97,16 +97,19 @@
       margin: 26px 0 16px 0;
       width: 100%;
     }
+    .row-despesa { display: flex; align-items: flex-end; gap:10px; }
     @media(max-width:600px) { 
       .main-card{max-width:100vw;margin:0;padding:2vw;}
       .gt-title {font-size:1.35rem;}
+      .row-despesa { flex-direction: column; align-items:initial; gap:0;}
+      .row-despesa .input-field {width:100%; margin-bottom:0;}
     }
   </style>
 </head>
 <body>
   <div class="main-card z-depth-2">
     <div class="gt-header">
-      <img src="https://images.unsplash.com/photo-1715913521434-39d1a8b1c40b?auto=format&fit=facearea&w=512&h=512&q=80" class="gt-logo" alt="Logotipo Grupo Tavares">
+      <img src="https://drive.google.com/uc?export=view&id=1pdzQtOp0iGQOMPDXvJex5qyNoNpZRmak" class="gt-logo" alt="Logotipo Grupo Tavares">
       <div class="gt-title">Envio de Despesas</div>
       <div class="gt-subtitle">Envie comprovantes em PDF, JPG ou PNG<br>Máx. 5 arquivos e 10MB no total</div>
     </div>
@@ -141,10 +144,19 @@
         </select>
         <label for="mes" class="required">Mês</label>
       </div>
-      <div class="input-field">
-        <input id="despesa" type="text" required placeholder="Ex: 119 - AGUA E ESGOTO" autocomplete="off" list="listaDespesas" aria-label="Conta de Despesa">
-        <label for="despesa" class="required">Conta de Despesa</label>
-        <datalist id="listaDespesas"></datalist>
+      <div class="row-despesa">
+        <div class="input-field" style="flex:2;">
+          <input id="despesa" type="text" required placeholder="Ex: 119 - AGUA E ESGOTO" autocomplete="off" list="listaDespesas" aria-label="Conta de Despesa">
+          <label for="despesa" class="required">Conta de Despesa</label>
+          <datalist id="listaDespesas"></datalist>
+        </div>
+        <div class="input-field" style="flex:2;">
+          <input id="novaDespesa" type="text" placeholder="Nova despesa: Ex: 999 - NOME" autocomplete="off" aria-label="Criar nova conta de despesa">
+          <label for="novaDespesa">Nova Despesa?</label>
+        </div>
+        <button id="btnVerPasta" type="button" class="btn" style="margin-bottom:15px;flex:1;" title="Ver pasta no Google Drive">
+          <i class="material-icons left">folder_open</i>Ver Pasta
+        </button>
       </div>
       <div class="center-align" style="margin-top:24px;">
         <button type="submit" class="btn waves-effect waves-light">
@@ -204,11 +216,18 @@
     document.getElementById('ano').addEventListener('change', updateUploadedList);
     document.getElementById('mes').addEventListener('change', updateUploadedList);
     document.getElementById('despesa').addEventListener('blur', updateUploadedList);
+    document.getElementById('novaDespesa').addEventListener('blur', updateUploadedList);
+
+    function getDespesaSelecionada() {
+      let nova = document.getElementById('novaDespesa').value.trim();
+      if(nova) return nova;
+      return document.getElementById('despesa').value.trim();
+    }
 
     function updateUploadedList() {
       const ano = document.getElementById('ano').value;
       const mes = document.getElementById('mes').value;
-      const despesa = document.getElementById('despesa').value.trim();
+      const despesa = getDespesaSelecionada();
       const ul = document.getElementById('uploadedFiles');
       ul.innerHTML = '<li class="collection-item">Carregando...</li>';
       if (!ano || !mes || !despesa) {
@@ -268,7 +287,7 @@
       }
       let mes = document.getElementById('mes').value;
       let ano = document.getElementById('ano').value;
-      let despesa = document.getElementById('despesa').value.trim();
+      let despesa = getDespesaSelecionada();
       if (!mes || !ano || !despesa) return M.toast({html: 'Preencha todos os campos.'});
 
       document.querySelector('button[type=submit]').disabled = true;
@@ -289,9 +308,11 @@
         }
       }, 18);
 
-      // Mostra estimativa de tempo
       let estimativa = (totalMb * 2).toFixed(0);
       M.toast({html:`Enviando... Pode levar cerca de ${estimativa} segundos.`});
+
+      // Checa se criou uma nova despesa, para salvar na planilha
+      let novaDespesa = document.getElementById('novaDespesa').value.trim();
 
       google.script.run.withSuccessHandler(function(resp){
         clearInterval(interval);
@@ -303,6 +324,7 @@
           status.innerHTML = resp.mensagens.map(m=>`<div class="success-text">${m}</div>`).join('');
           document.getElementById('uploadForm').reset();
           document.getElementById('fileList').innerHTML = '';
+          carregarDespesas(); // Atualiza sugestões se nova despesa foi criada
           updateUploadedList();
         }else{
           status.innerHTML = resp.mensagens.map(m=>`<div class="error-text">${m}</div>`).join('');
@@ -313,7 +335,25 @@
         document.getElementById('progressPercentage').style.display='none';
         document.querySelector('button[type=submit]').disabled = false;
         status.innerHTML = `<div class="error-text">Erro: ${erro.message}</div>`;
-      }).uploadFiles({mes, ano, despesa, arquivos});
+      }).uploadFiles({mes, ano, despesa, arquivos, novaDespesa});
+    };
+
+    // Botão "Ver Pasta"
+    document.getElementById('btnVerPasta').onclick = function() {
+      let ano = document.getElementById('ano').value;
+      let mes = document.getElementById('mes').value;
+      let despesa = getDespesaSelecionada();
+      if(!ano || !mes || !despesa) {
+        M.toast({html:"Selecione ano, mês e despesa!"});
+        return;
+      }
+      google.script.run.withSuccessHandler(function(url){
+        if(url) {
+          window.open(url, "_blank");
+        } else {
+          M.toast({html:"Pasta não encontrada ou criada ainda!"});
+        }
+      }).getFolderUrl(ano, mes, despesa);
     };
 
     function toBase64(file) {
