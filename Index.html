@@ -4,88 +4,168 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Envio de Despesas - Grupo Tavares</title>
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:700,400&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style>
-    body { background: #f5f7fa; }
-    .card { max-width: 480px; margin:40px auto; border-radius:14px; box-shadow:0 6px 32px 0 rgba(44,62,80,.10); padding-bottom:20px;}
-    .logo { width: 120px; margin:30px auto 10px auto; display:block; border-radius:8px; box-shadow:0 1px 6px #ccc;}
-    .main-title { font-size: 1.6rem; font-weight: 600; color: #1976d2; text-align:center; margin-bottom: 0;}
-    .subtitle { color: #607d8b; text-align:center; font-size:1rem; margin-bottom: 20px;}
-    .input-field label { color: #1976d2; }
-    .btn { background: #1976d2; border-radius: 22px; font-weight: 500; letter-spacing:1px; }
-    .btn-flat { color: #1976d2 !important; font-weight:600;}
-    .progress { border-radius: 10px; height:10px; margin-top:15px; margin-bottom:0; background:#dde5ee;}
-    .progress .determinate { background: #1976d2;}
-    .progress-percentage { text-align:center; color:#1976d2; font-weight: 600; }
+    :root {
+      --primary: #eb3920;
+      --primary-dark: #c22f19;
+      --primary-light: #fc6551;
+      --background: #f8f8f8;
+      --card: #fff;
+      --shadow: 0 8px 32px 0 rgba(44,62,80,.10);
+    }
+    body {
+      background: var(--background);
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    .main-card {
+      max-width: 500px;
+      margin: 48px auto;
+      border-radius: 22px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+      padding-bottom: 28px;
+      position: relative;
+      overflow: hidden;
+    }
+    .gt-header {
+      background: var(--primary);
+      padding: 36px 0 24px 0;
+      text-align: center;
+      border-radius: 0 0 38px 38px;
+      box-shadow: 0 6px 32px 0 rgba(44,62,80,.10);
+    }
+    .gt-logo {
+      width: 110px;
+      margin-bottom: 10px;
+      border-radius: 20px;
+      box-shadow: 0 2px 14px #d32b17;
+      background: #fff;
+      padding: 8px;
+    }
+    .gt-title {
+      color: #fff;
+      font-size: 2rem;
+      letter-spacing: 2px;
+      font-weight: 700;
+      margin-bottom: 2px;
+      text-shadow: 0 2px 4px rgba(44,62,80,.08);
+    }
+    .gt-subtitle {
+      color: #fff;
+      font-size: 1.08rem;
+      font-weight: 400;
+      margin-bottom: 0;
+      opacity: .93;
+    }
+    .input-field label { color: var(--primary-dark);}
+    .btn {
+      background: var(--primary);
+      border-radius: 22px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 8px #eb392020;
+      transition: background .2s;
+    }
+    .btn:hover, .btn:focus {
+      background: var(--primary-dark);
+    }
+    .btn-flat { color: var(--primary) !important; font-weight:600; }
+    .progress { border-radius: 10px; height:10px; background: var(--primary-light);}
+    .progress .determinate { background: var(--primary);}
+    .progress-percentage { text-align:center; color:var(--primary); font-weight: 600; }
     .success-text { color: #388e3c; font-weight: 500; }
     .error-text { color: #c62828; font-weight: 500; }
-    .collection .collection-item { border:none; background: #f6fbff; color:#455a64; border-radius: 8px; margin-bottom:4px;}
+    .collection .collection-item {
+      border:none;
+      background: #f6fbff;
+      color:#263238;
+      border-radius: 8px;
+      margin-bottom:4px;
+      font-size:1.06em;
+    }
     .toast { border-radius: 24px; font-weight: 500; background: #263238 !important;}
     .required:after { content:" *"; color:#c62828; }
     .file-list { margin-bottom:10px; }
-    .file-list li { font-size:0.97em; color:#37474f; }
-    @media(max-width:600px) { .card{max-width:100vw;margin:0;padding:2vw;} }
+    .file-list li { font-size:0.99em; color:#37474f; }
+    #envioDica { color:#607d8b;font-size:0.98em;margin-bottom:10px; }
+    .gt-divider {
+      border: 0;
+      border-top: 2px solid #eee;
+      margin: 26px 0 16px 0;
+      width: 100%;
+    }
+    @media(max-width:600px) { 
+      .main-card{max-width:100vw;margin:0;padding:2vw;}
+      .gt-title {font-size:1.35rem;}
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card z-depth-2">
-      <img src="https://drive.google.com/uc?export=view&id=1gIudZYZ4IsG5q99L8MLSEQ2jMCxeEdpQ" class="logo" alt="Logotipo Grupo Tavares">
-      <div class="main-title">Envio de Despesas</div>
-      <div class="subtitle">Envie comprovantes em PDF, JPG ou PNG<br>Máx. 5 arquivos e 10MB no total</div>
-      <form id="uploadForm" autocomplete="off">
-        <div class="file-field input-field">
-          <div class="btn">
-            <span><i class="material-icons left">cloud_upload</i>Selecionar</span>
-            <input type="file" id="arquivo" multiple accept=".pdf,.jpg,.jpeg,.png" required aria-label="Selecione os arquivos para upload">
-          </div>
-          <div class="file-path-wrapper">
-            <input class="file-path validate" type="text" placeholder="Selecione os arquivos">
-          </div>
-          <ul id="fileList" class="file-list"></ul>
-        </div>
-        <div class="input-field">
-          <select id="ano" required></select>
-          <label for="ano" class="required">Ano</label>
-        </div>
-        <div class="input-field">
-          <select id="mes" required aria-label="Selecione o mês">
-            <option value="" disabled selected>Escolha o mês</option>
-            <option value="01">Janeiro</option><option value="02">Fevereiro</option>
-            <option value="03">Março</option><option value="04">Abril</option>
-            <option value="05">Maio</option><option value="06">Junho</option>
-            <option value="07">Julho</option><option value="08">Agosto</option>
-            <option value="09">Setembro</option><option value="10">Outubro</option>
-            <option value="11">Novembro</option><option value="12">Dezembro</option>
-          </select>
-          <label for="mes" class="required">Mês</label>
-        </div>
-        <div class="input-field">
-          <input id="despesa" type="text" required placeholder="Ex: 337050 - Material de Consumo" autocomplete="off" aria-label="Conta de Despesa">
-          <label for="despesa" class="required">Conta de Despesa</label>
-        </div>
-        <div class="center-align" style="margin-top:24px;">
-          <button type="submit" class="btn waves-effect waves-light">
-            <i class="material-icons left">send</i>Enviar
-          </button>
-          <button type="reset" class="btn-flat waves-effect" style="margin-left:10px;">Limpar</button>
-        </div>
-      </form>
-      <div class="progress" id="progressBar" style="display:none;">
-        <div class="determinate" style="width:0%;"></div>
-      </div>
-      <div class="progress-percentage" id="progressPercentage" style="display:none;">0%</div>
-      <div id="status" style="margin-top:12px;"></div>
-      <h6 class="center-align" style="color:#607d8b;font-weight:600;margin-top:18px;">Últimos Arquivos Enviados</h6>
-      <ul id="uploadedFiles" class="collection"></ul>
+  <div class="main-card z-depth-2">
+    <div class="gt-header">
+      <img src="https://images.unsplash.com/photo-1715913521434-39d1a8b1c40b?auto=format&fit=facearea&w=512&h=512&q=80" class="gt-logo" alt="Logotipo Grupo Tavares">
+      <div class="gt-title">Envio de Despesas</div>
+      <div class="gt-subtitle">Envie comprovantes em PDF, JPG ou PNG<br>Máx. 5 arquivos e 10MB no total</div>
     </div>
+    <div id="envioDica" class="center-align">
+      O envio pode demorar alguns segundos dependendo do tamanho dos arquivos e da sua conexão.<br>
+      <b>Dica:</b> Prefira arquivos menores que 3MB.
+    </div>
+    <form id="uploadForm" autocomplete="off" style="margin-top:18px;">
+      <div class="file-field input-field">
+        <div class="btn">
+          <span><i class="material-icons left">cloud_upload</i>Selecionar</span>
+          <input type="file" id="arquivo" multiple accept=".pdf,.jpg,.jpeg,.png" required aria-label="Selecione os arquivos para upload">
+        </div>
+        <div class="file-path-wrapper">
+          <input class="file-path validate" type="text" placeholder="Selecione os arquivos">
+        </div>
+        <ul id="fileList" class="file-list"></ul>
+      </div>
+      <div class="input-field">
+        <select id="ano" required></select>
+        <label for="ano" class="required">Ano</label>
+      </div>
+      <div class="input-field">
+        <select id="mes" required aria-label="Selecione o mês">
+          <option value="" disabled selected>Escolha o mês</option>
+          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+          <option value="03">Março</option><option value="04">Abril</option>
+          <option value="05">Maio</option><option value="06">Junho</option>
+          <option value="07">Julho</option><option value="08">Agosto</option>
+          <option value="09">Setembro</option><option value="10">Outubro</option>
+          <option value="11">Novembro</option><option value="12">Dezembro</option>
+        </select>
+        <label for="mes" class="required">Mês</label>
+      </div>
+      <div class="input-field">
+        <input id="despesa" type="text" required placeholder="Ex: 337050 - Material de Consumo" autocomplete="off" list="listaDespesas" aria-label="Conta de Despesa">
+        <label for="despesa" class="required">Conta de Despesa</label>
+        <datalist id="listaDespesas"></datalist>
+      </div>
+      <div class="center-align" style="margin-top:24px;">
+        <button type="submit" class="btn waves-effect waves-light">
+          <i class="material-icons left">send</i>Enviar
+        </button>
+        <button type="reset" class="btn-flat waves-effect" style="margin-left:10px;">Limpar</button>
+      </div>
+    </form>
+    <div class="progress" id="progressBar" style="display:none;">
+      <div class="determinate" style="width:0%;"></div>
+    </div>
+    <div class="progress-percentage" id="progressPercentage" style="display:none;">0%</div>
+    <div id="status" style="margin-top:12px;"></div>
+    <hr class="gt-divider">
+    <h6 class="center-align" style="color:#607d8b;font-weight:600;margin-top:10px;">Últimos Arquivos Enviados</h6>
+    <ul id="uploadedFiles" class="collection"></ul>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       M.AutoInit();
-      // Preenche anos
       let anoAtual = new Date().getFullYear();
       let selectAno = document.getElementById('ano');
       for(let a=anoAtual; a >= anoAtual-10; a--) {
@@ -116,12 +196,11 @@
       }
       for (let i = 0; i < files.length; i++) {
         const li = document.createElement('li');
-        li.innerHTML = `<i class="material-icons left" style="font-size:1.1em;color:#1976d2;">description</i>${files[i].name} <span style="color:#607d8b;font-size:0.93em;">(${(files[i].size/1048576).toFixed(2)} MB)</span>`;
+        li.innerHTML = `<i class="material-icons left" style="font-size:1.1em;color:#eb3920;">description</i>${files[i].name} <span style="color:#607d8b;font-size:0.93em;">(${(files[i].size/1048576).toFixed(2)} MB)</span>`;
         fileList.appendChild(li);
       }
     }
 
-    // Atualiza a listagem de arquivos já enviados ao mudar ano, mês ou despesa
     document.getElementById('ano').addEventListener('change', updateUploadedList);
     document.getElementById('mes').addEventListener('change', updateUploadedList);
     document.getElementById('despesa').addEventListener('blur', updateUploadedList);
@@ -143,7 +222,7 @@
         }
         ul.innerHTML = files.map(f =>
           `<li class="collection-item">
-            <a href="${f.url}" target="_blank" style="font-weight:500;color:#1976d2;text-decoration:underline">
+            <a href="${f.url}" target="_blank" style="font-weight:500;color:#eb3920;text-decoration:underline">
               <i class="material-icons left green-text">file_present</i>${f.name}
             </a>
             <span style="color:#789;"> &mdash; ${f.date}</span>
@@ -152,8 +231,23 @@
       }).listUploadedFiles(ano, mes, despesa);
     }
 
-    // Chama ao abrir a página, caso valores já estejam selecionados
-    window.onload = updateUploadedList;
+    // Buscar lista de contas de despesa e preencher datalist
+    function carregarDespesas() {
+      google.script.run.withSuccessHandler(function(lista){
+        const datalist = document.getElementById('listaDespesas');
+        datalist.innerHTML = '';
+        lista.forEach(function(item){
+          const opt = document.createElement('option');
+          opt.value = item;
+          datalist.appendChild(opt);
+        });
+      }).getContasDespesas();
+    }
+
+    window.onload = function() {
+      updateUploadedList();
+      carregarDespesas();
+    };
 
     document.getElementById('uploadForm').onsubmit = async function(e){
       e.preventDefault();
@@ -177,16 +271,13 @@
       let despesa = document.getElementById('despesa').value.trim();
       if (!mes || !ano || !despesa) return M.toast({html: 'Preencha todos os campos.'});
 
-      // Previne envio duplo
       document.querySelector('button[type=submit]').disabled = true;
 
-      // Barra de progresso
       document.getElementById('progressBar').style.display='block';
       document.getElementById('progressPercentage').style.display='block';
       document.querySelector('.progress .determinate').style.width = '0%';
       document.getElementById('progressPercentage').innerText = '0%';
 
-      // Progresso "fake"
       let fake = 0;
       let interval = setInterval(()=>{
         if(fake<90){
@@ -198,6 +289,10 @@
         }
       }, 18);
 
+      // Mostra estimativa de tempo
+      let estimativa = (totalMb * 2).toFixed(0);
+      M.toast({html:`Enviando... Pode levar cerca de ${estimativa} segundos.`});
+
       google.script.run.withSuccessHandler(function(resp){
         clearInterval(interval);
         document.getElementById('progressBar').style.display='none';
@@ -208,7 +303,7 @@
           status.innerHTML = resp.mensagens.map(m=>`<div class="success-text">${m}</div>`).join('');
           document.getElementById('uploadForm').reset();
           document.getElementById('fileList').innerHTML = '';
-          updateUploadedList(); // Atualiza lista após upload
+          updateUploadedList();
         }else{
           status.innerHTML = resp.mensagens.map(m=>`<div class="error-text">${m}</div>`).join('');
         }
