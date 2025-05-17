@@ -3,6 +3,22 @@ function doGet() {
     .setTitle('Upload de Despesas - Grupo Tavares');
 }
 
+// Retorna uma lista de contas de despesas (edite conforme desejar!)
+function getContasDespesas() {
+  return [
+    "337050 - Material de Consumo",
+    "339030 - Material de Expediente",
+    "339032 - Material de Limpeza",
+    "339036 - Combustíveis e Lubrificantes",
+    "339039 - Serviços de Terceiros Pessoa Jurídica",
+    "339040 - Serviços de Terceiros Pessoa Física",
+    "339093 - Indenizações e Restituições",
+    "449052 - Obras e Instalações",
+    "449056 - Equipamentos e Material Permanente"
+    // ...adicione mais aqui...
+  ];
+}
+
 function uploadFiles(formObject) {
   try {
     const { mes, ano, despesa, arquivos } = formObject;
