@@ -4,221 +4,125 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <title>Envio de Despesas - Grupo Tavares</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Roboto+Mono:400,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700|Roboto+Mono:400,500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
   <style>
     :root {
-      --main-bg: #f6f8fb;
-      --main-card-bg: #fff;
-      --main-text: #23272F;
-      --accent: #1a237e; /* Indigo darken-4 */
-      --accent2: #283593;/* Indigo darken-3 */
-      --collection-bg: #f4f7fa;
-      --shadow: 0 2px 12px 0 rgba(30,40,120,0.13);
-      --chip-pdf: #ffebee; /* Red lighten-5 */
-      --chip-pdf-text: #c62828; /* Red darken-3 */
-      --chip-img: #e3f2fd; /* Blue lighten-5 */
-      --chip-img-text: #1565c0; /* Blue darken-3 */
+      --main-bg: #f4f6f9; 
+      --main-card-bg: #ffffff;
+      --main-text: #333a45; 
+      --accent: #1e3a8a; 
+      --accent2: #2563eb; 
+      --collection-bg: #f8fafc; 
+      --shadow-panel: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.07);
+      --shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+      --chip-pdf-bg: #fee2e2; --chip-pdf-text: #b91c1c; 
+      --chip-img-bg: #dbeafe; --chip-img-text: #1d4ed8; 
+      --chip-default-bg: #f3f4f6; --chip-default-text: #4b5563; 
+      --danger-bg: #fee2e2; --danger-text: #b91c1c;
+      --info-text-light: #64748b; /* Tailwind slate-500 */
+      --border-color-soft: #e2e8f0; /* Tailwind slate-200 */
     }
-    html, body {
-      height: 100%; margin: 0; padding: 0;
-      background: var(--main-bg); color: var(--main-text);
-      font-family: 'Montserrat', Arial, sans-serif;
-      min-width: 100vw; min-height: 100vh;
+    button, .collection-item, #fileListPreview li {
+        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
     }
-    .layout-wrap {
-      display: flex; flex-direction: column; align-items: center;
-      min-height: 100vh; justify-content: flex-start;
-      padding-bottom: 40px; /* Espaço para o rodapé não sobrepor */
-    }
-    .professional-panel {
-      background: var(--main-card-bg); color: var(--main-text);
-      border-radius: 18px; box-shadow: var(--shadow);
-      padding: 32px 28px 22px 28px; margin: 30px 10px 0 10px; /* Ajustado margin-top */
-      width: 900px; max-width: 98vw;
-      display: flex; flex-direction: column; gap: 0px; box-sizing: border-box;
-    }
-    .panel-row {
-      display: flex; flex-direction: row; gap: 32px; width: 100%;
-      align-items: flex-start; justify-content: space-between;
-    }
-    .form-section {
-      flex: 1 1 380px; max-width: 390px; min-width: 285px;
-      display: flex; flex-direction: column; gap: 12px; /* Aumentado gap */
-    }
-    .files-section {
-      flex: 1 1 390px; max-width: 430px; min-width: 320px;
-      display: flex; flex-direction: column; gap: 0;
-      background: #f9fafc; border-radius: 12px;
-      box-shadow: 0 1px 6px #1a237e0e; padding: 20px 16px; /* Ajustado padding */
-      min-height: 380px; position: relative;
-      overflow-y: auto; max-height: 450px; /* Ajustado max-height */
-    }
-    .notification-area {
-      position: absolute; top: 10px; right: 12px; z-index: 1050;
-      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
-      min-width: 220px; max-width: 320px; pointer-events: none;
-    }
-    .custom-notification {
-      display: flex; align-items: center;
-      border-left-width: 5px; border-left-style: solid;
-      border-radius: 8px; box-shadow: 0 2px 18px #1a237e19;
-      font-size: 0.95em; font-weight: 500; /* Ajustado font-size */
-      padding: 10px 15px 10px 12px; /* Ajustado padding */
-      min-width: 190px; pointer-events: auto; opacity: 0.96;
-      animation: fadeInNotif .3s; transition: opacity .35s;
-    }
-    .custom-notification.info    { background: #e3f2fd; border-left-color: #2196f3; color: #1565c0; } /* Blue */
-    .custom-notification.success { background: #e8f5e9; border-left-color: #4caf50; color: #2e7d32; } /* Green */
-    .custom-notification.error   { background: #ffebee; border-left-color: #f44336; color: #c62828; } /* Red */
-    .custom-notification .material-icons { margin-right: 8px; font-size: 1.3em; vertical-align: middle; } /* Aumentado ícone */
-    .custom-notification .close-notif {
-      margin-left: auto; /* Empurra para a direita */
-      padding-left:10px; /* Espaço para clicar */
-      color: inherit; cursor: pointer; font-size: 1.3em;
-      background: none; border: none; outline: none; box-shadow: none;
-      opacity: 0.7; transition: opacity .17s;
-    }
+    html, body { height: 100%; margin: 0; padding: 0; background: var(--main-bg); color: var(--main-text); font-family: 'Montserrat', Arial, sans-serif; font-weight: 400; min-width: 100vw; min-height: 100vh; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;}
+    .layout-wrap { display: flex; flex-direction: column; align-items: center; min-height: 100vh; justify-content: flex-start; padding: 0 10px 40px 10px; }
+    .professional-panel { background: var(--main-card-bg); color: var(--main-text); border-radius: 16px; box-shadow: var(--shadow-panel); padding: 30px 28px 25px 28px; margin: 25px 0 0 0; width: 920px; max-width: calc(100vw - 20px); display: flex; flex-direction: column; box-sizing: border-box;}
+    .panel-row { display: flex; flex-direction: row; gap: 30px; width: 100%; align-items: flex-start; justify-content: space-between;}
+    .form-section { flex: 1 1 45%; min-width: 300px; display: flex; flex-direction: column; gap: 16px;}
+    .files-section { flex: 1 1 55%; min-width: 320px; display: flex; flex-direction: column; gap: 0; background: var(--collection-bg); border-radius: 12px; border: 1px solid #e2e8f0; box-shadow: inset 0 1px 4px rgba(0,0,0,0.03); padding: 20px; min-height: 400px; position: relative; overflow-y: auto; max-height: 480px;}
+    .files-section::-webkit-scrollbar { width: 10px; }
+    .files-section::-webkit-scrollbar-track { background: rgba(0,0,0,0.03); border-radius: 10px; }
+    .files-section::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; } 
+    .files-section::-webkit-scrollbar-thumb:hover { background: #94a3b8; } 
+    #fileListPreview::-webkit-scrollbar { width: 7px; }
+    #fileListPreview::-webkit-scrollbar-track { background: rgba(0,0,0,0.02); border-radius: 10px; }
+    #fileListPreview::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; } 
+    #fileListPreview::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+    .notification-area { position: fixed; top: 20px; right: 20px; z-index: 1055; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; max-width: 340px; pointer-events: none;}
+    .custom-notification { display: flex; align-items: center; border-left-width: 5px; border-left-style: solid; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08); font-size: 0.92rem; font-weight: 500; padding: 12px 18px 12px 15px; min-width: 250px; pointer-events: auto; opacity: 0; animation: fadeInSlideRight .4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;}
+    @keyframes fadeInSlideRight { from { opacity: 0; transform: translateX(30px);} to { opacity: 0.97; transform: translateX(0);} }
+    .custom-notification.info    { background: var(--chip-img-bg); border-left-color: var(--chip-img-text); color: var(--chip-img-text); }
+    .custom-notification.success { background: #dcfce7; border-left-color: #16a34a; color: #14532d; } 
+    .custom-notification.error   { background: var(--chip-pdf-bg); border-left-color: var(--chip-pdf-text); color: var(--chip-pdf-text); }
+    .custom-notification .material-icons { margin-right: 10px; font-size: 1.4em; }
+    .custom-notification .close-notif { margin-left: auto; padding-left:10px; color: inherit; cursor: pointer; font-size: 1.3em; background: none; border: none; outline: none; box-shadow: none; opacity: 0.7; transition: opacity .17s; }
     .custom-notification .close-notif:hover { opacity: 1; }
-    @keyframes fadeInNotif { from { opacity: 0; transform: translateX(20px);} to { opacity: 0.96; transform: translateX(0);} }
-
-    .gt-logo-anim {
-      font-size: 2rem; font-weight: 900; letter-spacing: 1.3px; color: var(--accent);
-      padding-bottom: 4px; border-bottom: 2.5px solid var(--accent2);
-      margin-bottom: 3px; width: max-content; user-select: none;
-    }
-    .gt-subtitle { color: #546e7a; font-size: 1.05rem; margin-bottom: 20px; letter-spacing: .1px; }
-
-    .footer-dev { /* Estilizado para ficar no rodapé da página */
-      text-align: center; width:100%;
-      padding: 15px 0; margin-top:30px;
-      font-size: 0.95em; color: #78909c; /* Cinza azulado */
-      border-top: 1px solid #e0e0e0; /* Divisor sutil */
-    }
-    .footer-dev a { color: var(--accent); text-decoration: none; font-weight: 600; }
+    .gt-logo-anim { font-size: 1.9rem; font-weight: 700; letter-spacing: 0.5px; color: var(--accent); padding-bottom: 5px; border-bottom: 3px solid var(--accent2); margin-bottom: 5px; width: fit-content; user-select: none;}
+    .gt-subtitle { color: #64748b; font-size: 1rem; margin-bottom: 25px; } 
+    .footer-dev { display: flex; flex-direction: row; align-items: center; justify-content: center; gap: 8px; text-align: center; width: 100%; padding: 25px 15px; margin-top: 40px; font-size: 0.9rem; color: #64748b; border-top: 1px solid #e2e8f0;}
+    .footer-dev span { line-height: 1.5; }
+    .footer-dev a { color: var(--accent); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 5px; }
     .footer-dev a:hover { color: var(--accent2); text-decoration: underline; }
-    .footer-dev .github-icon { width: 18px; height: 18px; vertical-align: middle; margin-right: 4px; }
-
-    .input-field label { color: var(--accent); font-weight:500; } /* Label mais forte */
-    .input-field input, .input-field select {
-      background: #fdfdff !important; border: 1.2px solid #c5cae9 !important;
-      border-radius: 7px !important; padding-left: 13px !important;
-      font-weight: 500; font-size: 1.02em; /* Ajustado font-size */
-      transition: border .15s, box-shadow .18s; color: var(--main-text);
-    }
-    .input-field input:focus, .input-field select:focus {
-      border-color: var(--accent) !important; /* Cor do Materialize */
-      box-shadow: 0 0 0 2px rgba(26,35,126,0.2) !important; /* Glow sutil */
-    }
-    .file-field .btn {
-      background: var(--accent); border-radius: 7px; font-weight: 600;
-      box-shadow: none; font-size: 0.95em; margin-right: 7px; transition: background .13s;
-    }
-    .btn, .btn:focus-visible {
-      background: var(--accent2); border-radius: 8px; /* Borda mais suave */
-      font-weight: 600; font-size: 1em; letter-spacing: 0.5px; /* Ajustes */
-      box-shadow: none; transition: background .18s, box-shadow .18s;
-      margin-bottom: 7px; text-transform: none;
-      padding: 0 20px; /* Padding horizontal */
-    }
-    .btn:hover, .btn:active, .btn:focus {
-      background: var(--accent) !important; box-shadow: 0 2px 5px rgba(26,35,126,0.2) !important;
-    }
-    .btn-flat { color: var(--accent2) !important; font-weight: 600; border-radius: 8px; }
-    .btn-flat:hover { background-color: rgba(26,35,126,0.08) !important; } /* Fundo sutil no hover */
-    .btn-folder {
-      background: #e8eaf6 !important; /* Indigo lighten-5 */
-      color: var(--accent) !important; border-radius: 8px !important;
-      font-weight: 600; margin: 0 !important; box-shadow: none !important;
-      transition: background .13s, color .13s, box-shadow .13s;
-    }
-    .btn-folder:hover { background: #c5cae9 !important; box-shadow: 0 1px 3px rgba(26,35,126,0.15) !important;}
-    .btn-folder:disabled { background-color: #CFD8DC !important; color: #78909C !important; cursor: not-allowed; }
-
-    .progress { border-radius: 10px; height:8px; background: #e8eaf6; margin-top:5px; margin-bottom:2px;} /* Ajustado */
-    .progress .determinate { background: linear-gradient(90deg, var(--accent2), var(--accent)); transition: width .23s cubic-bezier(.4,0,.2,1); }
-    .progress-percentage { text-align:center; color:var(--accent2); font-weight: 600; font-size:0.9em; margin-bottom:8px;}
-
-    .success-text { color: #2e7d32; font-weight: 500; font-size: 1em; text-align:center; }
-    .error-text { color: #c62828; font-weight: 500; font-size: 1em; text-align:center; }
-    .required:after { content:" *"; color:var(--accent); }
-
-    .file-list { margin-top: 8px; margin-bottom:5px; padding-left: 0; list-style-type:none; max-height: 100px; overflow-y: auto; font-size: 0.9em;}
-    .file-list li { color:#37474f; display:flex; align-items:center; margin-bottom: 4px; padding: 3px 5px; border-radius:4px; background: #f0f2f5;}
-    .file-list li .material-icons { font-size: 1.1em; margin-right: 6px; }
-
-    .spin { animation: spin 1s infinite linear; font-size: 1.2em; color: white; } /* Cor branca para contraste no botão */
-    @keyframes spin {100% {transform: rotate(360deg);}}
-
-    .checkmark-success {
-      display: block; /* Para centralizar com margin auto */
-      width: 38px; height: 38px; margin: 10px auto; /* Ajustado margin */
-      border-radius: 50%; background: #e8f5e9; border: 2px solid #2e7d32; position: relative;
-    }
-    .checkmark-success:after {
-      content: ""; position: absolute; left: 11px; top: 8px;
-      width: 9px; height: 15px; border-right: 3px solid #2e7d32;
-      border-bottom: 3px solid #2e7d32; transform: rotate(45deg) scale(1);
-    }
-    .collection { box-shadow: none; background: none; border: none; margin: 0; padding: 0; }
-    .collection .collection-item {
-      border:none; background: var(--collection-bg); color: var(--main-text);
-      border-radius: 7px; margin-bottom:4px; font-size:0.95em; /* Ajustado */
-      box-shadow: 0 1px 4px #00000008; display: flex; align-items: center;
-      justify-content: space-between; gap: 8px; padding: 8px 12px; /* Ajustado padding */
-      transition: background .11s, box-shadow .13s; word-break: break-word;
-    }
-    .collection .collection-item:hover { background: #e3f2fd; box-shadow: 0 2px 8px rgba(26,35,126,0.1); }
-    .collection .collection-item a { display: inline-flex; align-items: center; gap: 6px; text-decoration: none; color: var(--accent); font-weight:500; }
-    .collection .collection-item a:hover { text-decoration: underline; color:var(--accent2); }
-    .collection .collection-item .material-icons.left { margin-right: 6px; margin-top: 0; font-size:1.2em; }
-
-    .secondary-content { display: flex; align-items: center; gap: 8px; margin-left:auto; /* Empurra para a direita */ }
-    .badge-date {
-      background: #e0e0e0; color: #424242; /* Cinzas mais neutros */
-      border-radius: 6px; font-size: .85em; padding: 3px 8px;
-      font-family: 'Roboto Mono', monospace; white-space: nowrap;
-    }
-    .chip { font-size:0.8em; padding: 2px 8px; height: auto; line-height: 1.5; border-radius:6px; font-weight:500;}
-    .chip-pdf { background: var(--chip-pdf); color: var(--chip-pdf-text);}
-    .chip-img { background: var(--chip-img); color: var(--chip-img-text);}
-
-    .custom-tooltip { /* Já definido antes, aqui apenas para referência se precisar de ajustes */ }
-    .num-mono { font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px; font-size: 0.95em; }
-    .center-align { text-align: center; }
-    .preloader-wrapper.small { width: 20px; height: 20px; }
-
-    @media(max-width:1100px) {
-      .professional-panel { width:98vw; margin-left:1vw; margin-right:1vw; }
-      .panel-row { flex-direction: column; gap: 28px; }
-      .form-section, .files-section { max-width: 100%; width: 100%; }
-      .files-section { min-height: 250px; max-height: 400px;}
-    }
-    @media(max-width:700px) {
-      .professional-panel { padding: 20px 15px 15px 15px; margin-top:15px;}
-      .gt-logo-anim {font-size:1.7rem;}
-      .gt-subtitle { font-size: 1rem; margin-bottom: 15px; }
-      .collection .collection-item { flex-direction: column; align-items: flex-start; gap: 5px; }
-      .secondary-content { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left:0; }
-      .footer-dev { font-size:0.9em; padding: 10px 0; margin-top:20px;}
-    }
+    .footer-dev .github-icon { width: 19px; height: 19px; }
+    .input-field label { color: var(--accent); font-weight:500; font-size:0.95rem; }
+    .input-field input, .input-field .select-wrapper input.select-dropdown, .input-field textarea { background: #fff !important; border: 1px solid #cbd5e1 !important; border-radius: 8px !important; padding: 0 14px !important; height: 3rem !important; font-weight: 400; font-size: 0.95rem; color: var(--main-text); box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);}
+    .input-field input:focus, .input-field .select-wrapper input.select-dropdown:focus, .input-field textarea:focus { border-color: var(--accent2) !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.2) !important;}
+    .dropdown-content li > a, .dropdown-content li > span { color: var(--accent) !important; font-weight: 500;}
+    .dropdown-content li.selected { background-color: rgba(37,99,235,0.08) !important; }
+    .file-field .btn { background: var(--accent); border-radius: 8px; font-weight: 500; box-shadow: none; font-size: 0.9rem; height: 3rem; line-height: 3rem; padding: 0 18px;}
+    .file-field .btn:hover { background: var(--accent2); }
+    .file-path-wrapper input.file-path::placeholder { color: #94a3b8; font-style: italic; }
+    .btn, .btn-large, .btn-small, .btn-floating { background-color: var(--accent2); border-radius: 8px; font-weight: 500; font-size: 0.95rem; text-transform: none; letter-spacing: 0.3px; padding: 0 22px; box-shadow: var(--shadow-panel);}
+    .btn:hover, .btn-large:hover, .btn-small:hover, .btn-floating:hover { background-color: var(--accent) !important; box-shadow: var(--shadow-hover) !important;}
+    .btn-flat { color: var(--accent2) !important; font-weight: 500; border-radius: 8px; }
+    button[type="reset"].btn-flat:hover { background-color: var(--danger-bg) !important; color: var(--danger-text) !important; }
+    .btn-folder { background: #eef2ff !important; color: var(--accent) !important;}
+    .btn-folder:hover { background: #e0e7ff !important; box-shadow: var(--shadow-panel) !important;}
+    .progress { border-radius: 8px; height:10px; background: #e2e8f0; margin-top:8px; margin-bottom:4px;}
+    .progress .determinate { background: var(--accent2); }
+    .progress-percentage { font-size:0.85rem; margin-bottom:10px;}
+    #statusMessages > div { padding: 12px 18px; border-radius: 8px; margin-top: 12px; font-weight: 500; border-width: 1px; border-style: solid; display: flex; align-items: center; gap: 10px;}
+    #statusMessages .success-text { background-color: #dcfce7; border-color: #4ade80; color: #15803d; }
+    #statusMessages .error-text { background-color: #fee2e2; border-color: #f87171; color: #b91c1c; }
+    #statusMessages .material-icons { font-size: 1.5rem; }
+    #fileListPreview { margin-top: 10px; margin-bottom:5px; padding-left: 0; list-style-type:none; max-height: 130px; overflow-y: auto; font-size: 0.85em;}
+    #fileListPreview li { background-color: #f8fafc; border: 1px solid #eef2ff; border-left: 4px solid var(--accent2); border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; display:flex; align-items:center; gap: 8px; }
+    #fileListPreview li:hover { border-color: var(--accent2); background-color: #eef2ff; box-shadow: 0 2px 5px rgba(30,40,120,0.08); transform: translateX(2px);}
+    #fileListPreview li .file-icon { font-size: 1.3em; color: var(--accent); flex-shrink: 0; }
+    #fileListPreview li .file-name-preview { flex-grow: 1; word-break: break-all; line-height:1.3; }
+    #fileListPreview li .file-size-preview { font-size:0.9em; margin-left:auto; white-space:nowrap; flex-shrink:0; color: var(--info-text-light); }
+    .remove-file-btn { background-color: transparent !important; color: var(--danger-text) !important; box-shadow: none !important; border-radius: 50%; width: 28px !important; height: 28px !important; line-height: 28px !important; padding: 0 !important; margin-left: 8px; flex-shrink: 0; opacity: 0.6; cursor:pointer;}
+    .remove-file-btn:hover { background-color: rgba(200,0,0,0.1) !important; opacity: 1; }
+    .remove-file-btn i { font-size: 1.2rem !important; line-height: 28px !important; display:block; }
+    .spin { color: white !important; } 
+    .checkmark-success { margin: 12px auto; } 
+    .files-section > h6 { display: flex; align-items: center; gap: 10px; color: var(--accent); font-weight: 600; font-size: 1.1rem; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid var(--border-color-soft); }
+    .files-section > h6 .material-icons { color: var(--accent2); font-size:1.6rem; }
+    .collection .collection-item { border:none; background: #fff; color: var(--main-text); border-radius: 8px; margin-bottom:6px; font-size:0.9rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 10px 14px;}
+    .collection .collection-item:hover { background: #f8fafc; box-shadow: var(--shadow-hover); transform: translateY(-2px) scale(1.01);}
+    .collection .collection-item a { font-weight:500; }
+    .collection .collection-item .material-icons.left { font-size:1.3em; }
+    .secondary-content { display: flex; align-items: center; gap: 8px; margin-left:auto; }
+    .badge-date { background: #e2e8f0; color: #475569; border-radius: 6px; font-size: .8rem; padding: 3px 7px; white-space:nowrap;}
+    .chip { font-size:0.75rem; padding: 3px 8px; height: auto; line-height: 1.4; border-radius:16px; font-weight:500;}
+    .chip-pdf { background-color: var(--chip-pdf-bg) !important; color: var(--chip-pdf-text) !important;}
+    .chip-img { background-color: var(--chip-img-bg) !important; color: var(--chip-img-text) !important;}
+    .empty-state-message { opacity:.7; padding:25px 15px !important; font-style:italic; display:flex !important; flex-direction:column; align-items:center; text-align:center; gap:12px; border: 2px dashed var(--border-color-soft) !important; border-radius:8px !important; background-color: transparent !important; box-shadow:none !important;}
+    .empty-state-message .material-icons { font-size:3.5rem !important; color: var(--info-text-light) !important; }
+    .empty-state-message span:first-of-type { font-size:1rem; color:var(--main-text); font-weight:500;}
+    .empty-state-message span:last-of-type { font-size:0.85rem; color: var(--info-text-light); }
+    @media(max-width:1100px) { .professional-panel { width:98vw; margin-left:1vw; margin-right:1vw; } .panel-row { flex-direction: column; gap: 28px; } .form-section, .files-section { max-width: 100%; width: 100%; } .files-section { min-height: 250px; max-height: 400px;} }
+    @media (max-width: 480px) { .footer-dev { flex-direction: column; gap: 5px; } }
+    @media(max-width:700px) { .professional-panel { padding: 20px 15px 15px 15px; margin-top:15px;} .gt-logo-anim {font-size:1.7rem;} .gt-subtitle { font-size: 1rem; margin-bottom: 15px; } .collection .collection-item { flex-direction: column; align-items: flex-start; gap: 5px; } .secondary-content { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left:0; } .footer-dev { font-size:0.9em; padding: 10px 0; margin-top:20px;} }
   </style>
 </head>
 <body>
   <div class="layout-wrap">
     <div class="professional-panel">
       <div class="gt-logo-anim">Grupo Tavares</div>
-      <div class="gt-subtitle">Envio de Despesas</div>
+      <div class="gt-subtitle">Envio de Despesas e Comprovantes</div>
       <div class="panel-row">
         <form id="uploadForm" autocomplete="off" class="form-section">
           <div class="input-field">
             <select id="ano" required></select>
-            <label for="ano" class="required">Ano</label>
+            <label for="ano" class="required">Ano Fiscal</label>
           </div>
           <div class="input-field">
             <select id="mes" required>
-              <option value="" disabled selected>Escolha o mês</option>
+              <option value="" disabled selected>Selecione o Mês</option>
               <option value="01">Janeiro</option><option value="02">Fevereiro</option>
               <option value="03">Março</option><option value="04">Abril</option>
               <option value="05">Maio</option><option value="06">Junho</option>
@@ -226,7 +130,7 @@
               <option value="09">Setembro</option><option value="10">Outubro</option>
               <option value="11">Novembro</option><option value="12">Dezembro</option>
             </select>
-            <label for="mes" class="required">Mês</label>
+            <label for="mes" class="required">Mês de Competência</label>
           </div>
           <div class="input-field">
             <input id="despesa" type="text" required placeholder="Digite ou selecione a conta" autocomplete="off" list="listaDespesas">
@@ -235,20 +139,21 @@
           </div>
           <div class="file-field input-field">
             <div class="btn" id="btnArquivoTooltipContainer">
-              <span><i class="material-icons left">cloud_upload</i>Selecionar Arquivos</span>
+              <span><i class="material-icons left">attach_file</i>Selecionar</span>
               <input type="file" id="arquivo" multiple accept=".pdf,.jpg,.jpeg,.png" required>
-              <span class="custom-tooltip" style="top:-40px;left:50%;display:none;">PDF, JPG, PNG (Max 100MB total)</span>
+              <span class="custom-tooltip" style="top:-42px;left:50%;display:none;white-space:nowrap;">PDF, JPG, PNG (Máx 100MB)</span>
             </div>
             <div class="file-path-wrapper">
               <input class="file-path validate" type="text" placeholder="Nenhum arquivo selecionado">
             </div>
             <ul id="fileListPreview" class="file-list"></ul>
+             <div id="fileSelectionInfo" style="font-size:0.8rem; color: #64748b; margin-top:4px; text-align:right;"></div>
           </div>
-          <div class="row-despesa" style="display: flex;align-items:center;gap:10px; margin-top:10px;">
-            <button id="btnVerPasta" type="button" class="btn btn-folder tooltipped" data-position="top" data-tooltip="Ver pasta de destino no Drive">
+          <div style="display: flex;align-items:center;gap:12px; margin-top:15px;">
+            <button id="btnVerPasta" type="button" class="btn btn-folder tooltipped" data-position="top" data-tooltip="Abrir pasta de destino no Drive">
               <i class="material-icons left">folder_open</i>Pasta
             </button>
-            <span style="flex:1 1 auto"></span>
+            <span style="flex:1 1 auto;"></span>
             <button type="submit" class="btn waves-effect waves-light tooltipped" id="btnEnviar" data-position="top" data-tooltip="Enviar arquivos para o Drive">
               <i class="material-icons left" id="iconEnviar">send</i>
               <span id="textEnviar">Enviar</span>
@@ -256,209 +161,230 @@
                 <i class="material-icons spin">autorenew</i>
               </span>
             </button>
-            <button type="reset" class="btn-flat waves-effect tooltipped" data-position="top" data-tooltip="Limpar todos os campos" style="margin-left:4px;">
-              <i class="material-icons">delete_sweep</i>
+            <button type="reset" class="btn-flat waves-effect tooltipped" data-position="top" data-tooltip="Limpar formulário">
+              <i class="material-icons">clear_all</i>
             </button>
           </div>
           <div class="progress" id="progressBarContainer" style="display:none;">
             <div class="determinate" id="progressBar" style="width:0%;"></div>
           </div>
           <div class="progress-percentage num-mono" id="progressPercentageText" style="display:none;">0%</div>
-          <div id="statusMessages" style="margin-top:10px;"></div>
+          <div id="statusMessages" style="margin-top:12px;"></div>
         </form>
         <div class="files-section">
           <div id="notificationArea" class="notification-area"></div>
-          <h6 style="color: var(--accent); font-weight: 600; margin:0 0 10px 0; border-bottom: 1.5px solid #e0e0e0; padding-bottom:8px;">Arquivos Enviados para Seleção Atual</h6>
+          <h6>
+            <i class="material-icons">assignment</i>
+            Arquivos Enviados
+          </h6>
           <ul id="uploadedFilesList" class="collection"></ul>
         </div>
       </div>
     </div>
      <div class="footer-dev">
-        <span>Desenvolvido por</span>
-        <a href="https://github.com/RyannBreston" target="_blank" rel="noopener" title="GitHub de RyannBreston">
-          <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.867 8.167 6.839 9.489.5.091.682-.217.682-.483 0-.237-.009-.868-.014-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.893 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.338 1.909-1.294 2.748-1.025 2.748-1.025.545 1.378.202 2.397.099 2.65.64.699 1.028 1.592 1.028 2.683 0 3.841-2.337 4.687-4.565 4.936.359.31.678.921.678 1.857 0 1.34-.012 2.421-.012 2.751 0 .268.18.577.688.48A10.013 10.013 0 0 0 22 12c0-5.523-4.477-10-10-10z"/></svg>
-          RyannBreston
-        </a>
-      </div>
+       <span>Desenvolvido por</span>
+       <a href="https://github.com/RyannBreston" target="_blank" rel="noopener" title="GitHub de RyannBreston">
+         <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.867 8.167 6.839 9.489.5.091.682-.217.682-.483 0-.237-.009-.868-.014-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.893 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.338 1.909-1.294 2.748-1.025 2.748-1.025.545 1.378.202 2.397.099 2.65.64.699 1.028 1.592 1.028 2.683 0 3.841-2.337 4.687-4.565 4.936.359.31.678.921.678 1.857 0 1.34-.012 2.421-.012 2.751 0 .268.18.577.688.48A10.013 10.013 0 0 0 22 12c0-5.523-4.477-10-10-10z"/></svg>
+         RyannBreston
+       </a>
+     </div>
   </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script>
-    // Chaves para localStorage (versionadas para evitar conflitos com dados antigos)
+    // Chaves para localStorage
     const ANO_STORAGE_KEY = 'gt_envioDespesas_ano_v2';
     const MES_STORAGE_KEY = 'gt_envioDespesas_mes_v2';
     const DESPESA_STORAGE_KEY = 'gt_envioDespesas_despesa_v2';
 
-    document.addEventListener('DOMContentLoaded', function() {
-      // --- INICIALIZAÇÃO DE COMPONENTES MATERIALIZE ---
-      var tooltippedElems = document.querySelectorAll('.tooltipped');
-      M.Tooltip.init(tooltippedElems, {enterDelay: 150, exitDelay:50}); // Ajusta delay dos tooltips
+    let arquivosParaEnviarArray = []; // Array para gerenciar os arquivos selecionados
 
-      // --- ELEMENTOS DO DOM ---
+    document.addEventListener('DOMContentLoaded', function() {
+      var tooltippedElems = document.querySelectorAll('.tooltipped');
+      M.Tooltip.init(tooltippedElems, {enterDelay: 200, exitDelay: 50, outDuration: 150});
+
       const anoSelect = document.getElementById('ano');
       const mesSelect = document.getElementById('mes');
       const despesaInput = document.getElementById('despesa');
       const arquivoInput = document.getElementById('arquivo');
       const fileListPreviewUl = document.getElementById('fileListPreview');
-      const uploadForm = document.getElementById('uploadForm');
       const btnArquivoTooltipContainer = document.getElementById('btnArquivoTooltipContainer');
       const btnArquivoTooltip = btnArquivoTooltipContainer.querySelector('.custom-tooltip');
 
-      // --- POPULAR CAMPOS e CARREGAR SELEÇÕES DO LOCALSTORAGE ---
-      // Popula Select de Ano
       let anoAtual = new Date().getFullYear();
       for(let a = anoAtual; a >= anoAtual - 10; a--) {
-        let opt = document.createElement('option');
-        opt.value = String(a); // Garante que o valor seja string
-        opt.textContent = String(a);
+        let opt = document.createElement('option'); opt.value = String(a); opt.textContent = String(a);
         anoSelect.appendChild(opt);
       }
+      carregarDespesas();
 
-      // Carrega opções do datalist para Contas de Despesa
-      carregarDespesas(); // Assíncrono, mas o input de texto não depende de sua conclusão imediata para definir valor
-
-      // Carrega valores salvos do localStorage
       const savedAno = localStorage.getItem(ANO_STORAGE_KEY);
-      if (savedAno && Array.from(anoSelect.options).some(opt => opt.value === savedAno)) {
-        anoSelect.value = savedAno;
-      } else {
-        anoSelect.value = String(anoAtual); // Padrão se não houver salvo ou for inválido
-      }
-
+      anoSelect.value = (savedAno && Array.from(anoSelect.options).some(opt => opt.value === savedAno)) ? savedAno : String(anoAtual);
       const savedMes = localStorage.getItem(MES_STORAGE_KEY);
-      if (savedMes && Array.from(mesSelect.options).some(opt => opt.value === savedMes)) {
-        mesSelect.value = savedMes;
-      } else {
-         mesSelect.value = ""; // Padrão: placeholder "Escolha o mês"
-      }
+      mesSelect.value = (savedMes && Array.from(mesSelect.options).some(opt => opt.value === savedMes)) ? savedMes : "";
+      despesaInput.value = localStorage.getItem(DESPESA_STORAGE_KEY) || "";
 
-      const savedDespesa = localStorage.getItem(DESPESA_STORAGE_KEY);
-      if (savedDespesa) {
-        despesaInput.value = savedDespesa;
-      }
-
-      // INICIALIZA/ATUALIZA MATERIALIZE para selects e text fields DEPOIS de definir valores
       M.FormSelect.init(document.querySelectorAll('select'), {});
-      M.updateTextFields(); // Importante para labels de inputs preenchidos
+      M.updateTextFields();
+      updateUploadedFilesListDisplay(); 
+      renderizarPreviewArquivosParaEnvio(); 
 
-      // Atualiza a lista de arquivos enviados com base nas seleções carregadas/definidas
-      updateUploadedFilesListDisplay();
-
-      // --- EVENT LISTENERS PARA PERSISTÊNCIA E UI ---
+      // --- EVENT LISTENERS ---
       anoSelect.addEventListener('change', function() {
-        localStorage.setItem(ANO_STORAGE_KEY, this.value);
-        updateUploadedFilesListDisplay();
+        localStorage.setItem(ANO_STORAGE_KEY, this.value); updateUploadedFilesListDisplay();
       });
-
       mesSelect.addEventListener('change', function() {
-        localStorage.setItem(MES_STORAGE_KEY, this.value);
-        updateUploadedFilesListDisplay();
+        localStorage.setItem(MES_STORAGE_KEY, this.value); updateUploadedFilesListDisplay();
       });
-
-      despesaInput.addEventListener('input', function() { // Salva enquanto digita/seleciona do datalist
+      despesaInput.addEventListener('input', function() {
         localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim());
       });
-      despesaInput.addEventListener('blur', function() { // Atualiza lista de arquivos ao perder o foco
-        localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim()); // Garante salvar o valor final
-        updateUploadedFilesListDisplay();
+      despesaInput.addEventListener('blur', function() {
+        localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim()); updateUploadedFilesListDisplay();
       });
 
-      // Tooltip customizado para o botão de arquivo
       btnArquivoTooltipContainer.addEventListener('mouseenter', () => { btnArquivoTooltip.style.display = 'block'; });
       btnArquivoTooltipContainer.addEventListener('mouseleave', () => { btnArquivoTooltip.style.display = 'none'; });
-
-      // Atualiza a pré-visualização de arquivos a serem enviados
-      arquivoInput.addEventListener('change', displaySelectedFilesForUpload);
-
-      // Tratamento do botão "Limpar" (reset)
-      document.querySelector('button[type=reset]').addEventListener('click', function(e) {
-        // O reset nativo já ocorreu ou ocorrerá. Este listener ajusta a UI pós-reset.
-        setTimeout(() => {
-            despesaInput.value = localStorage.getItem(DESPESA_STORAGE_KEY) || ""; // Restaura despesa
-            anoSelect.value = localStorage.getItem(ANO_STORAGE_KEY) || String(anoAtual);
-            mesSelect.value = localStorage.getItem(MES_STORAGE_KEY) || "";
-            
-            M.updateTextFields();
-            M.FormSelect.init(document.querySelectorAll('select'), {});
-            fileListPreviewUl.innerHTML = ''; // Limpa lista de arquivos do input
-            document.querySelector('.file-path').value = ''; // Limpa o texto do materialize file input
-            updateUploadedFilesListDisplay();
-        }, 0);
+      
+      arquivoInput.addEventListener('change', function() {
+        arquivosParaEnviarArray = Array.from(this.files); 
+        renderizarPreviewArquivosParaEnvio();
       });
 
-    }); // Fim do DOMContentLoaded
+      fileListPreviewUl.addEventListener('click', function(event) {
+        const removeButton = event.target.closest('.remove-file-btn');
+        if (removeButton) {
+          const indexToRemove = parseInt(removeButton.dataset.fileIndex, 10);
+          removerArquivoDaSelecao(indexToRemove);
+        }
+      });
 
-    // --- FUNÇÕES AUXILIARES E DE LÓGICA ---
+      document.querySelector('button[type=reset]').addEventListener('click', function(event) {
+        if (!confirm("Tem certeza que deseja limpar todos os campos do formulário? Os arquivos selecionados também serão removidos.")) {
+            event.preventDefault(); return;
+        }
+        setTimeout(() => {
+            localStorage.removeItem(DESPESA_STORAGE_KEY); 
+            anoSelect.value = localStorage.getItem(ANO_STORAGE_KEY) || String(new Date().getFullYear());
+            mesSelect.value = localStorage.getItem(MES_STORAGE_KEY) || "";
+            despesaInput.value = ""; 
+            
+            arquivosParaEnviarArray = []; 
+            arquivoInput.value = ""; 
+            renderizarPreviewArquivosParaEnvio(); 
 
-    function displaySelectedFilesForUpload() {
-      const files = document.getElementById('arquivo').files;
+            M.updateTextFields();
+            M.FormSelect.init(document.querySelectorAll('select'), {});
+            updateUploadedFilesListDisplay();
+            showNotification("Formulário limpo.", "info", 2000);
+        }, 0);
+      });
+    }); // Fim DOMContentLoaded
+
+    function renderizarPreviewArquivosParaEnvio() {
       const previewUl = document.getElementById('fileListPreview');
-      previewUl.innerHTML = ''; // Limpa pré-visualização anterior
-      if (files.length === 0) {
-        document.querySelector('.file-path').value = 'Nenhum arquivo selecionado';
+      const selectionInfoDiv = document.getElementById('fileSelectionInfo');
+      const filePathInput = document.querySelector('.file-path'); 
+      
+      previewUl.innerHTML = ''; 
+      selectionInfoDiv.innerHTML = '';
+
+      if (arquivosParaEnviarArray.length === 0) {
+        filePathInput.value = 'Nenhum arquivo selecionado';
+        // Se a array gerenciada está vazia, garante que o input de arquivo também esteja.
+        // Isso é importante para a validação 'required' e para o comportamento do botão de limpar.
+        if (document.getElementById('arquivo').files.length > 0) {
+            document.getElementById('arquivo').value = "";
+        }
         return;
       }
       
-      let fileNames = [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        fileNames.push(file.name);
+      let fileNamesForMaterializeInput = [];
+      let totalSize = 0;
+
+      arquivosParaEnviarArray.forEach((file, index) => {
+        fileNamesForMaterializeInput.push(file.name);
+        totalSize += file.size;
         let ext = file.name.split('.').pop().toLowerCase();
-        let icon = 'insert_drive_file', colorClass = 'grey-text';
-        if(ext==='pdf') {icon='picture_as_pdf'; colorClass='red-text text-darken-1';}
-        else if(['jpg','jpeg'].includes(ext)) {icon='image'; colorClass='blue-text';}
-        else if(ext==='png') {icon='image'; colorClass='green-text';}
-        previewUl.innerHTML += `<li><i class="material-icons ${colorClass}">${icon}</i>${file.name} <span class="num-mono grey-text text-darken-1" style="font-size:0.9em;">(${(file.size/1048576).toFixed(2)}MB)</span></li>`;
+        let icon = 'insert_drive_file';
+        let colorClass = 'grey-text'; 
+
+        if(ext==='pdf') {icon='picture_as_pdf'; colorClass='var(--chip-pdf-text)';}
+        else if(['jpg','jpeg'].includes(ext)) {icon='image'; colorClass='var(--chip-img-text)';}
+        else if(ext==='png') {icon='image'; colorClass='green-text text-darken-1';}
+
+        const li = document.createElement('li');
+        li.innerHTML = `
+          <i class="material-icons file-icon" style="color:${colorClass};">${icon}</i>
+          <span class="file-name-preview">${file.name}</span>
+          <span class="file-size-preview num-mono">(${(file.size/1048576).toFixed(2)}MB)</span>
+          <button type="button" class="remove-file-btn" data-file-index="${index}" title="Remover ${file.name}">
+              <i class="material-icons">close</i>
+          </button>
+        `;
+        previewUl.appendChild(li);
+      });
+
+      filePathInput.value = arquivosParaEnviarArray.length > 1 ? `${arquivosParaEnviarArray.length} arquivos selecionados` : (arquivosParaEnviarArray[0]?.name || 'Nenhum arquivo selecionado');
+      selectionInfoDiv.innerHTML = `Total: ${arquivosParaEnviarArray.length} arquivo(s) - ${(totalSize/1048576).toFixed(2)} MB`;
+    }
+
+    function removerArquivoDaSelecao(indexToRemove) {
+      if (indexToRemove >= 0 && indexToRemove < arquivosParaEnviarArray.length) {
+        arquivosParaEnviarArray.splice(indexToRemove, 1); 
+        renderizarPreviewArquivosParaEnvio(); 
       }
-      document.querySelector('.file-path').value = fileNames.join(', ');
     }
 
     function getSanitizedDespesaValue() {
-      // Remove múltiplos espaços e sanitiza para consistência com o backend se necessário,
-      // mas para display e localStorage, o valor como o usuário digitou (com trim) é usualmente ok.
       return document.getElementById('despesa').value.trim().replace(/\s+/g, ' ');
     }
 
     function updateUploadedFilesListDisplay() {
       const ano = document.getElementById('ano').value;
       const mes = document.getElementById('mes').value;
-      const despesa = getSanitizedDespesaValue(); // Usa valor sanitizado para busca
+      const despesa = getSanitizedDespesaValue();
       const ul = document.getElementById('uploadedFilesList');
       
-      ul.innerHTML = `<li class="collection-item center-align" style="padding:12px;"><div class="preloader-wrapper small active" style="vertical-align:middle; margin-right:8px;"><div class="spinner-layer spinner-blue-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>Carregando arquivos...</li>`;
-
       if (!ano || !mes || !despesa) {
-        ul.innerHTML = '<li class="collection-item center-align" style="opacity:.7; padding:12px; font-style:italic;">Informe Ano, Mês e Conta para visualizar os arquivos já enviados.</li>';
+        ul.innerHTML = `
+          <li class="collection-item empty-state-message">
+            <i class="material-icons">info_outline</i>
+            <span>Informe Ano, Mês e Conta</span>
+            <span>Para visualizar os arquivos já enviados para essa combinação.</span>
+          </li>`;
         return;
       }
+      // Adicione aqui a lógica de Skeleton Loading se desejar (omitida para brevidade desta resposta)
+      ul.innerHTML = `<li class="collection-item center-align" style="padding:12px;"><div class="preloader-wrapper small active" style="vertical-align:middle; margin-right:8px;"><div class="spinner-layer spinner-blue-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>Carregando arquivos...</li>`;
 
       google.script.run
         .withSuccessHandler(function(filesData) {
           if (!filesData || !filesData.length) {
-            ul.innerHTML = '<li class="collection-item center-align" style="opacity:.7; padding:12px; font-style:italic;">Nenhum arquivo encontrado para esta seleção.</li>';
+            ul.innerHTML = `
+              <li class="collection-item empty-state-message">
+                <i class="material-icons">cloud_off</i>
+                <span>Nenhum arquivo encontrado</span>
+                <span>Não há arquivos enviados para esta seleção específica.</span>
+              </li>`;
             return;
           }
           ul.innerHTML = filesData.map(f => {
               let ext = f.name.split('.').pop().toLowerCase();
-              let icon = 'insert_drive_file', colorClass = 'grey-text';
-              if(ext==='pdf') {icon='picture_as_pdf'; colorClass='red-text text-darken-2';}
-              else if(['jpg','jpeg','png','gif'].includes(ext)) {icon='image'; colorClass='indigo-text text-lighten-1';}
-
-              let tag = "";
-              if(ext==='pdf') tag=`<span class="chip chip-pdf">PDF</span>`;
-              else if(['jpg','jpeg','png','gif'].includes(ext)) tag=`<span class="chip chip-img">IMG</span>`;
-
-              return `<li class="collection-item">
-                        <a href="${f.url}" target="_blank" title="Abrir ${f.name}">
-                          <i class="material-icons left ${colorClass}">${icon}</i>${f.name}
-                        </a>
-                        <span class="secondary-content">
-                          <span class="badge-date">${f.date}</span>${tag}
-                        </span>
-                      </li>`;
+              let icon = 'insert_drive_file', colorClass = 'var(--chip-default-text)';
+              let chipBg = 'var(--chip-default-bg)', chipText = 'var(--chip-default-text)';
+              if(ext==='pdf') { icon='picture_as_pdf'; colorClass='var(--chip-pdf-text)'; chipBg = 'var(--chip-pdf-bg)'; chipText = 'var(--chip-pdf-text)'; }
+              else if(['jpg','jpeg','png','gif'].includes(ext)) { icon='image'; colorClass='var(--chip-img-text)'; chipBg = 'var(--chip-img-bg)'; chipText = 'var(--chip-img-text)';}
+              const tag = `<span class="chip" style="background-color:${chipBg}; color:${chipText};">${ext.toUpperCase()}</span>`;
+              return `<li class="collection-item"><a href="${f.url}" target="_blank" title="Abrir ${f.name}"><i class="material-icons left" style="color:${colorClass};">${icon}</i>${f.name}</a><span class="secondary-content"><span class="badge-date">${f.date}</span>${tag}</span></li>`;
           }).join('');
         })
-        .withFailureHandler(function(err) {
-          ul.innerHTML = '<li class="collection-item center-align red-text text-darken-2" style="padding:12px; font-weight:500;">Falha ao carregar arquivos.</li>';
+        .withFailureHandler(function(err) { 
+          ul.innerHTML = `
+              <li class="collection-item empty-state-message">
+                <i class="material-icons">error_outline</i>
+                <span>Falha ao Carregar Arquivos</span>
+                <span>Ocorreu um erro ao buscar os arquivos. Tente novamente.</span>
+              </li>`;
           console.error("Erro listUploadedFiles:", err);
           showNotification("Falha ao carregar lista de arquivos: " + (err.message || "Erro desconhecido."), "error", 4500);
         })
@@ -468,234 +394,171 @@
     function carregarDespesas() {
       google.script.run
         .withSuccessHandler(function(listaDeContas) {
-          const datalist = document.getElementById('listaDespesas');
-          datalist.innerHTML = ''; // Limpa opções antigas
+          const datalist = document.getElementById('listaDespesas'); datalist.innerHTML = ''; 
           if (listaDeContas && listaDeContas.length > 0) {
-              listaDeContas.forEach(function(item){
-              const opt = document.createElement('option');
-              opt.value = item;
-              datalist.appendChild(opt);
-              });
+              listaDeContas.forEach(function(item){ const opt = document.createElement('option'); opt.value = item; datalist.appendChild(opt); });
           }
         })
-        .withFailureHandler(function(err){
-          console.error("Erro ao carregar contas de despesa:", err);
-          showNotification("Não foi possível carregar as contas de despesa: "  + (err.message || "Tente recarregar."), "error", 5000);
-        })
+        .withFailureHandler(function(err){ console.error("Erro Contas:", err); showNotification("Erro ao carregar contas: "  + (err.message || "Tente recarregar."), "error", 5000);})
         .getContasDespesas();
     }
 
     function showNotification(message, type = "info", timeout = 4000) {
       const notificationArea = document.getElementById("notificationArea");
-      // Fallback para M.toast se a área de notificação não estiver visível ou não existir
-      if (!notificationArea || notificationArea.offsetParent === null) { //  offsetParent === null significa que não está visível
+      if (!notificationArea || notificationArea.offsetParent === null) { 
         let toastClasses = 'rounded ';
-        if (type === 'success') toastClasses += 'green white-text';
-        else if (type === 'error') toastClasses += 'red darken-2 white-text';
-        else toastClasses += 'indigo white-text'; // Default 'info'
-        M.toast({html: message, classes: toastClasses, displayLength: timeout});
-        return;
+        if (type === 'success') toastClasses += 'green white-text'; else if (type === 'error') toastClasses += 'red darken-2 white-text'; else toastClasses += 'indigo white-text';
+        M.toast({html: message, classes: toastClasses, displayLength: timeout}); return;
       }
-
       const notificationElement = document.createElement("div");
       let iconName = "info_outline";
-      if (type === "success") iconName = "check_circle_outline";
-      else if (type === "error") iconName = "error_outline";
-
+      if (type === "success") iconName = "check_circle_outline"; else if (type === "error") iconName = "error_outline";
       notificationElement.className = "custom-notification " + type;
       notificationElement.innerHTML = `<i class="material-icons">${iconName}</i><span>${message}</span><button class="close-notif" title="Fechar">&times;</button>`;
-      
-      notificationElement.querySelector('.close-notif').addEventListener('click', function() {
-        this.parentElement.style.opacity = 0;
-        setTimeout(() => this.parentElement.remove(), 350);
-      });
-      
+      notificationElement.querySelector('.close-notif').addEventListener('click', function() { this.parentElement.style.opacity = 0; setTimeout(() => this.parentElement.remove(), 350); });
       notificationArea.appendChild(notificationElement);
-      setTimeout(() => {
-        notificationElement.style.opacity = 0;
-        setTimeout(() => notificationElement.remove(), 350);
-      }, timeout);
+      setTimeout(() => { notificationElement.style.opacity = 0; setTimeout(() => notificationElement.remove(), 350); }, timeout);
+    }
+    
+    // Função toBase64 ATUALIZADA para melhor diagnóstico de erro
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result); // reader.result é o Data URL
+        reader.onerror = () => {
+          console.error(`FileReader Error for file "${file.name}":`, reader.error, {fileName: file.name, fileSize: file.size, fileType: file.type});
+          const errorDetails = new Error(`Falha ao ler o arquivo "${file.name}". Tipo: ${reader.error.name}.`);
+          errorDetails.name = "FileReaderError";
+          errorDetails.originalError = reader.error; 
+          reject(errorDetails);
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
     document.getElementById('uploadForm').addEventListener('submit', async function(event){
       event.preventDefault();
-      const statusMessagesDiv = document.getElementById('statusMessages');
-      statusMessagesDiv.innerHTML = '';
+      const statusMessagesDiv = document.getElementById('statusMessages'); statusMessagesDiv.innerHTML = '';
       
-      const arquivoInput = document.getElementById('arquivo');
-      const filesToUpload = arquivoInput.files;
-
-      if (!filesToUpload.length) {
-        showNotification('Por favor, selecione ao menos um arquivo para enviar.', "error");
-        return;
+      if (arquivosParaEnviarArray.length === 0) { 
+        showNotification('Por favor, selecione ao menos um arquivo para enviar.', "error"); return;
       }
 
-      const formObject = {
-        mes: document.getElementById('mes').value,
-        ano: document.getElementById('ano').value,
-        despesa: getSanitizedDespesaValue(),
-        arquivos: []
-      };
-
+      const formObject = { mes: document.getElementById('mes').value, ano: document.getElementById('ano').value, despesa: getSanitizedDespesaValue(), arquivos: [] };
       if (!formObject.despesa) { showNotification('Informe uma conta de despesa válida.', "error"); return; }
       if (!formObject.mes) { showNotification('Selecione o Mês.', "error"); return; }
       if (!formObject.ano) { showNotification('Selecione o Ano.', "error"); return; }
 
-      for (let i = 0; i < filesToUpload.length; i++) {
-        const file = filesToUpload[i];
-        if (!["application/pdf","image/jpeg","image/png"].includes(file.type)) {
-          showNotification(`Tipo de arquivo não permitido: ${file.name} (${file.type})`, "error");
-          return; // Interrompe se um arquivo for inválido
+      // Constrói formObject.arquivos a partir de arquivosParaEnviarArray
+      for (let i = 0; i < arquivosParaEnviarArray.length; i++) {
+        const file = arquivosParaEnviarArray[i]; 
+        if (!["application/pdf","image/jpeg","image/png"].includes(file.type)) { 
+            showNotification(`Tipo de arquivo não permitido na seleção final: ${file.name}`, "error"); return; 
         }
-        try {
-          const base64Data = await toBase64(file);
-          formObject.arquivos.push({name: file.name, type: file.type, data: base64Data.split(',')[1]});
-        } catch (readError) {
-          console.error("Erro ao ler arquivo:", file.name, readError);
-          showNotification(`Erro ao processar o arquivo ${file.name}. Tente novamente.`, "error");
-          return;
+        try { 
+          const base64DataURL = await toBase64(file); // CHAMADA ATUALIZADA
+          formObject.arquivos.push({name: file.name, type: file.type, data: base64DataURL.split(',')[1]}); 
+        }
+        catch (readError) { // CATCH ATUALIZADO
+          console.error(`Detailed error processing file "${file.name}" for upload:`, readError.name, readError.message, readError.originalError);
+          showNotification(`Erro ao processar ${file.name}: ${readError.message || 'Falha na leitura do arquivo.'}`, "error", 7000);
+
+          const submitButton = document.getElementById('btnEnviar'); const textEnviar = document.getElementById('textEnviar');
+          const iconEnviar = document.getElementById('iconEnviar'); const spinnerEnviar = document.getElementById('spinnerEnviar');
+          const originalButtonText = "Enviar"; 
+          submitButton.disabled = false; textEnviar.textContent = originalButtonText;
+          iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
+          document.getElementById('progressBarContainer').style.display='none';
+          document.getElementById('progressPercentageText').style.display='none';
+          return; 
         }
       }
 
-      // --- UI Feedback para Upload ---
-      const submitButton = document.getElementById('btnEnviar');
-      const textEnviar = document.getElementById('textEnviar');
-      const iconEnviar = document.getElementById('iconEnviar');
-      const spinnerEnviar = document.getElementById('spinnerEnviar');
-      const progressBarContainer = document.getElementById('progressBarContainer');
-      const progressBar = document.getElementById('progressBar');
-      const progressPercentageText = document.getElementById('progressPercentageText');
+      const submitButton = document.getElementById('btnEnviar'); const textEnviar = document.getElementById('textEnviar');
+      const iconEnviar = document.getElementById('iconEnviar'); const spinnerEnviar = document.getElementById('spinnerEnviar');
+      const progressBarContainer = document.getElementById('progressBarContainer'); const progressBar = document.getElementById('progressBar');
+      const progressPercentageText = document.getElementById('progressPercentageText'); const originalButtonText = textEnviar.textContent;
 
-      const originalButtonText = textEnviar.textContent;
-      const originalButtonIcon = iconEnviar.textContent;
+      submitButton.disabled = true; textEnviar.textContent = 'Enviando'; iconEnviar.style.display = 'none';
+      spinnerEnviar.style.display = 'inline-block'; progressBarContainer.style.display='block';
+      progressPercentageText.style.display='block'; progressBar.style.width = '0%'; progressPercentageText.innerText = '0%';
 
-      submitButton.disabled = true;
-      textEnviar.textContent = 'Enviando';
-      iconEnviar.style.display = 'none';
-      spinnerEnviar.style.display = 'inline-block';
-      progressBarContainer.style.display='block';
-      progressPercentageText.style.display='block';
-      progressBar.style.width = '0%';
-      progressPercentageText.innerText = '0%';
-
-      // Simulação de progresso para feedback visual imediato
       let fakeProgressValue = 0;
       let progressIntervalId = setInterval(() => {
-        if (fakeProgressValue < 90) {
-          fakeProgressValue += Math.floor(Math.random() * 5) + 1; // Incremento aleatório
-          fakeProgressValue = Math.min(fakeProgressValue, 90); // Não ultrapassa 90%
-          progressBar.style.width = fakeProgressValue + '%';
-          progressPercentageText.innerText = fakeProgressValue + '%';
-        } else {
-          clearInterval(progressIntervalId);
-        }
-      }, 150);
+        if (fakeProgressValue < 90) { fakeProgressValue += Math.floor(Math.random() * 5) + 2; fakeProgressValue = Math.min(fakeProgressValue, 90);
+          progressBar.style.width = fakeProgressValue + '%'; progressPercentageText.innerText = fakeProgressValue + '%';
+        } else { clearInterval(progressIntervalId); }
+      }, 120);
 
       const totalMB = formObject.arquivos.reduce((sum, f) => sum + (f.data.length * 3/4), 0) / (1024*1024);
-      const estimatedTimeSeconds = Math.max(5, Math.ceil(totalMB * 1.5));
-      showNotification(`Iniciando envio de ${formObject.arquivos.length} arquivo(s) (${totalMB.toFixed(2)} MB)...`, "info", estimatedTimeSeconds * 1000 + 2000);
+      showNotification(`Iniciando envio (${totalMB.toFixed(2)} MB)...`, "info", Math.max(5000, Math.ceil(totalMB * 1.5) * 1000 + 2000) );
 
       google.script.run
         .withSuccessHandler(function(response) {
-          clearInterval(progressIntervalId);
-          progressBar.style.width = '100%';
-          progressPercentageText.innerText = '100%';
-
-          setTimeout(() => { // Delay para visualização do 100%
-            progressBarContainer.style.display='none';
-            progressPercentageText.style.display='none';
-          }, 800);
-
-          submitButton.disabled = false;
-          textEnviar.textContent = originalButtonText;
-          iconEnviar.style.display = 'inline-block';
-          spinnerEnviar.style.display = 'none';
+          clearInterval(progressIntervalId); progressBar.style.width = '100%'; progressPercentageText.innerText = '100%';
+          setTimeout(() => { progressBarContainer.style.display='none'; progressPercentageText.style.display='none'; }, 800);
+          submitButton.disabled = false; textEnviar.textContent = originalButtonText; iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
 
           if (response.success) {
-            statusMessagesDiv.innerHTML = `<div class="checkmark-success"></div>` +
-              response.mensagens.map(m => `<div class="success-text">${m.replace(/✅|📤/g, '').trim()}</div>`).join(''); // Remove ícones padrão para não duplicar
+            let successMsgIcon = '<i class="material-icons" style="color: #15803d; font-size: 1.5rem; vertical-align:middle; margin-right:5px;">check_circle</i>';
+            statusMessagesDiv.innerHTML = `<div class="checkmark-success"></div>` + response.mensagens.map(m => `<div class="success-text">${m.replace(/✅|📤/g, '').trim()}</div>`).join('');
             showNotification(response.mensagens[0].replace(/✅|📤/g, '').trim() || 'Upload concluído!', "success", 5000);
             
-            // Limpa o input de arquivo e a pré-visualização
-            document.getElementById('uploadForm').reset(); // Causa o trigger do listener do botão reset, que restaura localStorage
-            arquivoInput.value = ''; 
-            document.getElementById('fileListPreview').innerHTML = '';
-            document.querySelector('.file-path').value = 'Nenhum arquivo selecionado';
+            arquivosParaEnviarArray = []; 
+            document.getElementById('arquivo').value = ''; 
+            renderizarPreviewArquivosParaEnvio(); 
 
-
-            // Garante que os campos sejam restaurados para os valores do localStorage ou padrões
-            // O listener do botão reset já faz algo similar, mas aqui é uma garantia extra
-            const anoSelect = document.getElementById('ano');
-            const mesSelect = document.getElementById('mes');
-            const despesaInput = document.getElementById('despesa');
-            const anoAtual = new Date().getFullYear();
-
+            const anoSelect = document.getElementById('ano'); const mesSelect = document.getElementById('mes');
+            const despesaInput = document.getElementById('despesa'); const anoAtual = new Date().getFullYear();
             anoSelect.value = localStorage.getItem(ANO_STORAGE_KEY) || String(anoAtual);
             mesSelect.value = localStorage.getItem(MES_STORAGE_KEY) || "";
             despesaInput.value = localStorage.getItem(DESPESA_STORAGE_KEY) || "";
-            
-            M.FormSelect.init(document.querySelectorAll('select'), {});
-            M.updateTextFields();
-
-            updateUploadedFilesListDisplay(); // Atualiza a lista de arquivos já enviados
+            M.FormSelect.init(document.querySelectorAll('select'), {}); M.updateTextFields();
+            updateUploadedFilesListDisplay();
           } else {
-            statusMessagesDiv.innerHTML = response.mensagens.map(m => `<div class="error-text">${m.replace(/❌/g, '').trim()}</div>`).join('');
+            let errorMsgIcon = '<i class="material-icons" style="color: #b91c1c; font-size: 1.5rem; vertical-align:middle; margin-right:5px;">error</i>';
+            statusMessagesDiv.innerHTML = response.mensagens.map(m => `<div class="error-text">${errorMsgIcon} ${m.replace(/❌/g, '').trim()}</div>`).join('');
             showNotification(response.mensagens[0].replace(/❌/g, '').trim() || "Erro no upload.", "error", 6000);
           }
         })
-        .withFailureHandler(function(error) {
-          clearInterval(progressIntervalId);
-          progressBarContainer.style.display='none';
-          progressPercentageText.style.display='none';
-          submitButton.disabled = false;
-          textEnviar.textContent = originalButtonText;
-          iconEnviar.style.display = 'inline-block';
-          spinnerEnviar.style.display = 'none';
-          statusMessagesDiv.innerHTML = `<div class="error-text">Falha crítica na comunicação: ${error.message}</div>`;
-          showNotification('Falha crítica no envio: ' + error.message, "error", 6000);
-          console.error("Upload Failure:", error);
+        .withFailureHandler(function(error) { 
+            clearInterval(progressIntervalId); progressBarContainer.style.display='none'; progressPercentageText.style.display='none';
+            submitButton.disabled = false; textEnviar.textContent = originalButtonText; iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
+            statusMessagesDiv.innerHTML = `<div class="error-text"><i class="material-icons">error_outline</i>Falha crítica: ${error.message}</div>`;
+            showNotification('Falha crítica no envio: ' + error.message, "error", 6000); console.error("Upload Failure:", error);
         })
         .uploadFiles(formObject);
     });
 
     document.getElementById('btnVerPasta').addEventListener('click', function() {
-      const ano = document.getElementById('ano').value;
-      const mes = document.getElementById('mes').value;
-      const despesa = getSanitizedDespesaValue();
-
-      if (!ano || !mes || !despesa) {
-        showNotification("Selecione Ano, Mês e Conta para ver a pasta de destino.", "error");
-        return;
-      }
-      const button = this;
-      const originalButtonHTML = button.innerHTML;
-      button.innerHTML = '<i class="material-icons left spin">autorenew</i>Aguarde...';
-      button.disabled = true;
-
+      const ano = document.getElementById('ano').value; const mes = document.getElementById('mes').value; const despesa = getSanitizedDespesaValue();
+      if (!ano || !mes || !despesa) { showNotification("Selecione Ano, Mês e Conta.", "error"); return; }
+      const button = this; const originalButtonHTML = button.innerHTML;
+      button.innerHTML = '<i class="material-icons left spin">autorenew</i>Aguarde...'; button.disabled = true;
       google.script.run
         .withSuccessHandler(function(folderUrl) {
-          button.innerHTML = originalButtonHTML;
-          button.disabled = false;
-          if (folderUrl) {
-            window.open(folderUrl, "_blank");
-          } else {
-            showNotification("Pasta não encontrada. Ela será criada no primeiro envio para esta combinação.", "info", 5000);
-          }
+          button.innerHTML = originalButtonHTML; button.disabled = false;
+          if (folderUrl) { window.open(folderUrl, "_blank"); }
+          else { showNotification("Pasta não encontrada. Será criada no primeiro envio.", "info", 5000); }
         })
         .withFailureHandler(function(error) {
-          button.innerHTML = originalButtonHTML;
-          button.disabled = false;
-          showNotification("Erro ao obter URL da pasta: " + (error.message || "Tente novamente."), "error", 5000);
-          console.error("Get Folder URL Error:", error);
+          button.innerHTML = originalButtonHTML; button.disabled = false;
+          showNotification("Erro ao obter URL: " + (error.message || "Tente novamente."), "error", 5000); console.error("Get URL Error:", error);
         })
         .getFolderUrl(ano, mes, despesa);
     });
 
-    function toBase64(file) {
+    function toBase64(file) { // Função toBase64 ATUALIZADA para melhor diagnóstico
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
         reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
+        reader.onerror = () => {
+          console.error(`FileReader Error for file "${file.name}":`, reader.error, {fileName: file.name, fileSize: file.size, fileType: file.type});
+          const errorDetails = new Error(`Falha ao ler o arquivo "${file.name}". Tipo: ${reader.error.name}.`);
+          errorDetails.name = "FileReaderError";
+          errorDetails.originalError = reader.error; 
+          reject(errorDetails);
+        };
         reader.readAsDataURL(file);
       });
     }
