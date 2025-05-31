@@ -21,8 +21,10 @@
       --chip-img-bg: #dbeafe; --chip-img-text: #1d4ed8; 
       --chip-default-bg: #f3f4f6; --chip-default-text: #4b5563; 
       --danger-bg: #fee2e2; --danger-text: #b91c1c;
-      --info-text-light: #64748b; /* Tailwind slate-500 */
-      --border-color-soft: #e2e8f0; /* Tailwind slate-200 */
+      --info-text-light: #64748b; 
+      --border-color-soft: #e2e8f0; 
+      --skeleton-base-color: #e0e0e0;
+      --skeleton-shine-color: #d0d0d0;
     }
     button, .collection-item, #fileListPreview li {
         transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
@@ -59,7 +61,9 @@
     .footer-dev .github-icon { width: 19px; height: 19px; }
     .input-field label { color: var(--accent); font-weight:500; font-size:0.95rem; }
     .input-field input, .input-field .select-wrapper input.select-dropdown, .input-field textarea { background: #fff !important; border: 1px solid #cbd5e1 !important; border-radius: 8px !important; padding: 0 14px !important; height: 3rem !important; font-weight: 400; font-size: 0.95rem; color: var(--main-text); box-shadow: inset 0 1px 2px rgba(0,0,0,0.03);}
-    .input-field input:focus, .input-field .select-wrapper input.select-dropdown:focus, .input-field textarea:focus { border-color: var(--accent2) !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.2) !important;}
+    .input-field input:focus, .input-field .select-wrapper input.select-dropdown:focus, .input-field textarea:focus { border-color: var(--accent2) !important; box-shadow: 0 0 0 3px rgba(37,99,235,0.25) !important;} 
+    .input-field input:focus + label, .input-field textarea:focus + label { color: var(--accent2) !important; }
+    .select-wrapper.active input.select-dropdown + label { color: var(--accent2) !important;}
     .dropdown-content li > a, .dropdown-content li > span { color: var(--accent) !important; font-weight: 500;}
     .dropdown-content li.selected { background-color: rgba(37,99,235,0.08) !important; }
     .file-field .btn { background: var(--accent); border-radius: 8px; font-weight: 500; box-shadow: none; font-size: 0.9rem; height: 3rem; line-height: 3rem; padding: 0 18px;}
@@ -73,7 +77,7 @@
     .btn-folder:hover { background: #e0e7ff !important; box-shadow: var(--shadow-panel) !important;}
     .progress { border-radius: 8px; height:10px; background: #e2e8f0; margin-top:8px; margin-bottom:4px;}
     .progress .determinate { background: var(--accent2); }
-    .progress-percentage { font-size:0.85rem; margin-bottom:10px;}
+    .progress-percentage { font-size:0.85rem; margin-bottom:10px; text-align:center; color: var(--accent2); font-weight:500;} /* Centralizado e com cor */
     #statusMessages > div { padding: 12px 18px; border-radius: 8px; margin-top: 12px; font-weight: 500; border-width: 1px; border-style: solid; display: flex; align-items: center; gap: 10px;}
     #statusMessages .success-text { background-color: #dcfce7; border-color: #4ade80; color: #15803d; }
     #statusMessages .error-text { background-color: #fee2e2; border-color: #f87171; color: #b91c1c; }
@@ -89,7 +93,7 @@
     .remove-file-btn i { font-size: 1.2rem !important; line-height: 28px !important; display:block; }
     .spin { color: white !important; } 
     .checkmark-success { margin: 12px auto; } 
-    .files-section > h6 { display: flex; align-items: center; gap: 10px; color: var(--accent); font-weight: 600; font-size: 1.1rem; margin: 0 0 15px 0; padding-bottom: 10px; border-bottom: 2px solid var(--border-color-soft); }
+    .files-section > h6 { display: flex; align-items: center; gap: 10px; color: var(--accent); font-weight: 600; font-size: 1.1rem; margin: 0 0 10px 0; padding-bottom: 10px; border-bottom: 2px solid var(--border-color-soft); } /* Ajustada margem inferior */
     .files-section > h6 .material-icons { color: var(--accent2); font-size:1.6rem; }
     .collection .collection-item { border:none; background: #fff; color: var(--main-text); border-radius: 8px; margin-bottom:6px; font-size:0.9rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); padding: 10px 14px;}
     .collection .collection-item:hover { background: #f8fafc; box-shadow: var(--shadow-hover); transform: translateY(-2px) scale(1.01);}
@@ -104,6 +108,23 @@
     .empty-state-message .material-icons { font-size:3.5rem !important; color: var(--info-text-light) !important; }
     .empty-state-message span:first-of-type { font-size:1rem; color:var(--main-text); font-weight:500;}
     .empty-state-message span:last-of-type { font-size:0.85rem; color: var(--info-text-light); }
+    .skeleton-item-wrapper { width: 100%; }
+    .skeleton-item { background-color: var(--skeleton-base-color); border-radius: 8px; margin-bottom: 6px; padding: 10px 14px; height: 52px; opacity: 0.7; display: flex; flex-direction: column; justify-content: center; gap: 8px; animation: shimmer 1.8s infinite linear; background-image: linear-gradient(to right, var(--skeleton-base-color) 0%, var(--skeleton-shine-color) 20%, var(--skeleton-base-color) 40%, var(--skeleton-base-color) 100%); background-repeat: no-repeat; background-size: 1200px 100%;}
+    .skeleton-item .line { background-color: #c0c0c0; height: 12px; border-radius: 4px; }
+    .skeleton-item .line.full { width: 90%; }
+    .skeleton-item .line.medium { width: 70%; }
+    .skeleton-item .line.short { width: 50%; }
+    @keyframes shimmer { 0% { background-position: -1200px 0; } 100% { background-position: 1200px 0; } }
+    .list-item-animate { opacity: 0; transform: translateY(15px); animation: listItemEnter 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;}
+    @keyframes listItemEnter { to { opacity: 1; transform: translateY(0); } }
+    /* Estilo para mensagem de filtro vazio */
+    .no-filter-match {
+        display: block; text-align: center; padding: 20px 15px;
+        color: var(--info-text-light); font-style: italic; font-size: 0.9rem;
+        border: 2px dashed var(--border-color-soft); border-radius: 8px; margin-top: 10px;
+    }
+
+
     @media(max-width:1100px) { .professional-panel { width:98vw; margin-left:1vw; margin-right:1vw; } .panel-row { flex-direction: column; gap: 28px; } .form-section, .files-section { max-width: 100%; width: 100%; } .files-section { min-height: 250px; max-height: 400px;} }
     @media (max-width: 480px) { .footer-dev { flex-direction: column; gap: 5px; } }
     @media(max-width:700px) { .professional-panel { padding: 20px 15px 15px 15px; margin-top:15px;} .gt-logo-anim {font-size:1.7rem;} .gt-subtitle { font-size: 1rem; margin-bottom: 15px; } .collection .collection-item { flex-direction: column; align-items: flex-start; gap: 5px; } .secondary-content { width: 100%; justify-content: flex-start; margin-top: 5px; margin-left:0; } .footer-dev { font-size:0.9em; padding: 10px 0; margin-top:20px;} }
@@ -173,6 +194,11 @@
         </form>
         <div class="files-section">
           <div id="notificationArea" class="notification-area"></div>
+           <div class="input-field" style="margin-bottom: 15px; margin-top:-5px;">
+            <i class="material-icons prefix" style="color:var(--accent);">filter_list</i>
+            <input id="filtroArquivosEnviadosInput" type="text" placeholder="Filtrar por nome...">
+            <label for="filtroArquivosEnviadosInput">Filtrar Arquivos Enviados</label>
+          </div>
           <h6>
             <i class="material-icons">assignment</i>
             Arquivos Enviados
@@ -196,7 +222,7 @@
     const MES_STORAGE_KEY = 'gt_envioDespesas_mes_v2';
     const DESPESA_STORAGE_KEY = 'gt_envioDespesas_despesa_v2';
 
-    let arquivosParaEnviarArray = []; // Array para gerenciar os arquivos selecionados
+    let arquivosParaEnviarArray = []; 
 
     document.addEventListener('DOMContentLoaded', function() {
       var tooltippedElems = document.querySelectorAll('.tooltipped');
@@ -207,6 +233,7 @@
       const despesaInput = document.getElementById('despesa');
       const arquivoInput = document.getElementById('arquivo');
       const fileListPreviewUl = document.getElementById('fileListPreview');
+      const filtroArquivosEnviadosEl = document.getElementById('filtroArquivosEnviadosInput');
       const btnArquivoTooltipContainer = document.getElementById('btnArquivoTooltipContainer');
       const btnArquivoTooltip = btnArquivoTooltipContainer.querySelector('.custom-tooltip');
 
@@ -224,22 +251,27 @@
       despesaInput.value = localStorage.getItem(DESPESA_STORAGE_KEY) || "";
 
       M.FormSelect.init(document.querySelectorAll('select'), {});
-      M.updateTextFields();
+      M.updateTextFields(); // Importante para labels dos inputs e do filtro
       updateUploadedFilesListDisplay(); 
       renderizarPreviewArquivosParaEnvio(); 
 
       // --- EVENT LISTENERS ---
+      function limparFiltroEAtualizarLista() {
+        if(filtroArquivosEnviadosEl) filtroArquivosEnviadosEl.value = ""; // Limpa o campo de filtro
+        updateUploadedFilesListDisplay();
+      }
+
       anoSelect.addEventListener('change', function() {
-        localStorage.setItem(ANO_STORAGE_KEY, this.value); updateUploadedFilesListDisplay();
+        localStorage.setItem(ANO_STORAGE_KEY, this.value); limparFiltroEAtualizarLista();
       });
       mesSelect.addEventListener('change', function() {
-        localStorage.setItem(MES_STORAGE_KEY, this.value); updateUploadedFilesListDisplay();
+        localStorage.setItem(MES_STORAGE_KEY, this.value); limparFiltroEAtualizarLista();
       });
       despesaInput.addEventListener('input', function() {
         localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim());
       });
       despesaInput.addEventListener('blur', function() {
-        localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim()); updateUploadedFilesListDisplay();
+        localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim()); limparFiltroEAtualizarLista();
       });
 
       btnArquivoTooltipContainer.addEventListener('mouseenter', () => { btnArquivoTooltip.style.display = 'block'; });
@@ -258,6 +290,10 @@
         }
       });
 
+      if(filtroArquivosEnviadosEl) {
+        filtroArquivosEnviadosEl.addEventListener('input', filtrarListaArquivosEnviados);
+      }
+
       document.querySelector('button[type=reset]').addEventListener('click', function(event) {
         if (!confirm("Tem certeza que deseja limpar todos os campos do formulário? Os arquivos selecionados também serão removidos.")) {
             event.preventDefault(); return;
@@ -267,6 +303,7 @@
             anoSelect.value = localStorage.getItem(ANO_STORAGE_KEY) || String(new Date().getFullYear());
             mesSelect.value = localStorage.getItem(MES_STORAGE_KEY) || "";
             despesaInput.value = ""; 
+            if(filtroArquivosEnviadosEl) filtroArquivosEnviadosEl.value = "";
             
             arquivosParaEnviarArray = []; 
             arquivoInput.value = ""; 
@@ -278,8 +315,19 @@
             showNotification("Formulário limpo.", "info", 2000);
         }, 0);
       });
-    }); // Fim DOMContentLoaded
+    }); 
 
+    function renderizarPreviewArquivosParaEnvio() { /* ... (como na resposta anterior) ... */ }
+    function removerArquivoDaSelecao(indexToRemove) { /* ... (como na resposta anterior) ... */ }
+    function getSanitizedDespesaValue() { /* ... (como na resposta anterior) ... */ }
+    function updateUploadedFilesListDisplay() { /* ... (com skeleton e animação de entrada como na resposta anterior) ... */ }
+    function carregarDespesas() { /* ... (como na resposta anterior) ... */ }
+    function showNotification(message, type = "info", timeout = 4000) { /* ... (como na resposta anterior) ... */ }
+    function toBase64(file) { /* ... (com diagnóstico de erro como na resposta anterior) ... */ }
+    document.getElementById('uploadForm').addEventListener('submit', async function(event){ /* ... (LÓGICA DE SUBMIT ATUALIZADA ABAIXO) ... */ });
+    document.getElementById('btnVerPasta').addEventListener('click', function() { /* ... (como na resposta anterior) ... */ });
+
+    // --- Implementações completas das funções auxiliares ---
     function renderizarPreviewArquivosParaEnvio() {
       const previewUl = document.getElementById('fileListPreview');
       const selectionInfoDiv = document.getElementById('fileSelectionInfo');
@@ -290,8 +338,6 @@
 
       if (arquivosParaEnviarArray.length === 0) {
         filePathInput.value = 'Nenhum arquivo selecionado';
-        // Se a array gerenciada está vazia, garante que o input de arquivo também esteja.
-        // Isso é importante para a validação 'required' e para o comportamento do botão de limpar.
         if (document.getElementById('arquivo').files.length > 0) {
             document.getElementById('arquivo').value = "";
         }
@@ -313,6 +359,9 @@
         else if(ext==='png') {icon='image'; colorClass='green-text text-darken-1';}
 
         const li = document.createElement('li');
+        li.className = 'list-item-animate'; 
+        li.style.animationDelay = `${index * 0.05}s`; 
+
         li.innerHTML = `
           <i class="material-icons file-icon" style="color:${colorClass};">${icon}</i>
           <span class="file-name-preview">${file.name}</span>
@@ -346,45 +395,40 @@
       const ul = document.getElementById('uploadedFilesList');
       
       if (!ano || !mes || !despesa) {
-        ul.innerHTML = `
-          <li class="collection-item empty-state-message">
-            <i class="material-icons">info_outline</i>
-            <span>Informe Ano, Mês e Conta</span>
-            <span>Para visualizar os arquivos já enviados para essa combinação.</span>
-          </li>`;
+        ul.innerHTML = `<li class="collection-item empty-state-message"><i class="material-icons">info_outline</i><span>Informe Ano, Mês e Conta</span><span>Para visualizar os arquivos já enviados.</span></li>`;
         return;
       }
-      // Adicione aqui a lógica de Skeleton Loading se desejar (omitida para brevidade desta resposta)
-      ul.innerHTML = `<li class="collection-item center-align" style="padding:12px;"><div class="preloader-wrapper small active" style="vertical-align:middle; margin-right:8px;"><div class="spinner-layer spinner-blue-only"><div class="circle-clipper left"><div class="circle"></div></div><div class="gap-patch"><div class="circle"></div></div><div class="circle-clipper right"><div class="circle"></div></div></div></div>Carregando arquivos...</li>`;
+      
+      let skeletonHTML = '<div class="skeleton-item-wrapper">';
+      for (let i = 0; i < 4; i++) { skeletonHTML += `<div class="skeleton-item"><div class="line full"></div><div class="line medium"></div></div>`;}
+      skeletonHTML += '</div>';
+      ul.innerHTML = skeletonHTML; 
 
       google.script.run
         .withSuccessHandler(function(filesData) {
+          ul.innerHTML = ''; 
           if (!filesData || !filesData.length) {
-            ul.innerHTML = `
-              <li class="collection-item empty-state-message">
-                <i class="material-icons">cloud_off</i>
-                <span>Nenhum arquivo encontrado</span>
-                <span>Não há arquivos enviados para esta seleção específica.</span>
-              </li>`;
+            ul.innerHTML = `<li class="collection-item empty-state-message"><i class="material-icons">cloud_off</i><span>Nenhum arquivo encontrado</span><span>Não há arquivos para esta seleção.</span></li>`;
             return;
           }
-          ul.innerHTML = filesData.map(f => {
+          filesData.forEach((f, index) => {
               let ext = f.name.split('.').pop().toLowerCase();
               let icon = 'insert_drive_file', colorClass = 'var(--chip-default-text)';
               let chipBg = 'var(--chip-default-bg)', chipText = 'var(--chip-default-text)';
               if(ext==='pdf') { icon='picture_as_pdf'; colorClass='var(--chip-pdf-text)'; chipBg = 'var(--chip-pdf-bg)'; chipText = 'var(--chip-pdf-text)'; }
               else if(['jpg','jpeg','png','gif'].includes(ext)) { icon='image'; colorClass='var(--chip-img-text)'; chipBg = 'var(--chip-img-bg)'; chipText = 'var(--chip-img-text)';}
               const tag = `<span class="chip" style="background-color:${chipBg}; color:${chipText};">${ext.toUpperCase()}</span>`;
-              return `<li class="collection-item"><a href="${f.url}" target="_blank" title="Abrir ${f.name}"><i class="material-icons left" style="color:${colorClass};">${icon}</i>${f.name}</a><span class="secondary-content"><span class="badge-date">${f.date}</span>${tag}</span></li>`;
-          }).join('');
+              const listItem = document.createElement('li');
+              listItem.className = 'collection-item list-item-animate';
+              listItem.style.animationDelay = `${index * 0.07}s`;
+              listItem.innerHTML = `<a href="${f.url}" target="_blank" title="Abrir ${f.name}"><i class="material-icons left" style="color:${colorClass};">${icon}</i>${f.name}</a><span class="secondary-content"><span class="badge-date">${f.date}</span>${tag}</span>`;
+              ul.appendChild(listItem);
+          });
+          filtrarListaArquivosEnviados(); // Reaplicar filtro após carregar novos itens
         })
         .withFailureHandler(function(err) { 
-          ul.innerHTML = `
-              <li class="collection-item empty-state-message">
-                <i class="material-icons">error_outline</i>
-                <span>Falha ao Carregar Arquivos</span>
-                <span>Ocorreu um erro ao buscar os arquivos. Tente novamente.</span>
-              </li>`;
+          ul.innerHTML = ''; 
+          ul.innerHTML = `<li class="collection-item empty-state-message"><i class="material-icons">error_outline</i><span>Falha ao Carregar Arquivos</span><span>Tente novamente.</span></li>`;
           console.error("Erro listUploadedFiles:", err);
           showNotification("Falha ao carregar lista de arquivos: " + (err.message || "Erro desconhecido."), "error", 4500);
         })
@@ -420,25 +464,59 @@
       setTimeout(() => { notificationElement.style.opacity = 0; setTimeout(() => notificationElement.remove(), 350); }, timeout);
     }
     
-    // Função toBase64 ATUALIZADA para melhor diagnóstico de erro
     function toBase64(file) {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
-        reader.onload = () => resolve(reader.result); // reader.result é o Data URL
+        reader.onload = () => resolve(reader.result);
         reader.onerror = () => {
           console.error(`FileReader Error for file "${file.name}":`, reader.error, {fileName: file.name, fileSize: file.size, fileType: file.type});
           const errorDetails = new Error(`Falha ao ler o arquivo "${file.name}". Tipo: ${reader.error.name}.`);
-          errorDetails.name = "FileReaderError";
-          errorDetails.originalError = reader.error; 
+          errorDetails.name = "FileReaderError"; errorDetails.originalError = reader.error; 
           reject(errorDetails);
         };
         reader.readAsDataURL(file);
       });
     }
 
+    // Função de Filtro
+    function filtrarListaArquivosEnviados() {
+        const termoFiltro = document.getElementById('filtroArquivosEnviadosInput').value.toLowerCase();
+        const listaUL = document.getElementById('uploadedFilesList');
+        // Seleciona apenas itens que são de arquivos, não mensagens de empty state ou skeletons
+        const itens = listaUL.querySelectorAll('li.collection-item:not(.empty-state-message):not(.skeleton-item)');
+        let contadorVisiveis = 0;
+        let mensagemFiltroVazio = listaUL.querySelector('.no-filter-match');
+
+        itens.forEach(item => {
+            const nomeArquivoLink = item.querySelector('a');
+            if (nomeArquivoLink) {
+                const nomeArquivo = nomeArquivoLink.textContent.toLowerCase();
+                if (nomeArquivo.includes(termoFiltro)) {
+                    item.style.display = 'flex'; // Assume 'flex' como display original de .collection-item
+                    contadorVisiveis++;
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+
+        if (mensagemFiltroVazio) {
+            mensagemFiltroVazio.remove(); 
+        }
+
+        if (contadorVisiveis === 0 && termoFiltro !== "" && itens.length > 0) { // Só mostra se havia itens para filtrar
+             mensagemFiltroVazio = document.createElement('li');
+             mensagemFiltroVazio.className = 'collection-item no-filter-match'; 
+             mensagemFiltroVazio.innerHTML = `<i class="material-icons" style="margin-right:8px; opacity:0.7;">search_off</i>Nenhum arquivo corresponde a "${document.getElementById('filtroArquivosEnviadosInput').value}".`;
+             listaUL.appendChild(mensagemFiltroVazio);
+        }
+    }
+
+
     document.getElementById('uploadForm').addEventListener('submit', async function(event){
       event.preventDefault();
       const statusMessagesDiv = document.getElementById('statusMessages'); statusMessagesDiv.innerHTML = '';
+      const arquivoInput = document.getElementById('arquivo');
       
       if (arquivosParaEnviarArray.length === 0) { 
         showNotification('Por favor, selecione ao menos um arquivo para enviar.', "error"); return;
@@ -449,20 +527,18 @@
       if (!formObject.mes) { showNotification('Selecione o Mês.', "error"); return; }
       if (!formObject.ano) { showNotification('Selecione o Ano.', "error"); return; }
 
-      // Constrói formObject.arquivos a partir de arquivosParaEnviarArray
       for (let i = 0; i < arquivosParaEnviarArray.length; i++) {
         const file = arquivosParaEnviarArray[i]; 
         if (!["application/pdf","image/jpeg","image/png"].includes(file.type)) { 
             showNotification(`Tipo de arquivo não permitido na seleção final: ${file.name}`, "error"); return; 
         }
         try { 
-          const base64DataURL = await toBase64(file); // CHAMADA ATUALIZADA
+          const base64DataURL = await toBase64(file); 
           formObject.arquivos.push({name: file.name, type: file.type, data: base64DataURL.split(',')[1]}); 
         }
-        catch (readError) { // CATCH ATUALIZADO
+        catch (readError) { 
           console.error(`Detailed error processing file "${file.name}" for upload:`, readError.name, readError.message, readError.originalError);
           showNotification(`Erro ao processar ${file.name}: ${readError.message || 'Falha na leitura do arquivo.'}`, "error", 7000);
-
           const submitButton = document.getElementById('btnEnviar'); const textEnviar = document.getElementById('textEnviar');
           const iconEnviar = document.getElementById('iconEnviar'); const spinnerEnviar = document.getElementById('spinnerEnviar');
           const originalButtonText = "Enviar"; 
@@ -481,22 +557,40 @@
 
       submitButton.disabled = true; textEnviar.textContent = 'Enviando'; iconEnviar.style.display = 'none';
       spinnerEnviar.style.display = 'inline-block'; progressBarContainer.style.display='block';
-      progressPercentageText.style.display='block'; progressBar.style.width = '0%'; progressPercentageText.innerText = '0%';
+      progressPercentageText.style.display='block'; progressBar.style.width = '0%'; 
+      // BARRA DE PROGRESSO REFINADA
+      progressPercentageText.innerText = 'Preparando...'; 
 
       let fakeProgressValue = 0;
       let progressIntervalId = setInterval(() => {
-        if (fakeProgressValue < 90) { fakeProgressValue += Math.floor(Math.random() * 5) + 2; fakeProgressValue = Math.min(fakeProgressValue, 90);
-          progressBar.style.width = fakeProgressValue + '%'; progressPercentageText.innerText = fakeProgressValue + '%';
-        } else { clearInterval(progressIntervalId); }
-      }, 120);
+        if (fakeProgressValue < 95) { // Vai até 95% antes da resposta do servidor
+            if (fakeProgressValue < 40) {
+                fakeProgressValue += Math.floor(Math.random() * 5) + 3; // Mais rápido no início
+                 if(fakeProgressValue < 20) progressPercentageText.innerText = 'Lendo arquivos...';
+                 else progressPercentageText.innerText = 'Preparando envio...';
+            } else if (fakeProgressValue < 80) {
+                fakeProgressValue += Math.floor(Math.random() * 3) + 1; // Velocidade média
+                progressPercentageText.innerText = 'Enviando dados...';
+            } else {
+                fakeProgressValue += Math.floor(Math.random() * 2) + 1; // Mais lento perto do fim
+                progressPercentageText.innerText = 'Quase lá...';
+            }
+            fakeProgressValue = Math.min(fakeProgressValue, 95);
+            progressBar.style.width = fakeProgressValue + '%';
+        } else {
+            clearInterval(progressIntervalId);
+            progressPercentageText.innerText = 'Finalizando...'; // Aguardando confirmação
+        }
+      }, 180); 
 
       const totalMB = formObject.arquivos.reduce((sum, f) => sum + (f.data.length * 3/4), 0) / (1024*1024);
       showNotification(`Iniciando envio (${totalMB.toFixed(2)} MB)...`, "info", Math.max(5000, Math.ceil(totalMB * 1.5) * 1000 + 2000) );
 
       google.script.run
         .withSuccessHandler(function(response) {
-          clearInterval(progressIntervalId); progressBar.style.width = '100%'; progressPercentageText.innerText = '100%';
-          setTimeout(() => { progressBarContainer.style.display='none'; progressPercentageText.style.display='none'; }, 800);
+          clearInterval(progressIntervalId); progressBar.style.width = '100%'; 
+          progressPercentageText.innerText = 'Concluído!'; 
+          setTimeout(() => { progressBarContainer.style.display='none'; progressPercentageText.style.display='none'; }, 1200); // Aumentado delay para ver "Concluído"
           submitButton.disabled = false; textEnviar.textContent = originalButtonText; iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
 
           if (response.success) {
@@ -524,6 +618,7 @@
         .withFailureHandler(function(error) { 
             clearInterval(progressIntervalId); progressBarContainer.style.display='none'; progressPercentageText.style.display='none';
             submitButton.disabled = false; textEnviar.textContent = originalButtonText; iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
+            progressPercentageText.innerText = 'Falha!'; // Atualiza texto da porcentagem em caso de falha
             statusMessagesDiv.innerHTML = `<div class="error-text"><i class="material-icons">error_outline</i>Falha crítica: ${error.message}</div>`;
             showNotification('Falha crítica no envio: ' + error.message, "error", 6000); console.error("Upload Failure:", error);
         })
@@ -547,21 +642,6 @@
         })
         .getFolderUrl(ano, mes, despesa);
     });
-
-    function toBase64(file) { // Função toBase64 ATUALIZADA para melhor diagnóstico
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => {
-          console.error(`FileReader Error for file "${file.name}":`, reader.error, {fileName: file.name, fileSize: file.size, fileType: file.type});
-          const errorDetails = new Error(`Falha ao ler o arquivo "${file.name}". Tipo: ${reader.error.name}.`);
-          errorDetails.name = "FileReaderError";
-          errorDetails.originalError = reader.error; 
-          reject(errorDetails);
-        };
-        reader.readAsDataURL(file);
-      });
-    }
   </script>
 </body>
 </html>
