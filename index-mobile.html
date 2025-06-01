@@ -1,0 +1,1138 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Envio de Despesas - Grupo Tavares</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <style>
+    :root {
+      /* Paleta de Cores e Variáveis de Tema */
+      --primary-bg: #f8faff; 
+      --card-bg: #ffffff;
+      --text-primary: #1f2937; 
+      --text-secondary: #4b5563;
+      --text-muted: #9ca3af;
+      
+      --accent-primary: #2563eb; /* Azul mais forte e moderno */
+      --accent-primary-rgb: 37, 99, 235;
+      --accent-secondary: #1d4ed8; 
+      --accent-tertiary: #eff6ff; 
+
+      --danger-primary: #dc2626;
+      --danger-primary-rgb: 220, 38, 38;
+      --danger-secondary: #b91c1c;
+      --danger-bg-light: #fee2e2;
+
+      --success-primary: #16a34a;
+      --success-primary-rgb: 22, 163, 74;
+      --success-secondary: #15803d;
+      --success-bg-light: #dcfce7;
+
+      --info-primary: #0ea5e9; /* Azul céu para informações */
+      --info-primary-rgb: 14, 165, 233;
+      --info-bg-light: #e0f2fe;
+
+      --warning-primary: #f59e0b;
+      --warning-primary-rgb: 245, 158, 11;
+      --warning-bg-light: #fef3c7;
+
+      --border-color: #d1d5db;
+      --border-color-light: #e5e7eb;
+      --border-radius-sm: 6px;
+      --border-radius-md: 12px;
+      --border-radius-lg: 18px;
+
+      --shadow-color: rgba(31, 41, 55, 0.1); 
+      --shadow-light: rgba(31, 41, 55, 0.05);
+      --shadow-strong: rgba(31, 41, 55, 0.15);
+
+      --skeleton-base: #e5e7eb;
+      --skeleton-shine: #f3f4f6;
+
+      --font-family-headings: 'Montserrat', sans-serif;
+      --font-family-base: 'Roboto', sans-serif;
+      --line-height-base: 1.65;
+      --line-height-tight: 1.4;
+
+      /* Gradientes */
+      --gradient-accent: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+      --gradient-card-bg: linear-gradient(145deg, rgba(255,255,255,0.6) 0%, rgba(248,250,255,0.3) 100%);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    html, body {
+      height: 100%; margin: 0; padding: 0;
+      background: var(--primary-bg);
+      color: var(--text-primary);
+      font-family: var(--font-family-base);
+      font-weight: 400;
+      line-height: var(--line-height-base);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden; /* Prevenir scroll horizontal */
+    }
+
+    .layout-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      min-height: 100vh; justify-content: flex-start;
+      padding: 15px 5px 30px 5px; /* Reduzido padding para mobile */
+      width: 100%;
+    }
+
+    .professional-panel {
+      background: var(--card-bg);
+      border-radius: var(--border-radius-lg);
+      box-shadow: 0 10px 30px -5px var(--shadow-strong), 0 4px 6px -2px var(--shadow-light);
+      padding: 25px 15px; /* Reduzido padding para mobile */
+      margin: 15px 0 0 0; /* Reduzida margem superior para mobile */
+      width: 100%; 
+      max-width: 980px; /* Mantém max-width para desktop */
+      display: flex; flex-direction: column;
+      border: 1px solid var(--border-color-light);
+    }
+
+    .panel-row { 
+      display: flex; 
+      flex-direction: column; /* Padrão para mobile */
+      gap: 25px; /* Reduzido gap para mobile */
+      width: 100%; 
+      align-items: flex-start; 
+      justify-content: space-between;
+    }
+    .form-section, .files-section { 
+      flex: 1 1 100%; /* Ocupa toda a largura no mobile */
+      min-width: unset; /* Remove min-width no mobile */
+      width: 100%;
+    } 
+    
+    .files-section {
+      gap: 10px;
+      background: var(--accent-tertiary); 
+      border-radius: var(--border-radius-md);
+      border: 1px solid var(--border-color-light);
+      box-shadow: inset 0 3px 8px -2px var(--shadow-light);
+      padding: 20px; /* Reduzido padding para mobile */
+      min-height: 350px; /* Ajustado para mobile */
+      max-height: 450px; /* Ajustado para mobile */
+    }
+    .files-section::-webkit-scrollbar { width: 10px; } /* Ajustado scrollbar */
+    .files-section::-webkit-scrollbar-track { background: rgba(0,0,0,0.04); border-radius: var(--border-radius-sm); }
+    .files-section::-webkit-scrollbar-thumb { background: #c0c9d0; border-radius: var(--border-radius-sm); border: 2px solid var(--accent-tertiary); } 
+    .files-section::-webkit-scrollbar-thumb:hover { background: #a0abb3; } 
+
+    .notification-area { position: fixed; top: 15px; right: 10px; left: 10px; /* Ajustado para mobile */
+      z-index: 1070; display: flex; flex-direction: column; align-items: center; /* Centralizado no mobile */
+      gap: 10px; max-width: calc(100% - 20px); pointer-events: none;
+    }
+    .custom-notification {
+      display: flex; align-items: center;
+      border-left-width: 5px; border-left-style: solid; /* Reduzida borda */
+      border-radius: var(--border-radius-md);
+      box-shadow: 0 5px 15px var(--shadow-color);
+      font-size: 0.9rem; font-weight: 500; /* Reduzida fonte */
+      padding: 12px 18px; /* Reduzido padding */
+      min-width: auto; width: 100%; /* Ajustado para mobile */
+      pointer-events: auto;
+      opacity: 0; animation: fadeInSlideRightImproved .5s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+    }
+    @keyframes fadeInSlideRightImproved { 
+      from { opacity: 0; transform: translateY(-20px) scale(0.95);} /* Ajustada animação */
+      to { opacity: 1; transform: translateY(0) scale(1);} 
+    }
+    /* ... (restante das classes de notificação) ... */
+    .custom-notification.info    { background: var(--info-bg-light); border-left-color: var(--info-primary); color: var(--info-primary); }
+    .custom-notification.success { background: var(--success-bg-light); border-left-color: var(--success-primary); color: var(--success-secondary); } 
+    .custom-notification.error   { background: var(--danger-bg-light); border-left-color: var(--danger-primary); color: var(--danger-secondary); }
+    .custom-notification .material-icons { margin-right: 10px; font-size: 1.4em; }
+    .custom-notification .close-notif { margin-left: auto; padding-left:10px; color: inherit; cursor: pointer; font-size: 1.3em; background: none; border: none; outline: none; box-shadow: none; opacity: 0.65; }
+    .custom-notification .close-notif:hover { opacity: 1; transform: scale(1.15) rotate(90deg); color: var(--danger-primary);}
+
+
+    .gt-logo-anim {
+      font-size: 1.8rem; /* Reduzido para mobile */
+      padding-bottom: 6px; border-bottom-width: 4px; /* Ajustado */
+      margin-bottom: 8px; 
+    }
+    .gt-subtitle {
+      font-size: 1rem; /* Reduzido para mobile */
+      margin-bottom: 25px; /* Ajustado */
+    } 
+
+    .footer-dev {
+      flex-direction: column; /* Stack no mobile */
+      gap: 8px; /* Ajustado gap */
+      padding: 25px 15px; margin-top: 30px;
+      font-size: 0.9rem; 
+    }
+    /* ... (restante do footer) ... */
+    .footer-dev a { color: var(--accent-primary); text-decoration: none; font-weight: 500; display: inline-flex; align-items: center; gap: 7px; }
+    .footer-dev a:hover { color: var(--accent-secondary); text-decoration: none; transform: scale(1.05); }
+    .footer-dev .github-icon { width: 22px; height: 22px; }
+
+
+    /* Campos de Formulário */
+    .input-field label { font-size:1rem; } /* Ajustado */
+    .input-field input, .input-field .select-wrapper input.select-dropdown, .input-field textarea {
+      height: 3.1rem !important; /* Ajustado */
+      font-size: 0.95rem; /* Ajustado */
+    }
+    /* ... (restante dos estilos de input-field) ... */
+    .input-field input:focus, .input-field .select-wrapper input.select-dropdown:focus, .input-field textarea:focus {
+      border-color: var(--accent-secondary) !important;
+      box-shadow: 0 0 0 4px rgba(var(--accent-primary-rgb), 0.2), inset 0 2px 4px -1px var(--shadow-light) !important; 
+    } 
+    .input-field input:focus + label, .input-field textarea:focus + label { color: var(--accent-secondary) !important; }
+    .select-wrapper.active input.select-dropdown + label { color: var(--accent-secondary) !important;}
+    .dropdown-content { border-radius: var(--border-radius-md) !important; box-shadow: 0 6px 20px var(--shadow-color) !important; border: 1px solid var(--border-color-light) !important;}
+    .dropdown-content li > a, .dropdown-content li > span { color: var(--text-primary) !important; font-weight: 500; padding: 14px 20px !important; }
+    .dropdown-content li:hover { background-color: var(--accent-tertiary) !important; color: var(--accent-primary) !important; }
+    .dropdown-content li.selected { background-color: rgba(var(--accent-primary-rgb), 0.15) !important; color: var(--accent-primary) !important; font-weight: 600 !important;}
+    .dropdown-content li.selected > span { color: var(--accent-primary) !important; }
+
+    .input-field input#despesa.valid-datalist {
+      border-color: var(--success-primary) !important;
+      box-shadow: 0 0 0 4px rgba(var(--success-primary-rgb), 0.15), inset 0 1px 3px var(--shadow-light) !important;
+    }
+    .input-field input#despesa.valid-datalist + label { color: var(--success-primary) !important; }
+    .input-field input#despesa.invalid-datalist:not(:placeholder-shown) { 
+      border-color: var(--danger-primary) !important;
+      box-shadow: 0 0 0 4px rgba(var(--danger-primary-rgb), 0.15), inset 0 1px 3px var(--shadow-light) !important;
+    }
+    .input-field input#despesa.invalid-datalist:not(:placeholder-shown) + label { color: var(--danger-primary) !important; }
+
+
+    /* Botões */
+    .btn, .btn-large, .btn-small { /* Unificado para mobile */
+      font-size: 0.95rem; /* Ajustado */
+      padding: 0 20px; /* Ajustado */
+      height: 3.1rem; line-height: 3.1rem; /* Ajustado */
+      display: inline-flex; align-items: center; justify-content: center; /* Melhor alinhamento do ícone */
+    }
+    .btn .material-icons.left, .btn .material-icons.right {
+        line-height: inherit; /* Garante que o ícone não quebre a altura do botão */
+    }
+    /* ... (restante dos estilos de botões) ... */
+     .btn-floating {
+        background: var(--gradient-accent); 
+        color: #fff;
+        border-radius: var(--border-radius-md); font-weight: 600; font-size: 1rem;
+        text-transform: none; letter-spacing: 0.5px; 
+        box-shadow: 0 4px 10px -2px rgba(var(--accent-primary-rgb), 0.4);
+        height: 3.3rem; line-height: 3.3rem;
+        border: none; 
+    }
+    .btn:hover, .btn-large:hover, .btn-small:hover, .btn-floating:hover {
+      background: var(--gradient-accent); 
+      filter: brightness(1.1); 
+      box-shadow: 0 6px 15px -3px rgba(var(--accent-primary-rgb), 0.5) !important;
+      transform: translateY(-3px) scale(1.02);
+    }
+    .btn:active, .btn-large:active, .btn-small:active, .btn-floating:active {
+      transform: translateY(-1px) scale(0.99);
+      box-shadow: 0 2px 8px -1px rgba(var(--accent-primary-rgb), 0.35) !important;
+      filter: brightness(0.95);
+    }
+    .btn-flat { color: var(--accent-primary) !important; font-weight: 600; border-radius: var(--border-radius-md); padding: 0 10px !important; height: 3.1rem; line-height: 3.1rem;}
+    .modal-trigger.btn-flat:hover { background-color: var(--danger-bg-light) !important; color: var(--danger-primary) !important; transform: scale(1.05); }
+    #btnClearSelectedFiles.btn-flat:hover { background-color: var(--danger-bg-light) !important; color: var(--danger-primary) !important; transform: scale(1.05); }
+    
+    .btn-folder { 
+      background: var(--accent-tertiary) !important; 
+      color: var(--accent-primary) !important; 
+      border: 1.5px solid var(--accent-primary) !important;
+      box-shadow: 0 2px 5px -1px var(--shadow-light) !important;
+    }
+    .btn-folder:hover { 
+      background: var(--accent-primary) !important; 
+      color: #fff !important; 
+      border-color: var(--accent-secondary) !important;
+      box-shadow: 0 5px 12px -2px rgba(var(--accent-primary-rgb),0.35) !important;
+      transform: translateY(-2px) scale(1.02);
+    }
+    
+    .file-field { padding: 15px; } /* Ajustado padding */
+    .file-field .btn { margin-bottom: 8px; }
+    /* ... (restante dos estilos de file-field) ... */
+    .file-field.drag-over {
+        border-color: var(--accent-primary);
+        background-color: var(--accent-tertiary);
+        box-shadow: inset 0 0 15px rgba(var(--accent-primary-rgb), 0.1);
+    }
+    .file-path-wrapper input.file-path::placeholder { color: var(--text-muted); font-style: italic; }
+
+    .progress { height:12px; } /* Ajustado */
+    .progress-percentage { font-size:0.9rem; } /* Ajustado */
+    /* ... (restante dos estilos de progress) ... */
+    .progress .determinate { background: var(--success-primary); }
+    #statusMessages > div {
+      padding: 14px 18px; /* Ajustado */
+      font-size: 0.95rem; /* Ajustado */
+    }
+    /* ... (restante dos estilos de statusMessages) ... */
+    #statusMessages .success-text { background-color: var(--success-bg-light); border-color: var(--success-primary); color: var(--success-secondary); }
+    #statusMessages .error-text { background-color: var(--danger-bg-light); border-color: var(--danger-primary); color: var(--danger-secondary); }
+    #statusMessages .material-icons { font-size: 1.7rem; }
+
+
+    #fileListPreview { max-height: 120px; font-size: 0.85rem;} /* Ajustado */
+    #fileListPreview li {
+      padding: 10px 12px; /* Ajustado */
+      margin-bottom: 8px; /* Ajustado */
+      gap: 8px; /* Ajustado */
+    }
+    /* ... (restante dos estilos de fileListPreview) ... */
+    #fileListPreview li:hover {
+      border-color: var(--accent-secondary);
+      border-left-color: var(--accent-secondary);
+      background-color: var(--accent-tertiary);
+      box-shadow: 0 5px 12px -2px var(--shadow-color);
+      transform: translateX(4px) scale(1.02);
+    }
+    #fileListPreview li .file-icon { font-size: 1.5em; color: var(--accent-primary); flex-shrink: 0; animation: iconPopIn 0.3s ease-out both; }
+    @keyframes iconPopIn { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    #fileListPreview li .file-name-preview { flex-grow: 1; word-break: break-all; line-height:var(--line-height-tight); color: var(--text-primary); font-weight: 500;}
+    #fileListPreview li .file-size-preview { font-size:0.9em; margin-left:auto; white-space:nowrap; flex-shrink:0; color: var(--text-secondary); }
+    .remove-file-btn {
+      background-color: transparent !important; color: var(--danger-primary) !important;
+      box-shadow: none !important; border-radius: 50%;
+      width: 32px !important; height: 32px !important; line-height: 32px !important; padding: 0 !important;
+      margin-left: 12px; flex-shrink: 0; opacity: 0.65; cursor:pointer;
+    }
+    .remove-file-btn:hover { background-color: rgba(var(--danger-primary-rgb), 0.1) !important; opacity: 1; transform: scale(1.15) rotate(15deg); }
+    .remove-file-btn i { font-size: 1.4rem !important; line-height: 32px !important; display:block; }
+
+
+    .files-section > h6 {
+      font-size: 1.2rem; /* Ajustado */
+      gap: 10px; /* Ajustado */
+      margin-bottom: 15px; padding-bottom: 10px; /* Ajustado */
+    }
+    /* ... (restante dos estilos de files-section > h6) ... */
+     .files-section > h6 .material-icons { color: var(--accent-secondary); font-size:1.8rem; }
+
+    .collection .collection-item {
+      flex-direction: column; /* Stack no mobile */
+      align-items: flex-start; /* Alinha à esquerda no mobile */
+      gap: 8px; /* Espaçamento entre elementos stackados */
+      padding: 12px 15px; /* Ajustado */
+      font-size:0.9rem; /* Ajustado */
+    }
+    .collection .collection-item .material-icons.left { margin-right: 8px; } /* Ajustado */
+    .secondary-content { 
+      width: 100%; /* Ocupa toda a largura */
+      justify-content: space-between; /* Espaça data e chip */
+      margin-left:0;
+      margin-top: 8px; /* Espaçamento do nome do arquivo */
+    }
+    /* ... (restante dos estilos de collection) ... */
+    .collection { border: none !important; }
+    .collection .collection-item:hover {
+      background: #feffff; border-color: var(--accent-primary) !important;
+      box-shadow: 0 6px 15px -2px var(--shadow-color);
+      transform: translateY(-3px) scale(1.02);
+      z-index: 10;
+    }
+    .collection .collection-item a { font-weight:500; color: var(--accent-primary); display: flex; align-items: center; flex-grow: 1; width: 100%; } /* Garante que o link ocupe a largura */
+    .collection .collection-item a:hover { color: var(--accent-secondary); }
+    .badge-date { background: var(--border-color-light); color: var(--text-secondary); border-radius: var(--border-radius-sm); font-size: .85rem; padding: 5px 9px; white-space:nowrap; font-weight: 500;}
+    .chip { font-size:0.8rem; padding: 5px 12px; height: auto; line-height: var(--line-height-tight); border-radius:18px; font-weight:500;}
+    .chip-pdf { background-color: var(--danger-bg-light) !important; color: var(--danger-primary) !important;}
+    .chip-img { background-color: var(--info-bg-light) !important; color: var(--info-primary) !important;}
+
+    .empty-state-message {
+      padding:25px 15px !important; /* Ajustado */
+      gap:15px; /* Ajustado */
+    }
+    .empty-state-message .material-icons { font-size:3.5rem !important; } /* Ajustado */
+    .empty-state-message span:first-of-type { font-size:1.1rem; } /* Ajustado */
+    .empty-state-message span:last-of-type { font-size:0.9rem; } /* Ajustado */
+     /* ... (restante dos estilos de empty-state-message) ... */
+    @keyframes pulseIcon { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+
+
+    .skeleton-item {
+      padding: 12px 15px; height: 55px; /* Ajustado */
+      gap: 10px; /* Ajustado */
+    }
+    .skeleton-item .line { height: 14px; } /* Ajustado */
+    /* ... (restante dos estilos de skeleton) ... */
+     .skeleton-item-wrapper { width: 100%; }
+    .skeleton-item .line.full { width: 93%; }
+    .skeleton-item .line.medium { width: 76%; }
+    .skeleton-item .line.short { width: 58%; }
+    @keyframes shimmer { 0% { background-position: -1400px 0; } 100% { background-position: 1400px 0; } }
+
+    .no-filter-match {
+      padding: 25px 15px !important; /* Ajustado */
+      gap:15px; /* Ajustado */
+    }
+    .no-filter-match .material-icons { font-size:3rem !important; } /* Ajustado */
+    .no-filter-match span { font-size:0.95rem;} /* Ajustado */
+    /* ... (restante dos estilos de no-filter-match) ... */
+
+
+    .modal { width: 90% !important; max-width: 450px; } /* Ajustado para mobile */
+    .modal .modal-content { padding: 25px 20px 15px 20px; } /* Ajustado */
+    .modal .modal-content h4 { font-size: 1.4rem; margin-bottom: 15px;} /* Ajustado */
+    .modal .modal-content p { font-size: 1rem; } /* Ajustado */
+    .modal .modal-footer { padding: 8px 20px 20px 20px; } /* Ajustado */
+    /* ... (restante dos estilos de modal) ... */
+    .modal .modal-footer .btn-flat { color: var(--accent-primary) !important; font-weight: 600; padding: 0 15px !important; }
+    .modal .modal-footer .btn-flat:hover { background-color: var(--accent-tertiary) !important; }
+    .modal .modal-footer .btn.red { background: var(--danger-primary) !important; } 
+    .modal .modal-footer .btn.red:hover { background: var(--danger-secondary) !important; }
+
+
+    /* Media Queries Consolidadas e Refinadas */
+    /* Tablet e telas médias */
+    @media(min-width: 769px) and (max-width:1100px) {
+      .professional-panel { width:95vw; padding: 30px 25px; }
+      .panel-row { flex-direction: row; gap: 30px; } /* Volta para row em tablets */
+      .form-section, .files-section { flex: 1 1 0; } /* Permite que cresçam igualmente */
+    }
+    
+    /* Ajustes finos para telas muito pequenas (ex: iPhone SE) */
+    @media(max-width: 380px) {
+        .gt-logo-anim { font-size: 1.6rem; }
+        .gt-subtitle { font-size: 0.9rem; }
+        .btn, .btn-large, .btn-small { font-size: 0.85rem; padding: 0 15px; height: 2.8rem; line-height: 2.8rem; }
+        .btn-flat { font-size: 0.85rem; padding: 0 8px !important; height: 2.8rem; line-height: 2.8rem; }
+        #btnClearSelectedFiles { font-size: 0.75rem !important; padding: 0 6px !important; height: 2.2rem !important; line-height: 2.2rem !important;}
+        #btnClearSelectedFiles .material-icons { font-size: 1rem !important;}
+        .input-field label { font-size: 0.95rem; }
+        .input-field input, .input-field .select-wrapper input.select-dropdown { font-size: 0.9rem; height: 2.9rem !important;}
+        .file-field .btn { font-size: 0.85rem; padding: 0 15px; }
+        .file-field .btn .material-icons { font-size: 1.2rem; }
+        #fileListPreview li .file-name-preview { font-size: 0.8rem; }
+        #fileListPreview li .file-size-preview { font-size: 0.75rem; }
+        .remove-file-btn { width: 28px !important; height: 28px !important; line-height: 28px !important;}
+        .remove-file-btn i { font-size: 1.1rem !important; line-height: 28px !important; }
+        .collection .collection-item a { font-size: 0.85rem; }
+        .badge-date { font-size: 0.75rem; padding: 3px 6px;}
+        .chip { font-size: 0.7rem; padding: 3px 8px;}
+        .files-section > h6 { font-size: 1.1rem; }
+        .form-section, .files-section { padding: 15px; }
+        .panel-row { gap: 20px; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="layout-wrap">
+    <div class="professional-panel">
+      <div class="gt-logo-anim">Grupo Tavares</div>
+      <div class="gt-subtitle">Envio Otimizado de Despesas e Comprovantes</div>
+      <div class="panel-row">
+        <form id="uploadForm" autocomplete="off" class="form-section">
+          <div class="input-field">
+            <select id="ano" required></select>
+            <label for="ano" class="required">Ano Fiscal</label>
+          </div>
+          <div class="input-field">
+            <select id="mes" required>
+              <option value="" disabled selected>Selecione o Mês</option>
+              <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+              <option value="03">Março</option><option value="04">Abril</option>
+              <option value="05">Maio</option><option value="06">Junho</option>
+              <option value="07">Julho</option><option value="08">Agosto</option>
+              <option value="09">Setembro</option><option value="10">Outubro</option>
+              <option value="11">Novembro</option><option value="12">Dezembro</option>
+            </select>
+            <label for="mes" class="required">Mês de Competência</label>
+          </div>
+          <div class="input-field">
+            <input id="despesa" type="text" required placeholder="Digite ou selecione a conta" autocomplete="off" list="listaDespesas">
+            <label for="despesa" class="required">Conta de Despesa</label>
+            <datalist id="listaDespesas"></datalist>
+          </div>
+          
+          <div class="file-field input-field" id="fileDropZone">
+            <div class="btn tooltipped" id="btnArquivoTooltipContainer" data-position="bottom" data-tooltip="PDF, JPG, PNG (Máx 50MB/arq, 100MB total)">
+              <span><i class="material-icons left">attach_file</i>Selecionar Arquivos</span>
+              <input type="file" id="arquivo" multiple accept=".pdf,.jpg,.jpeg,.png"> </div>
+            <div class="file-path-wrapper">
+              <input class="file-path validate" type="text" placeholder="Ou arraste os arquivos aqui">
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 8px;">
+                <div id="fileSelectionInfo" style="font-size:0.85rem; color: var(--text-secondary); margin-top:5px;"></div>
+                <button type="button" id="btnClearSelectedFiles" class="btn-flat waves-effect tooltipped" data-position="top" data-tooltip="Limpar arquivos selecionados" style="font-size: 0.82rem; padding: 0 10px !important; color: var(--danger-primary) !important; display: none; height: 2.5rem !important; line-height: 2.5rem !important;">
+                    <i class="material-icons left" style="font-size: 1.2rem; margin-right: 3px;">delete_sweep</i>Limpar
+                </button>
+            </div>
+            <ul id="fileListPreview" class="file-list"></ul>
+          </div>
+          
+          <div style="display: flex;align-items:center;gap:10px; margin-top:20px; flex-wrap: wrap;"> <button id="btnVerPasta" type="button" class="btn btn-folder tooltipped" data-position="top" data-tooltip="Abrir pasta de destino no Drive" style="flex-grow: 1; min-width: 120px;"> <i class="material-icons left">folder_open</i>Pasta
+            </button>
+            <span style="flex:1 1 auto; min-width: 10px;"></span> <button type="submit" class="btn waves-effect waves-light tooltipped" id="btnEnviar" data-position="top" data-tooltip="Enviar arquivos para o Drive" style="flex-grow: 1; min-width: 120px;"> <i class="material-icons left" id="iconEnviar">send</i>
+              <span id="textEnviar">Enviar</span>
+              <span id="spinnerEnviar" style="display:none; vertical-align:middle;">
+                <i class="material-icons spin">autorenew</i>
+              </span>
+            </button>
+            <button type="button" class="btn-flat waves-effect tooltipped modal-trigger" data-target="resetConfirmModal" data-position="top" data-tooltip="Limpar formulário" style="padding: 0 10px !important;"> <i class="material-icons">clear_all</i>
+            </button>
+          </div>
+          <div class="progress" id="progressBarContainer" style="display:none;">
+            <div class="determinate" id="progressBar" style="width:0%;"></div>
+          </div>
+          <div class="progress-percentage num-mono" id="progressPercentageText" style="display:none;">0%</div>
+          <div id="statusMessages" style="margin-top:18px;"></div>
+        </form>
+
+        <div class="files-section">
+          <div id="notificationArea" class="notification-area"></div>
+          <div class="input-field" style="margin-bottom: 22px; margin-top:-8px;">
+            <i class="material-icons prefix" style="color:var(--accent-primary);">filter_list</i>
+            <input id="filtroArquivosEnviadosInput" type="text" placeholder="Filtrar por nome do arquivo...">
+            <label for="filtroArquivosEnviadosInput">Filtrar Arquivos Enviados</label>
+          </div>
+          <h6>
+            <i class="material-icons">assignment_turned_in</i>
+            Arquivos Enviados Recentemente
+          </h6>
+          <ul id="uploadedFilesList" class="collection"></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-dev">
+      <span>Desenvolvido com <i class="material-icons" style="font-size: 1em; color: #e74c3c; vertical-align: -2px;">favorite</i> por</span>
+      <a href="https://github.com/RyannBreston" target="_blank" rel="noopener" title="GitHub de RyannBreston">
+        <svg class="github-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.867 8.167 6.839 9.489.5.091.682-.217.682-.483 0-.237-.009-.868-.014-1.703-2.782.604-3.369-1.342-3.369-1.342-.454-1.155-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.004.07 1.532 1.032 1.532 1.032.893 1.53 2.341 1.088 2.91.832.091-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.272.098-2.65 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0 1 12 6.844c.85.004 1.705.115 2.504.338 1.909-1.294 2.748-1.025 2.748-1.025.545 1.378.202 2.397.099 2.65.64.699 1.028 1.592 1.028 2.683 0 3.841-2.337 4.687-4.565 4.936.359.31.678.921.678 1.857 0 1.34-.012 2.421-.012 2.751 0 .268.18.577.688.48A10.013 10.013 0 0 0 22 12c0-5.523-4.477-10-10-10z"/></svg>
+        RyannBreston
+      </a>
+    </div>
+  </div>
+
+  <div id="resetConfirmModal" class="modal">
+    <div class="modal-content">
+      <h4>Confirmar Limpeza do Formulário</h4>
+      <p>Todos os campos preenchidos e arquivos selecionados serão removidos. Deseja continuar?</p>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-grey btn-flat">Cancelar</a>
+      <a href="#!" id="confirmResetBtn" class="modal-close waves-effect waves-red btn red">Limpar Tudo</a>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    const ANO_STORAGE_KEY = 'gt_envioDespesas_ano_v4'; 
+    const MES_STORAGE_KEY = 'gt_envioDespesas_mes_v4';
+    const DESPESA_STORAGE_KEY = 'gt_envioDespesas_despesa_v4';
+    const MAX_INDIVIDUAL_FILE_SIZE_MB = 50; 
+    const MAX_INDIVIDUAL_FILE_SIZE_BYTES = MAX_INDIVIDUAL_FILE_SIZE_MB * 1024 * 1024;
+
+    let arquivosParaEnviarArray = []; 
+    let filtroDebounceTimer;
+
+    // Função para validar input da Datalist
+    function validateDatalistInput(inputElement, datalistElement) {
+        const value = inputElement.value.trim();
+        let isValid = false;
+        
+        if (!value && !inputElement.required) { 
+            inputElement.classList.remove('valid-datalist', 'invalid-datalist');
+            return;
+        }
+        
+        if (!value) { 
+            inputElement.classList.remove('valid-datalist', 'invalid-datalist');
+            return;
+        }
+
+        for (let i = 0; i < datalistElement.options.length; i++) {
+            if (datalistElement.options[i].value === value) {
+                isValid = true;
+                break;
+            }
+        }
+
+        if (isValid) {
+            inputElement.classList.add('valid-datalist');
+            inputElement.classList.remove('invalid-datalist');
+        } else {
+            inputElement.classList.add('invalid-datalist');
+            inputElement.classList.remove('valid-datalist');
+        }
+    }
+
+
+    document.addEventListener('DOMContentLoaded', function() {
+      var tooltippedElems = document.querySelectorAll('.tooltipped');
+      M.Tooltip.init(tooltippedElems, {enterDelay: 250, exitDelay: 60, outDuration: 180, transitionMovement: 8, margin: 8});
+
+      var modalElems = document.querySelectorAll('.modal');
+      M.Modal.init(modalElems, {endingTop: '20%', inDuration: 350, outDuration: 350});
+
+      const anoSelect = document.getElementById('ano');
+      const mesSelect = document.getElementById('mes');
+      const despesaInput = document.getElementById('despesa');
+      const listaDespesasDatalist = document.getElementById('listaDespesas');
+      const arquivoInput = document.getElementById('arquivo');
+      const fileListPreviewUl = document.getElementById('fileListPreview');
+      const filtroArquivosEnviadosEl = document.getElementById('filtroArquivosEnviadosInput');
+      const btnClearSelectedFiles = document.getElementById('btnClearSelectedFiles');
+      const fileDropZone = document.getElementById('fileDropZone');
+
+      // Popula o select de Ano
+      const anoAtualSistema = new Date().getFullYear();
+      const anoDePartida = 2025; 
+      const alcanceAnosFuturos = 10; 
+
+      anoSelect.innerHTML = ''; 
+
+      for (let i = 0; i <= alcanceAnosFuturos; i++) {
+        const anoOpcao = anoDePartida + i;
+        let opt = document.createElement('option');
+        opt.value = String(anoOpcao);
+        opt.textContent = String(anoOpcao);
+        anoSelect.appendChild(opt);
+      }
+
+      const savedAno = localStorage.getItem(ANO_STORAGE_KEY);
+      // O ano padrão será o maior entre o ano atual do sistema e o ano de partida (2025)
+      // ou o valor salvo, se for válido dentro do novo intervalo.
+      let anoPadrao = String(Math.max(anoAtualSistema, anoDePartida)); 
+      let anoFinalSelecionado = anoPadrao;
+
+      if (savedAno) {
+        const savedAnoInt = parseInt(savedAno);
+        if (savedAnoInt >= anoDePartida && savedAnoInt <= (anoDePartida + alcanceAnosFuturos)) {
+          anoFinalSelecionado = savedAno; 
+        } else {
+          // Se o ano salvo estiver fora do novo intervalo, usa o padrão e atualiza o localStorage
+          localStorage.setItem(ANO_STORAGE_KEY, anoPadrao);
+          anoFinalSelecionado = anoPadrao;
+        }
+      } else {
+        // Se não houver ano salvo, usa o padrão e salva no localStorage
+        localStorage.setItem(ANO_STORAGE_KEY, anoPadrao);
+      }
+      
+      // Garante que o valor selecionado exista nas opções
+      if (Array.from(anoSelect.options).some(opt => opt.value === anoFinalSelecionado)) {
+        anoSelect.value = anoFinalSelecionado;
+      } else {
+        // Se, por algum motivo, o anoFinalSelecionado não estiver nas opções (improvável com a lógica acima),
+        // seleciona a primeira opção disponível.
+        if(anoSelect.options.length > 0) {
+            anoSelect.value = anoSelect.options[0].value;
+            localStorage.setItem(ANO_STORAGE_KEY, anoSelect.value); 
+        }
+      }
+      
+      const savedMes = localStorage.getItem(MES_STORAGE_KEY);
+      mesSelect.value = (savedMes && Array.from(mesSelect.options).some(opt => opt.value === savedMes)) ? savedMes : "";
+      despesaInput.value = localStorage.getItem(DESPESA_STORAGE_KEY) || "";
+
+      M.FormSelect.init(document.querySelectorAll('select'), {});
+      M.updateTextFields(); 
+      renderizarPreviewArquivosParaEnvio(); 
+
+      if (despesaInput.value) {
+          validateDatalistInput(despesaInput, listaDespesasDatalist);
+      }
+
+      function limparFiltroEAtualizarLista() {
+        if(filtroArquivosEnviadosEl) filtroArquivosEnviadosEl.value = ""; 
+        setTimeout(updateUploadedFilesListDisplay, 0);
+      }
+
+      anoSelect.addEventListener('change', function() {
+        localStorage.setItem(ANO_STORAGE_KEY, this.value); 
+        limparFiltroEAtualizarLista();
+      });
+      mesSelect.addEventListener('change', function() {
+        localStorage.setItem(MES_STORAGE_KEY, this.value); 
+        limparFiltroEAtualizarLista();
+      });
+      despesaInput.addEventListener('input', function() {
+        localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim());
+        validateDatalistInput(despesaInput, listaDespesasDatalist);
+      });
+       despesaInput.addEventListener('change', function() { 
+        localStorage.setItem(DESPESA_STORAGE_KEY, this.value.trim());
+        validateDatalistInput(despesaInput, listaDespesasDatalist);
+        limparFiltroEAtualizarLista(); 
+      });
+
+      if (fileDropZone) {
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            fileDropZone.addEventListener(eventName, preventDefaults, false);
+        });
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        ['dragenter', 'dragover'].forEach(eventName => {
+            fileDropZone.addEventListener(eventName, () => fileDropZone.classList.add('drag-over'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            fileDropZone.addEventListener(eventName, () => fileDropZone.classList.remove('drag-over'), false);
+        });
+        fileDropZone.addEventListener('drop', handleDrop, false);
+        function handleDrop(e) {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            processAndAddFiles(Array.from(files));
+        }
+      }
+      
+      arquivoInput.addEventListener('change', function(event) {
+        const newFiles = Array.from(event.target.files);
+        processAndAddFiles(newFiles);
+      });
+      
+      function processAndAddFiles(filesToAdd) {
+          let validFiles = [];
+          let oversizedFiles = [];
+
+          filesToAdd.forEach(file => {
+              if (file.size > MAX_INDIVIDUAL_FILE_SIZE_BYTES) {
+                  oversizedFiles.push({name: file.name, size: (file.size / (1024*1024)).toFixed(2) });
+              } else if (["application/pdf","image/jpeg","image/png"].includes(file.type)) {
+                  validFiles.push(file);
+              } else {
+                  showNotification(`Tipo de arquivo não permitido: ${file.name} (${file.type})`, "warning", 4000);
+              }
+          });
+
+          if (oversizedFiles.length > 0) {
+              const fileMessages = oversizedFiles.map(f => `"${f.name}" (${f.size}MB)`).join(', ');
+              showNotification(`Arquivo(s) muito grande(s): ${fileMessages}. Limite: ${MAX_INDIVIDUAL_FILE_SIZE_MB}MB/arq.`, "error", 8000);
+          }
+          
+          validFiles.forEach(vf => {
+              if (!arquivosParaEnviarArray.some(ef => ef.name === vf.name && ef.size === vf.size)) {
+                  arquivosParaEnviarArray.push(vf);
+              } else {
+                   showNotification(`Arquivo "${vf.name}" já está na lista.`, "info", 3000);
+              }
+          });
+          
+          arquivoInput.value = null; 
+          renderizarPreviewArquivosParaEnvio();
+      }
+
+
+      fileListPreviewUl.addEventListener('click', function(event) {
+        const removeButton = event.target.closest('.remove-file-btn');
+        if (removeButton) {
+          const indexToRemove = parseInt(removeButton.dataset.fileIndex, 10);
+          removerArquivoDaSelecao(indexToRemove);
+        }
+      });
+
+      if(filtroArquivosEnviadosEl) {
+        filtroArquivosEnviadosEl.addEventListener('input', () => {
+            clearTimeout(filtroDebounceTimer);
+            filtroDebounceTimer = setTimeout(filtrarListaArquivosEnviados, 350);
+        });
+      }
+      
+      btnClearSelectedFiles.addEventListener('click', function() {
+        arquivosParaEnviarArray = [];
+        arquivoInput.value = ""; 
+        renderizarPreviewArquivosParaEnvio();
+        showNotification("Seleção de arquivos limpa.", "info", 2500);
+      });
+
+      document.getElementById('confirmResetBtn').addEventListener('click', function() {
+        setTimeout(() => {
+          localStorage.removeItem(DESPESA_STORAGE_KEY); 
+          despesaInput.value = ""; 
+          despesaInput.classList.remove('valid-datalist', 'invalid-datalist'); 
+
+          if(filtroArquivosEnviadosEl) filtroArquivosEnviadosEl.value = "";
+          
+          arquivosParaEnviarArray = []; 
+          arquivoInput.value = ""; 
+          renderizarPreviewArquivosParaEnvio(); 
+
+          M.updateTextFields(); 
+          setTimeout(updateUploadedFilesListDisplay, 0);
+          showNotification("Formulário limpo (exceto Ano e Mês).", "info", 2800);
+        }, 0);
+      });
+
+      setTimeout(() => {
+          carregarDespesas(); 
+          updateUploadedFilesListDisplay(); 
+      }, 100); 
+    }); 
+
+    function renderizarPreviewArquivosParaEnvio() {
+      const previewUl = document.getElementById('fileListPreview');
+      const selectionInfoDiv = document.getElementById('fileSelectionInfo');
+      const filePathInput = document.querySelector('.file-path'); 
+      const btnClearSelectedFiles = document.getElementById('btnClearSelectedFiles');
+      
+      previewUl.innerHTML = ''; 
+      selectionInfoDiv.innerHTML = '';
+
+      if (arquivosParaEnviarArray.length === 0) {
+        filePathInput.value = 'Nenhum arquivo selecionado';
+        btnClearSelectedFiles.style.display = 'none'; 
+        return;
+      }
+      
+      btnClearSelectedFiles.style.display = 'inline-flex'; 
+      let totalSize = 0;
+
+      arquivosParaEnviarArray.forEach((file, index) => {
+        totalSize += file.size;
+        let ext = file.name.split('.').pop().toLowerCase();
+        let icon = 'insert_drive_file';
+        let colorClass = 'var(--text-secondary)'; 
+
+        if(ext==='pdf') {icon='picture_as_pdf'; colorClass='var(--danger-primary)';}
+        else if(['jpg','jpeg'].includes(ext)) {icon='image'; colorClass='var(--info-primary)';}
+        else if(ext==='png') {icon='image'; colorClass='var(--success-primary)';}
+
+        const li = document.createElement('li');
+        li.className = 'list-item-animate'; 
+        li.style.animationDelay = `${index * 0.07}s`; 
+
+        li.innerHTML = `
+          <i class="material-icons file-icon" style="color:${colorClass};">${icon}</i>
+          <span class="file-name-preview" title="${file.name}">${file.name}</span>
+          <span class="file-size-preview num-mono">(${(file.size/1048576).toFixed(2)}MB)</span>
+          <button type="button" class="remove-file-btn tooltipped" data-position="left" data-tooltip="Remover ${file.name}" data-file-index="${index}">
+              <i class="material-icons">close</i>
+          </button>
+        `;
+        previewUl.appendChild(li);
+      });
+      
+      M.Tooltip.init(previewUl.querySelectorAll('.tooltipped'), {enterDelay: 100, exitDelay: 30, transitionMovement: 5, margin: 5}); 
+
+      filePathInput.value = arquivosParaEnviarArray.length > 1 ? `${arquivosParaEnviarArray.length} arquivos selecionados` : (arquivosParaEnviarArray[0]?.name || 'Nenhum arquivo selecionado');
+      selectionInfoDiv.innerHTML = `Total: ${arquivosParaEnviarArray.length} arquivo(s) - <b>${(totalSize/1048576).toFixed(2)} MB</b>`;
+    }
+
+    function removerArquivoDaSelecao(indexToRemove) {
+      if (indexToRemove >= 0 && indexToRemove < arquivosParaEnviarArray.length) {
+        const removedFileName = arquivosParaEnviarArray[indexToRemove].name;
+        arquivosParaEnviarArray.splice(indexToRemove, 1); 
+        renderizarPreviewArquivosParaEnvio(); 
+        showNotification(`Arquivo "${removedFileName}" removido.`, "info", 2200);
+      }
+    }
+
+    function getSanitizedDespesaValue() {
+      return document.getElementById('despesa').value.trim().replace(/\s+/g, ' ');
+    }
+
+    function updateUploadedFilesListDisplay() {
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        console.warn("API Google (google.script.run) não pronta. Tentando updateUploadedFilesListDisplay() mais tarde.");
+        setTimeout(updateUploadedFilesListDisplay, 250); 
+        return;
+      }
+
+      const ano = document.getElementById('ano').value;
+      const mes = document.getElementById('mes').value;
+      const despesa = getSanitizedDespesaValue();
+      const ul = document.getElementById('uploadedFilesList');
+      
+      if (!ano || !mes || !despesa) {
+        ul.innerHTML = `<li class="collection-item empty-state-message"><i class="material-icons">explore_off</i><span>Nada por Aqui Ainda</span><span>Informe Ano, Mês e Conta para ver os arquivos.</span></li>`;
+        return;
+      }
+      
+      let skeletonHTML = '<div class="skeleton-item-wrapper">';
+      for (let i = 0; i < 3; i++) { skeletonHTML += `<div class="skeleton-item"><div class="line full"></div><div class="line medium"></div></div>`;}
+      skeletonHTML += '</div>';
+      ul.innerHTML = skeletonHTML; 
+
+      google.script.run
+        .withSuccessHandler(function(filesData) {
+          ul.innerHTML = ''; 
+          if (!filesData || !filesData.length) {
+            ul.innerHTML = `<li class="collection-item empty-state-message"><i class="material-icons">cloud_off</i><span>Nenhum Comprovante</span><span>Não há arquivos para esta seleção. Que tal enviar alguns?</span></li>`;
+            return;
+          }
+          filesData.forEach((f, index) => {
+              let ext = f.name.split('.').pop().toLowerCase();
+              let icon = 'insert_drive_file', colorClass = 'var(--text-secondary)';
+              let chipBg = 'var(--border-color-light)', chipText = 'var(--text-secondary)'; 
+              if(ext==='pdf') { icon='picture_as_pdf'; colorClass='var(--danger-primary)'; chipBg = 'var(--danger-bg-light)'; chipText = 'var(--danger-primary)'; }
+              else if(['jpg','jpeg','png','gif'].includes(ext)) { icon='image'; colorClass='var(--info-primary)'; chipBg = 'var(--info-bg-light)'; chipText = 'var(--info-primary)';}
+              const tag = `<span class="chip" style="background-color:${chipBg}; color:${chipText};">${ext.toUpperCase()}</span>`;
+              const listItem = document.createElement('li');
+              listItem.className = 'collection-item list-item-animate';
+              listItem.style.animationDelay = `${index * 0.09}s`; 
+              listItem.innerHTML = `<a href="${f.url}" target="_blank" title="Abrir ${f.name} no Drive"><i class="material-icons left" style="color:${colorClass};">${icon}</i><span class="truncate" style="max-width: 70%;">${f.name}</span></a><span class="secondary-content"><span class="badge-date">${f.date}</span>${tag}</span>`;
+              ul.appendChild(listItem);
+          });
+          filtrarListaArquivosEnviados(); 
+        })
+        .withFailureHandler(function(err) { 
+          ul.innerHTML = ''; 
+          ul.innerHTML = `<li class="collection-item empty-state-message"><i class="material-icons">error_outline</i><span>Ops! Algo Deu Errado</span><span>Não foi possível carregar os arquivos. Tente novamente.</span></li>`;
+          console.error("Erro listUploadedFiles:", err);
+          showNotification("Falha ao carregar lista de arquivos: " + (err.message || "Erro desconhecido."), "error", 5500);
+        })
+        .listUploadedFiles(ano, mes, despesa);
+    }
+
+    function carregarDespesas() {
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        console.warn("API Google (google.script.run) não pronta. Tentando carregarDespesas() mais tarde.");
+        setTimeout(carregarDespesas, 250);
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function(listaDeContas) {
+          const datalist = document.getElementById('listaDespesas'); datalist.innerHTML = ''; 
+          if (listaDeContas && listaDeContas.length > 0) {
+              listaDeContas.forEach(function(item){ const opt = document.createElement('option'); opt.value = item; datalist.appendChild(opt); });
+          }
+          const despesaInput = document.getElementById('despesa');
+          if (despesaInput.value) {
+             validateDatalistInput(despesaInput, datalist);
+          }
+        })
+        .withFailureHandler(function(err){ console.error("Erro Contas:", err); showNotification("Erro ao carregar contas de despesa: " + (err.message || "Tente recarregar."), "error", 6500);})
+        .getContasDespesas();
+    }
+
+    function showNotification(message, type = "info", timeout = 5000) {
+      const notificationArea = document.getElementById("notificationArea");
+      if (!notificationArea || notificationArea.offsetParent === null) { 
+        let toastClasses = 'rounded ';
+        if (type === 'success') toastClasses += 'green darken-1 white-text'; 
+        else if (type === 'error') toastClasses += 'red darken-3 white-text'; 
+        else if (type === 'warning') toastClasses += 'amber darken-2 white-text';
+        else toastClasses += 'blue darken-1 white-text'; 
+        M.toast({html: message, classes: toastClasses, displayLength: timeout}); return;
+      }
+      const notificationElement = document.createElement("div");
+      let iconName = "info_outline";
+      if (type === "success") iconName = "check_circle_outline"; 
+      else if (type === "error") iconName = "error_outline";
+      else if (type === "warning") iconName = "warning_amber";
+
+      notificationElement.className = "custom-notification " + type;
+      notificationElement.innerHTML = `<i class="material-icons">${iconName}</i><span>${message}</span><button class="close-notif" title="Fechar">&times;</button>`;
+      notificationElement.querySelector('.close-notif').addEventListener('click', function() { 
+          this.parentElement.style.opacity = 0; 
+          this.parentElement.style.transform = 'translateX(40px) scale(0.95)';
+          setTimeout(() => this.parentElement.remove(), 350); 
+      });
+      notificationArea.appendChild(notificationElement);
+      setTimeout(() => { 
+          notificationElement.style.opacity = 0; 
+          notificationElement.style.transform = 'translateX(40px) scale(0.95)';
+          setTimeout(() => notificationElement.remove(), 350); 
+      }, timeout);
+    }
+    
+    function toBase64(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => {
+          console.error(`FileReader Error for file "${file.name}":`, reader.error, {fileName: file.name, fileSize: file.size, fileType: file.type});
+          const errorDetails = new Error(`Falha ao ler o arquivo "${file.name}". (${reader.error.name})`);
+          errorDetails.name = "FileReaderError"; errorDetails.originalError = reader.error; 
+          reject(errorDetails);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function filtrarListaArquivosEnviados() {
+        const termoFiltro = document.getElementById('filtroArquivosEnviadosInput').value.toLowerCase();
+        const listaUL = document.getElementById('uploadedFilesList');
+        const itens = listaUL.querySelectorAll('li.collection-item:not(.empty-state-message):not(.skeleton-item)');
+        let contadorVisiveis = 0;
+        let mensagemFiltroVazio = listaUL.querySelector('.no-filter-match');
+
+        itens.forEach(item => {
+            const nomeArquivoLink = item.querySelector('a');
+            if (nomeArquivoLink) {
+                const nomeArquivo = nomeArquivoLink.textContent.toLowerCase();
+                if (nomeArquivo.includes(termoFiltro)) {
+                    item.style.display = 'flex'; 
+                    contadorVisiveis++;
+                } else {
+                    item.style.display = 'none';
+                }
+            }
+        });
+
+        if (mensagemFiltroVazio) {
+            mensagemFiltroVazio.remove(); 
+        }
+
+        if (contadorVisiveis === 0 && termoFiltro !== "" && itens.length > 0) { 
+            mensagemFiltroVazio = document.createElement('li');
+            mensagemFiltroVazio.className = 'collection-item no-filter-match'; 
+            mensagemFiltroVazio.innerHTML = `<i class="material-icons">search_off</i><span>Nenhum arquivo corresponde a: "<b>${document.getElementById('filtroArquivosEnviadosInput').value}</b>"</span>`;
+            listaUL.appendChild(mensagemFiltroVazio);
+        }
+    }
+
+
+    document.getElementById('uploadForm').addEventListener('submit', async function(event){
+      event.preventDefault();
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        showNotification("API do Google não carregada. Aguarde e tente novamente.", "error", 5500);
+        console.error("API Google (google.script.run) não pronta para submit.");
+        return;
+      }
+
+      const statusMessagesDiv = document.getElementById('statusMessages'); statusMessagesDiv.innerHTML = '';
+      
+      if (arquivosParaEnviarArray.length === 0) { 
+        showNotification('Por favor, selecione ao menos um arquivo para enviar.', "error"); return;
+      }
+
+      const despesaEl = document.getElementById('despesa');
+      const datalistEl = document.getElementById('listaDespesas');
+      validateDatalistInput(despesaEl, datalistEl);
+      if (despesaEl.classList.contains('invalid-datalist') || !despesaEl.value.trim()) {
+          showNotification('Selecione uma "Conta de Despesa" válida da lista.', "error", 4000);
+          despesaEl.focus();
+          return;
+      }
+
+
+      const formObject = { mes: document.getElementById('mes').value, ano: document.getElementById('ano').value, despesa: getSanitizedDespesaValue(), arquivos: [] };
+      if (!formObject.mes) { showNotification('Selecione o Mês de competência.', "error"); return; }
+      if (!formObject.ano) { showNotification('Selecione o Ano fiscal.', "error"); return; }
+
+      for (let i = 0; i < arquivosParaEnviarArray.length; i++) {
+        const file = arquivosParaEnviarArray[i]; 
+        if (!["application/pdf","image/jpeg","image/png"].includes(file.type)) { 
+            showNotification(`Tipo inválido no arquivo final: ${file.name}`, "error"); return; 
+        }
+        if (file.size > MAX_INDIVIDUAL_FILE_SIZE_BYTES) {
+            showNotification(`Arquivo "${file.name}" (${(file.size/(1024*1024)).toFixed(2)}MB) excede o limite de ${MAX_INDIVIDUAL_FILE_SIZE_MB}MB.`, "error", 7000); return;
+        }
+        try { 
+          const base64DataURL = await toBase64(file); 
+          formObject.arquivos.push({name: file.name, type: file.type, data: base64DataURL.split(',')[1]}); 
+        }
+        catch (readError) { 
+          console.error(`Erro ao processar "${file.name}":`, readError.name, readError.message, readError.originalError);
+          showNotification(`Erro crítico ao processar ${file.name}: ${readError.message}`, "error", 8000);
+          const submitButton = document.getElementById('btnEnviar'); const textEnviar = document.getElementById('textEnviar');
+          const iconEnviar = document.getElementById('iconEnviar'); const spinnerEnviar = document.getElementById('spinnerEnviar');
+          const originalButtonText = "Enviar"; 
+          submitButton.disabled = false; textEnviar.textContent = originalButtonText;
+          iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
+          document.getElementById('progressBarContainer').style.display='none';
+          document.getElementById('progressPercentageText').style.display='none';
+          return; 
+        }
+      }
+
+      const submitButton = document.getElementById('btnEnviar'); const textEnviar = document.getElementById('textEnviar');
+      const iconEnviar = document.getElementById('iconEnviar'); const spinnerEnviar = document.getElementById('spinnerEnviar');
+      const progressBarContainer = document.getElementById('progressBarContainer'); const progressBar = document.getElementById('progressBar');
+      const progressPercentageText = document.getElementById('progressPercentageText'); const originalButtonText = textEnviar.textContent;
+
+      submitButton.disabled = true; textEnviar.textContent = 'Enviando...'; iconEnviar.style.display = 'none';
+      spinnerEnviar.style.display = 'inline-block'; progressBarContainer.style.display='block';
+      progressPercentageText.style.display='block'; progressBar.style.width = '0%'; 
+      progressPercentageText.innerText = 'Preparando arquivos...'; 
+
+      let fakeProgressValue = 0;
+      let progressIntervalId = setInterval(() => {
+        if (fakeProgressValue < 95) { 
+            if (fakeProgressValue < 25) { fakeProgressValue += Math.floor(Math.random() * 7) + 5; progressPercentageText.innerText = 'Codificando dados...'; } 
+            else if (fakeProgressValue < 65) { fakeProgressValue += Math.floor(Math.random() * 5) + 3; progressPercentageText.innerText = 'Transmitindo ao servidor...'; } 
+            else { fakeProgressValue += Math.floor(Math.random() * 3) + 1; progressPercentageText.innerText = 'Aguardando processamento...';}
+            fakeProgressValue = Math.min(fakeProgressValue, 95);
+            progressBar.style.width = fakeProgressValue + '%';
+        } else {
+            clearInterval(progressIntervalId);
+            progressPercentageText.innerText = 'Finalizando...'; 
+        }
+      }, 220); 
+
+      const totalMB = formObject.arquivos.reduce((sum, f) => sum + (f.data.length * 3/4), 0) / (1024*1024);
+      showNotification(`Iniciando envio de ${formObject.arquivos.length} arquivo(s) (${totalMB.toFixed(2)} MB)...`, "info", Math.max(6000, Math.ceil(totalMB * 2) * 1000 + 3000) );
+
+      google.script.run
+        .withSuccessHandler(function(response) {
+          clearInterval(progressIntervalId); progressBar.style.width = '100%'; 
+          progressPercentageText.innerText = 'Envio Concluído!'; 
+          setTimeout(() => { progressBarContainer.style.display='none'; progressPercentageText.style.display='none'; }, 1800); 
+          submitButton.disabled = false; textEnviar.textContent = originalButtonText; iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
+
+          if (response.success) {
+            let successMsgIcon = '<i class="material-icons">check_circle</i>';
+            statusMessagesDiv.innerHTML = response.mensagens.map(m => `<div class="success-text">${successMsgIcon} ${m.replace(/✅|📤/g, '').trim()}</div>`).join('');
+            showNotification(response.mensagens[0].replace(/✅|📤/g, '').trim() || 'Upload realizado com sucesso!', "success", 7000);
+            
+            arquivosParaEnviarArray = []; 
+            document.getElementById('arquivo').value = ''; 
+            // Limpa o campo de despesa após o envio bem-sucedido
+            const despesaEl = document.getElementById('despesa');
+            despesaEl.value = '';
+            localStorage.removeItem(DESPESA_STORAGE_KEY); // Remove do localStorage também
+            despesaEl.classList.remove('valid-datalist', 'invalid-datalist'); // Limpa classes de validação
+            M.updateTextFields(); // Atualiza a label do Materialize
+
+            renderizarPreviewArquivosParaEnvio(); 
+            updateUploadedFilesListDisplay(); 
+          } else {
+            let errorMsgIcon = '<i class="material-icons">error</i>';
+            statusMessagesDiv.innerHTML = response.mensagens.map(m => `<div class="error-text">${errorMsgIcon} ${m.replace(/❌/g, '').trim()}</div>`).join('');
+            showNotification(response.mensagens[0].replace(/❌/g, '').trim() || "Ocorreu um erro durante o upload.", "error", 8000);
+          }
+        })
+        .withFailureHandler(function(error) { 
+            clearInterval(progressIntervalId); progressBarContainer.style.display='none'; progressPercentageText.style.display='none';
+            submitButton.disabled = false; textEnviar.textContent = originalButtonText; iconEnviar.style.display = 'inline-block'; spinnerEnviar.style.display = 'none';
+            progressPercentageText.innerText = 'Falha Crítica!'; 
+            statusMessagesDiv.innerHTML = `<div class="error-text"><i class="material-icons">error_outline</i>Falha crítica na comunicação: ${error.message}</div>`;
+            showNotification('Falha crítica no envio: ' + error.message, "error", 8000); console.error("Upload Failure:", error);
+        })
+        .uploadFiles(formObject);
+    });
+
+    document.getElementById('btnVerPasta').addEventListener('click', function() {
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        showNotification("API do Google não carregada. Aguarde e tente novamente.", "error", 5500);
+        console.error("API Google (google.script.run) não pronta para getFolderUrl.");
+        return;
+      }
+
+      const ano = document.getElementById('ano').value; const mes = document.getElementById('mes').value; const despesa = getSanitizedDespesaValue();
+      if (!ano || !mes || !despesa) { showNotification("Selecione Ano, Mês e Conta para ver a pasta.", "error"); return; }
+      const button = this; const originalButtonHTML = button.innerHTML;
+      button.innerHTML = '<i class="material-icons left spin">autorenew</i>Aguarde...'; button.disabled = true;
+      google.script.run
+        .withSuccessHandler(function(folderUrl) {
+          button.innerHTML = originalButtonHTML; button.disabled = false;
+          if (folderUrl) { window.open(folderUrl, "_blank"); }
+          else { showNotification("Pasta de destino não encontrada. Será criada no primeiro envio.", "info", 6500); }
+        })
+        .withFailureHandler(function(error) {
+          button.innerHTML = originalButtonHTML; button.disabled = false;
+          showNotification("Erro ao obter URL da pasta: " + (error.message || "Tente novamente."), "error", 6500); console.error("Get Folder URL Error:", error);
+        })
+        .getFolderUrl(ano, mes, despesa);
+    });
+  </script>
+</body>
+</html>
